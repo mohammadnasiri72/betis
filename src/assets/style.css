@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    text-align: center;
+    direction: rtl;
+    overflow-x: hidden;
+}
+
+
+
+@font-face{
+    font-family: "iransans";
+    src: url("./../../public/fonts/IRANSansWeb.ttf");
+}
+
+*{
+    font-family: "iransans" !important;
+}
+
+.toast-modal{
+    z-index: 55555555 !important;
+}
+
+.swal2-container {
+    z-index: 99999999999999999999999 !important;
+  }
+.textfield-style{
+    color: white !important;
+    font-size: 20px !important;
+}
+
+
+
+
+
+
+
+
+

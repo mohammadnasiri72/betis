@@ -1,0 +1,1 @@
+export const mainDomain = 'https://bms.aitest2.ir'
