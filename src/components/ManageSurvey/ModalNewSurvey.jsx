@@ -1,14 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  Box,
+  Autocomplete,
+  Checkbox,
   Chip,
   FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
+  FormLabel,
   Switch,
   TextField,
 } from '@mui/material';
@@ -41,7 +39,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ModalNewSurvey({ setFlag, listService, valServiceMain }) {
+export default function ModalNewSurvey({ setFlag, listService }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [number, setNumber] = React.useState(1);
@@ -52,18 +50,11 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
 
   const { themeMode } = useSettings();
 
-  const e2p = (s) => s.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
-  function p2e(strNum, name) {
-    const pn = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    const en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-    let cache = strNum;
-    for (let i = 0; i < 10; i += 1) {
-      const regexFa = new RegExp(pn[i], 'g');
-      cache = cache.replace(regexFa, en[i]);
+  useEffect(() => {
+    if (listService.length > 0) {
+      setValService(listService);
     }
-    return cache;
-  }
+  }, [listService]);
 
   useEffect(() => {
     AOS.init();
@@ -81,7 +72,7 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
 
   const handleClickOpen = () => {
     setOpen(true);
-    // setValService(valServiceMain);
+    // Set all services as default when modal opens
   };
   const handleClose = () => {
     setOpen(false);
@@ -90,28 +81,33 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
 
   const resetState = () => {
     setNumber(1);
+    setBody('');
+    setIsActive(true);
+    setValService(listService);
   };
 
   // set new serviceRule
   const setNewServiceRule = () => {
     setIsLoading(true);
     const data = {
-      serviceId: valService.id,
-      number,
+      text: body,
+      isActive,
+      priority: number,
+      serviceIds: valService.map((item) => item.id),
     };
     axios
-      .post(`${mainDomain}/api/ServiceRule/Add`, data, {
+      .post(`${mainDomain}/api/SurveyQuestion/Add`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
-      .then((res) => {
+      .then(() => {
         setIsLoading(false);
-        handleClose();
+        // handleClose();
         setFlag((e) => !e);
         Toast.fire({
           icon: 'success',
-          text: 'قانون جدید با موفقیت ثبت شد',
+          text: 'سوال جدید با موفقیت ثبت شد',
           customClass: {
             container: 'toast-modal',
           },
@@ -133,7 +129,15 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
     const {
       target: { value },
     } = event;
-    setValService(typeof value === 'string' ? value.split(',') : value);
+    if (value.includes(0)) {
+      if (valService.length === 0) {
+        setValService(listService);
+      } else {
+        setValService([]);
+      }
+    } else {
+      setValService(typeof value === 'string' ? value.split(',') : value);
+    }
   };
 
   return (
@@ -205,40 +209,66 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
                 {errBody && <p className="text-red-500 text-xs text-start">*متن سوال را وارد کنید</p>}
               </div>
 
-              <div className=" w-full px-2 mt-3" dir="rtl">
+              <div className="w-full px-2 mt-5" dir="rtl">
                 <FormControl size="small" color="primary" className="w-full">
-                  <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-                    لیست خدمات
-                  </InputLabel>
-                  <Select
+                  
+
+                  <Autocomplete
+                   minRows={2}
                     multiple
-                    size="small"
-                    className="w-full"
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="لیست خدمات"
-                    color="primary"
+                    options={[{ id: 0, title: 'همه خدمات' }, ...listService]}
+                    getOptionLabel={(option) => option.title}
                     value={valService}
-                    onChange={handleChange}
-                    input={<OutlinedInput id="select-multiple-chip" label="لیست خدمات" />}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value.id} label={value.title} />
-                        ))}
-                      </Box>
-                    )}
-                  >
-                    {listService.map((e) => (
-                      <MenuItem key={e.id} value={e}>
-                        {e.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    onChange={(event, newValue) => {
+                      const clickedAll = newValue.some((e) => e.id === 0);
+                      const isAllSelected = valService.length === listService.length;
+
+                      if (clickedAll) {
+                        if (isAllSelected) {
+                          // اگر همه انتخاب بودن و دوباره "همه خدمات" زده شد → پاک کن
+                          setValService([]);
+                        } else {
+                          // همه آیتم‌ها انتخاب بشن ولی "همه خدمات" در اتوکمپلیت نمایش داده بشه
+                          setValService([...listService]);
+                        }
+                      } else {
+                        // حالت عادی انتخاب آیتم‌ها (بدون "همه خدمات")
+                        setValService(newValue.filter((e) => e.id !== 0));
+                      }
+                    }}
+                    disableCloseOnSelect
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    renderTags={(selected, getTagProps) =>
+                      selected.map((option, index) => (
+                        <Chip
+                          key={index}
+                          label={option.title}
+                          {...getTagProps({ index })}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onDelete={() => {
+                            const newSelected = valService.filter((item) => item.id !== option.id);
+                            setValService(newSelected);
+                          }}
+                        />
+                      ))
+                    }
+                    renderOption={(props, option, { selected }) => {
+                      const isAllSelected = valService.length === listService.length;
+                      const isAllOption = option.id === 0;
+
+                      return (
+                        <li {...props}>
+                          <Checkbox checked={isAllOption ? isAllSelected : selected} sx={{ mr: 1 }} />
+                          {option.title}
+                        </li>
+                      );
+                    }}
+                    renderInput={(params) => <TextField {...params} label="لیست خدمات" size="small" color="primary" />}
+                  />
                 </FormControl>
               </div>
 
-              <div className="flex items-start w-full mt-3">
+              <div className="flex items-start w-full mt-5">
                 <div className="flex relative sm:w-1/5 w-1/2 px-2">
                   <TextField
                     size="small"
@@ -253,10 +283,10 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
                       }
                     }}
                   />
-                  <div className="flex flex-col absolute left-0 top-0 h-full">
+                  <div className="flex flex-col absolute left-2 top-0 h-full">
                     <IoMdArrowDropup
                       onClick={() => setNumber(number * 1 + 1)}
-                      className="text-3xl cursor-pointer rounded-full relative top-0 right-0"
+                      className="text-3xl cursor-pointer rounded-full relative top-1 right-0"
                     />
                     <IoMdArrowDropdown
                       onClick={() => {
@@ -264,7 +294,7 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
                           setNumber(number - 1);
                         }
                       }}
-                      className="text-3xl cursor-pointer mt-3 rounded-full relative top-0 right-0"
+                      className="text-3xl cursor-pointer mt-3 rounded-full relative -top-1 right-0"
                     />
                   </div>
                 </div>
@@ -283,26 +313,24 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
             {isLoading && <SimpleBackdrop />}
           </DialogContent>
           <DialogActions>
-            <div className="absolute left-5 right-5 bottom-5">
-              <Button
-                size="large"
-                sx={{
-                  boxShadow: 'none',
-                  width: '100%',
-                  py: 1,
-                  backgroundColor: '#00005e',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: '#00007e',
-                  },
-                }}
-                variant="contained"
-                autoFocus
-                onClick={setNewServiceRule}
-              >
-                ثبsت
-              </Button>
-            </div>
+            <Button
+              size="large"
+              sx={{
+                boxShadow: 'none',
+                width: '100%',
+                py: 1,
+                backgroundColor: '#00005e',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#00007e',
+                },
+              }}
+              variant="contained"
+              autoFocus
+              onClick={setNewServiceRule}
+            >
+              ثبت
+            </Button>
           </DialogActions>
         </div>
       </BootstrapDialog>

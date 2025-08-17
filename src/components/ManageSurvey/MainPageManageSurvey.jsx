@@ -5,16 +5,17 @@ import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
+import BoxSurvey from './BoxSurvey';
 import ModalNewSurvey from './ModalNewSurvey';
 
 function MainPageManageSurvey() {
   const [isLoading, setIsLoading] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [valBuilding, setValBuilding] = useState({});
   const [listBuilding, setListBuilding] = useState([]);
   const [flag, setFlag] = useState(false);
   const [listService, setListService] = useState([]);
-  const [valService, setValService] = useState({});
+  const [listSurvey, setListSurvey] = useState([]);
+  const [valService, setValService] = useState(-1);
   const { themeMode } = useSettings();
 
   const url = useLocation();
@@ -52,11 +53,8 @@ function MainPageManageSurvey() {
           },
         })
         .then((res) => {
-          console.log(res);
-
-          if (res.data.length > 0 && res.data.filter((e) => e.typeId === 0 || e.typeId === 1)?.length > 0) {
+          if (res.data.length > 0) {
             setListService(res.data);
-            setValService(res.data[0]);
           }
           setIsLoading(false);
         })
@@ -65,6 +63,27 @@ function MainPageManageSurvey() {
         });
     }
   }, [valBuilding]);
+
+  //   get list Survey
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${mainDomain}/api/SurveyQuestion/GetList`, {
+        params: {
+          serviceId: valService !== -1 ? valService.id : valService,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        setListSurvey(res.data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, [valService]);
 
   return (
     <>
@@ -115,7 +134,9 @@ function MainPageManageSurvey() {
                 onChange={(e) => {
                   setValService(e.target.value);
                 }}
+                displayEmpty
               >
+                <MenuItem value={-1}>همه خدمات</MenuItem>
                 {listService.map((e) => (
                   <MenuItem key={e?.id} value={e}>
                     {e.title}
@@ -127,13 +148,19 @@ function MainPageManageSurvey() {
         </div>
         {checkClaims(url.pathname, 'post') && (
           <div>
-            <ModalNewSurvey
-              setFlag={setFlag}
-              listService={listService}
-              valServiceMain={valService}
-            />
+            <ModalNewSurvey setFlag={setFlag} listService={listService} valServiceMain={valService} />
           </div>
         )}
+      </div>
+      <div>
+        {listSurvey.length > 0 &&
+          listSurvey
+            .sort((a, b) => b.priority - a.priority)
+            .map((survey) => (
+              <div className="mt-8" key={survey.id}>
+                <BoxSurvey survey={survey} listService={listService} />
+              </div>
+            ))}
       </div>
     </>
   );
