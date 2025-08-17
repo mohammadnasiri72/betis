@@ -300,7 +300,7 @@ export default function ModalNewSurvey({ setFlag, listService, valServiceMain })
                 autoFocus
                 onClick={setNewServiceRule}
               >
-                ثبت
+                ثبsت
               </Button>
             </div>
           </DialogActions>
