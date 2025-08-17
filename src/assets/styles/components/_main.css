@@ -1,0 +1,31 @@
+
+  @font-face {
+    font-family: iransansRegular;
+    src: url("../fonts/iransans-regular.woff");
+    font-style: normal;
+  }
+  body{
+    font-family: iransansRegular !important;
+  }
+  .font-main{
+    font-family: iransansRegular !important;
+  }
+ 
+.apexcharts-tooltip .apexcharts-tooltip-y-group {
+margin-right: 10px !important;
+}
+.calendar .fc .custom-calendar-event{
+  direction: rtl !important;
+}
+.app-layout-modern{
+  overflow: hidden !important;
+}
+.select .select__control{
+  height: 0 !important;
+}
+.prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+
+ border-right: 4px solid #e5e7eb;
+ border-left: none;
+ padding-right: 10px !important;
+}

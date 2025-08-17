@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  text-align: center;
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+@font-face {
+  font-family: 'iransans';
+  src: url('./../../public/fonts/IRANSansWeb\(FaNum\)_Light.ttf');
+}
+
+* {
+  font-family: 'iransans' !important;
+}
+
+.toast-modal {
+  z-index: 55555555 !important;
+}
+
+.swal2-container {
+  z-index: 99999999999999999999999 !important;
+}
+.textfield-style {
+  color: white !important;
+  font-size: 20px !important;
+}
+.bg-reserv-service {
+  background-image: url('/public/images/srv.jpg');
+}
+
+.boxPending {
+  place-content: center;
+
+  --main-bg: conic-gradient(
+    from var(--border-angle),
+    rgb(255, 255, 255),
+    rgb(255, 255, 255) 5%,
+    rgb(255, 255, 255) 60%,
+    rgb(255, 255, 255) 95%
+  );
+
+  border: solid 5px transparent;
+  border-radius: 2em;
+  --gradient-border: conic-gradient(
+    from var(--border-angle),
+    transparent 25%,
+    rgb(255, 217, 0),
+    rgb(255, 251, 0) 99%,
+    transparent
+  );
+
+  background: var(--main-bg) padding-box, var(--gradient-border) border-box, var(--main-bg) border-box;
+
+  background-position: center center;
+
+  animation: bg-spin 3s linear infinite !important;
+}
+.boxProgress {
+  place-content: center;
+
+  --main-bg: conic-gradient(
+    from var(--border-angle),
+    rgb(255, 255, 255),
+    rgb(255, 255, 255) 5%,
+    rgb(255, 255, 255) 60%,
+    rgb(255, 255, 255) 95%
+  );
+
+  border: solid 5px transparent;
+  border-radius: 2em;
+  --gradient-border: conic-gradient(
+    from var(--border-angle),
+    transparent 25%,
+    rgb(0, 140, 255),
+    rgb(153, 0, 255) 99%,
+    transparent
+  );
+
+  background: var(--main-bg) padding-box, var(--gradient-border) border-box, var(--main-bg) border-box;
+
+  background-position: center center;
+
+  animation: bg-spin 3s linear infinite !important;
+}
+@keyframes bg-spin {
+  to {
+    --border-angle: 1turn;
+  }
+}
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0turn;
+}
+
+.logo {
+  animation: fadeInOut 3s infinite;
+}
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.custom-animation {
+  animation-duration: 4s !important;
+}
+
+.gradient-box {
+  background: linear-gradient(to bottom, rgb(243, 243, 243) 0%, white 20%);
+}
+.gradient-box-dark {
+  background: linear-gradient(to bottom, #212933 0%, #161c24 20%);
+}
+
+.ant-select {
+  z-index: 119999 !important;
+}
+.ant-select-item-option {
+  z-index: 119999 !important;
+}
+.ant-select-dropdown {
+  z-index: 119999 !important;
+}
+.ant-select-item {
+  z-index: 119999 !important;
+}
+

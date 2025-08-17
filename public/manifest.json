@@ -1,0 +1,20 @@
+{
+  "name": "اسپارا - سیستم مدیریت هوشمند ساختمان",
+  "short_name": "Espara",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "favicon/lgo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon/lgo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
