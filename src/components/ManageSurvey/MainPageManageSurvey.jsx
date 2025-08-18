@@ -1,10 +1,12 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Empty } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
+import SimpleBackdrop from '../backdrop';
 import BoxSurvey from './BoxSurvey';
 import ModalNewSurvey from './ModalNewSurvey';
 
@@ -66,6 +68,7 @@ function MainPageManageSurvey() {
 
   //   get list Survey
   useEffect(() => {
+    setListSurvey([]);
     setIsLoading(true);
     axios
       .get(`${mainDomain}/api/SurveyQuestion/GetList`, {
@@ -83,7 +86,7 @@ function MainPageManageSurvey() {
       .catch(() => {
         setIsLoading(false);
       });
-  }, [valService]);
+  }, [valService, flag]);
 
   return (
     <>
@@ -158,10 +161,19 @@ function MainPageManageSurvey() {
             .sort((a, b) => b.priority - a.priority)
             .map((survey) => (
               <div className="mt-8" key={survey.id}>
-                <BoxSurvey survey={survey} listService={listService} />
+                <BoxSurvey survey={survey} listService={listService} setFlag={setFlag} />
               </div>
             ))}
       </div>
+      <div>
+        {listSurvey.length === 0 && (
+          <div>
+            <Empty description={<span>سوالی ثبت نشده است</span>} />
+          </div>
+        )}
+      </div>
+
+      {isLoading && <SimpleBackdrop />}
     </>
   );
 }

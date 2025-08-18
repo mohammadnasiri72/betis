@@ -39,8 +39,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ModalNewSurvey({ setFlag, listService }) {
-  const [open, setOpen] = React.useState(false);
+export default function ModalEditSurvey({ setFlag, listService, open, setOpen, survey }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [number, setNumber] = React.useState(1);
   const [body, setBody] = React.useState('');
@@ -49,11 +48,21 @@ export default function ModalNewSurvey({ setFlag, listService }) {
   const [valService, setValService] = React.useState([]);
   const [errValService, setErrValService] = React.useState(false);
 
+  useEffect(() => {
+    if (survey.id) {
+      setBody(survey.text);
+      setIsActive(survey.isActive);
+      setNumber(survey.priority);
+    }
+  }, [survey]);
+
   const { themeMode } = useSettings();
 
   useEffect(() => {
     if (listService.length > 0) {
-      setValService(listService);
+      const ids = survey.serviceSurveyQuestions.map((obj) => obj.serviceId);
+      const filteredItems = listService.filter((item) => ids.includes(item.id));
+      setValService(filteredItems);
     }
   }, [listService]);
 
@@ -71,10 +80,6 @@ export default function ModalNewSurvey({ setFlag, listService }) {
     customClass: 'toast-modal',
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    // Set all services as default when modal opens
-  };
   const handleClose = () => {
     setOpen(false);
     resetState();
@@ -101,24 +106,25 @@ export default function ModalNewSurvey({ setFlag, listService }) {
     if (body && valService.length > 0) {
       setIsLoading(true);
       const data = {
+        id: survey.id,
         text: body,
         isActive,
         priority: number,
         serviceIds: valService.map((item) => item.id),
       };
       axios
-        .post(`${mainDomain}/api/SurveyQuestion/Add`, data, {
+        .put(`${mainDomain}/api/SurveyQuestion/Update`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
         .then(() => {
           setIsLoading(false);
-          resetState();
+          handleClose();
           setFlag((e) => !e);
           Toast.fire({
             icon: 'success',
-            text: 'سوال جدید با موفقیت ثبت شد',
+            text: 'ویرایش سوال با موفقیت انجام شد',
             customClass: {
               container: 'toast-modal',
             },
@@ -139,23 +145,6 @@ export default function ModalNewSurvey({ setFlag, listService }) {
 
   return (
     <>
-      <Button
-        onClick={handleClickOpen}
-        variant="contained"
-        id="basic-button"
-        sx={{
-          boxShadow: 'none',
-          backgroundColor: themeMode === 'dark' ? '#212b36' : '#eef2ff',
-          color: themeMode === 'dark' ? '#fff' : '#4f46e5',
-          '&:hover': {
-            backgroundColor: themeMode === 'dark' ? '#212436' : '#e0e7ff',
-            color: themeMode === 'dark' ? '#eee' : '#4f47e5',
-          },
-        }}
-      >
-        <FiPlusCircle className="text-xl" />
-        <span className="px-1 whitespace-nowrap">ثبت جدید</span>
-      </Button>
       <BootstrapDialog
         fullWidth
         sx={{ minHeight: '600px' }}
@@ -169,7 +158,7 @@ export default function ModalNewSurvey({ setFlag, listService }) {
             sx={{ m: 0, p: 2, textAlign: 'start' }}
             id="customized-dialog-title"
           >
-            ثبت نظرسنجی جدید
+            ویرایش نظرسنجی
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -370,7 +359,7 @@ export default function ModalNewSurvey({ setFlag, listService }) {
               autoFocus
               onClick={setNewServiceRule}
             >
-              ثبت
+              ویرایش
             </Button>
           </DialogActions>
         </div>
