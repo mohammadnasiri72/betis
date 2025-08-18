@@ -1,20 +1,19 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
-import CircleIcon from '@mui/icons-material/Circle';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Card, Collapse } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
+import { FaAngleLeft } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import ModalCancelMenu from './ModalCancelMenu';
-import useSettings from '../../../hooks/useSettings';
 
 export default function BoxMyMenu({ menu, setFlag }) {
   const [expanded, setExpanded] = useState(false);
   const [listServiceMenu, setListServiceMenu] = useState([]);
-
-  
 
   const { themeMode } = useSettings();
 
@@ -40,6 +39,8 @@ export default function BoxMyMenu({ menu, setFlag }) {
         .catch((err) => {});
     }
   };
+
+  
 
   return (
     <>
@@ -130,10 +131,19 @@ export default function BoxMyMenu({ menu, setFlag }) {
               <span className="text-xs">{menu.description}</span>
             </div>
           )}
+          {menu.statusId === 3 && (
+            <div className="flex justify-between items-center text-xs px-3">
+              <span>به سفارش خود امتیاز دهید</span>
+              <Link className="flex items-center gap-2 text-teal-500 hover:bg-teal-100 rounded-full px-3 py-1" to={`rate/${menu.id}`}>
+                <span>ثبت نظر</span>
+                <FaAngleLeft />
+              </Link>
+            </div>
+          )}
           <div className="flex justify-between items-center w-full p-2">
             <button
               onClick={handleExpandClick}
-              className='px-2 py-1 rounded-lg text-yellow-500 flex items-center duration-300 hover:text-yellow-600 text-sm'
+              className="px-2 py-1 rounded-lg text-yellow-500 flex items-center duration-300 hover:text-yellow-600 text-sm"
             >
               <span className="mt-1">مشاهده جزئیات سفارش</span>
               <ExpandMoreIcon
@@ -178,7 +188,7 @@ export default function BoxMyMenu({ menu, setFlag }) {
             <hr />
             <div className="flex justify-between py-2 px-5">
               <div className="text-start px-3 py-1 whitespace-nowrap">
-                <span className="text-xs">مجموع تعداد  : </span>
+                <span className="text-xs">مجموع تعداد : </span>
                 <span className="font-semibold text-xs">{menu.totalQuantity}</span>
               </div>
               <div className="text-start px-3 py-1 whitespace-nowrap">

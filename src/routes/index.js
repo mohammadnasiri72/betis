@@ -384,6 +384,12 @@ export default function Router() {
         {
           path: 'my-menu',
           element: <MyMenu accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+          children: [
+            {
+              path: 'rate/:number',
+              element: <MyMenu flagRefreshPage={flagRefreshPage} />,
+            },
+          ],
         },
         {
           path: 'my-guest',
