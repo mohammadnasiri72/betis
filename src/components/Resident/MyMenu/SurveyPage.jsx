@@ -1,19 +1,37 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button } from '@mui/material';
+import { Divider, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
+import { IoCloseOutline } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router';
+import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
+import RatingSurvey from './RatingSurvey';
+
+// import sweet alert 2
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-start',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  customClass: 'toast-modal',
+});
 
 function SurveyPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState({});
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [listSurvey, setListSurvey] = useState([]);
+  const [data, setData] = useState([]);
+  const [listServiceMenu, setListServiceMenu] = useState([]);
 
   const { themeMode } = useSettings();
 
@@ -26,10 +44,8 @@ function SurveyPage() {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
-  console.log(order);
-  // get order
+  // get order && listSurvey
   useEffect(() => {
-    setIsLoading(true);
     axios
       .get(`${mainDomain}/api/Order/Get/${id}`, {
         headers: {
@@ -37,24 +53,86 @@ function SurveyPage() {
         },
       })
       .then((res) => {
-        setIsLoading(false);
         setOrder(res.data);
+
+        axios
+          .get(`${mainDomain}/api/SurveyAnswer/Questions/${res?.data?.serviceId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          })
+          .then((res) => {
+            setListSurvey(res.data);
+            if (res.data.length === 0) {
+              Toast.fire({
+                icon: 'error',
+                text: 'نظرسنجی در حال حاضر غیرفعال می‌باشد. لطفاً در زمان دیگری مراجعه فرمایید',
+                customClass: {
+                  container: 'toast-modal',
+                },
+              });
+              navigate('/resident/my-menu');
+            }
+          })
+          .catch((err) => {
+            Toast.fire({
+              icon: 'error',
+              text: err.response ? err.response.data : 'خطای شبکه',
+              customClass: {
+                container: 'toast-modal',
+              },
+            });
+            navigate('/resident/my-menu');
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       })
-      .catch(() => {
+      .catch((err) => {
         setIsLoading(false);
-        navigate('/404');
+        Toast.fire({
+          icon: 'error',
+          text: err.response ? err.response.data : 'خطای شبکه',
+          customClass: {
+            container: 'toast-modal',
+          },
+        });
+        navigate('/resident/my-menu');
       });
   }, []);
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+
     try {
-      await axios.post('/api/ratings', {
-        orderId: order.id,
-        score: rating,
-        comment,
-      });
-      navigate('/thank-you'); // انتقال به صفحه تشکر پس از ثبت
+      await axios
+        .post(`${mainDomain}/api/SurveyAnswer/Order`, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          Toast.fire({
+            icon: 'success',
+            text: 'نظر شما با موفقیت ثبت گردید. از مشارکت شما سپاسگزاریم',
+            customClass: {
+              container: 'toast-modal',
+            },
+          });
+          navigate('/resident/my-menu');
+        })
+        .catch((err) => {
+          Toast.fire({
+            icon: 'error',
+            text: err.response ? err.response.data : 'خطای شبکه',
+            customClass: {
+              container: 'toast-modal',
+            },
+          });
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
     } catch (error) {
       console.error('Error submitting rating:', error);
     } finally {
@@ -62,10 +140,37 @@ function SurveyPage() {
     }
   };
 
-  const handleExpandClick = () => {
-    // setExpanded(!expanded);
-   
+  const handleOpenModal = () => {
+    setOpenModal(true);
   };
+
+  useEffect(() => {
+    if (order.serviceId) {
+      axios
+        .get(`${mainDomain}/api/ServiceMenu/GetList`, {
+          params: {
+            serviceId: order.serviceId,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          setListServiceMenu(res.data);
+        })
+        .catch((err) => {});
+    }
+  }, [order]);
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="flex justify-center items-center w-full h-60 max-w-md mx-auto">
+          <Spin />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -75,33 +180,46 @@ function SurveyPage() {
         </Button>
       </div>
       {order.id && (
-        <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-          <div className="flex gap-2">
-            <img
-              src={`${mainDomain}${order.serviceImageSrc}`}
-              alt={order.serviceTitle}
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <h1
-              className={`text-sm font-medium flex flex-col items-start justify-center ${
-                themeMode === 'dark' ? 'text-[#fff9]' : 'text-[#0009]'
-              }`}
+        <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <img
+                src={`${mainDomain}${order.serviceImageSrc}`}
+                alt={order.serviceTitle}
+                className="sm:w-16 w-12 sm:h-16 h-12 rounded-full object-cover"
+              />
+              <h1
+                className={`text-sm font-medium flex flex-col items-start justify-center ${
+                  themeMode === 'dark' ? 'text-[#fff9]' : 'text-[#0009]'
+                }`}
+              >
+                <span>امتیاز به سفارش از </span>
+                <span className="font-bold !text-[#000]">{order.serviceTitle}</span>
+              </h1>
+            </div>
+            <button
+              type="button"
+              onClick={handleOpenModal}
+              className="flex text-xs items-center gap-2 text-teal-500 duration-300 hover:text-teal-600"
             >
-              <span>امتیاز به سفارش از </span>
-              <span className="font-bold !text-[#000]">{order.serviceTitle}</span>
-            </h1>
+              <span>جزئیات سفارش</span>
+              <FaAngleLeft />
+            </button>
           </div>
           {/* اطلاعات سفارش */}
-          <div className="my-6 p-4 bg-gray-50 rounded-lg">
+          <div
+            className={` p-4 bg-gray-50 fixed bottom-[95px]  left-0 max-w-md mx-auto right-0 duration-300 overflow-auto z-[60] ${
+              openModal ? 'top-[30%]' : 'top-[100%]'
+            }`}
+          >
             <div className="flex items-center justify-between text-sm pb-3">
               <span className="font-semibold">اطلاعات سفارش</span>
-              <button
-                onClick={handleExpandClick}
-                className="flex items-center gap-2 text-teal-500 px-3 py-1 rounded-full hover:bg-teal-100"
-              >
-                <span>جزئیات</span>
-                <FaAngleLeft />
-              </button>
+              <IoCloseOutline
+                className="text-2xl cursor-pointer"
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+              />
             </div>
 
             <div>
@@ -116,7 +234,8 @@ function SurveyPage() {
                   <div className=" w-2/5 flex justify-start items-center">
                     <img
                       className="w-10 h-10 rounded-full object-cover"
-                      src={`${mainDomain}${order.serviceImageSrc}`}
+                      // src={`${mainDomain}${order.serviceImageSrc}`}
+                      src={mainDomain + listServiceMenu.find((ev) => ev.id === e.itemId)?.imageSrc}
                       alt=""
                     />
 
@@ -147,28 +266,20 @@ function SurveyPage() {
                 </div>
               </div>
             </div>
-
-           
           </div>
-
+          <div
+            onClick={() => {
+              setOpenModal(false);
+            }}
+            className={`fixed left-0 right-0 top-0 bottom-0 bg-[#0008] z-50 ${openModal ? 'block' : 'hidden'}`}
+          />
+          <Divider />
           {/* سیستم امتیازدهی */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">به این سفارش چند ستاره می‌دهید؟</h3>
-            <div className="flex justify-center space-x-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => setRating(star)}
-                  className={`text-3xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-          </div>
+          {listSurvey.length > 0 &&
+            listSurvey.map((e) => <RatingSurvey key={e.id} data={data} setData={setData} order={order} survey={e} />)}
 
           {/* نظر کاربر */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-lg font-semibold mb-2">نظر شما (اختیاری)</label>
             <textarea
               value={comment}
@@ -177,14 +288,17 @@ function SurveyPage() {
               rows="4"
               placeholder="نظر خود را درباره سفارش بنویسید..."
             />
-          </div>
+          </div> */}
 
           {/* دکمه ثبت */}
           <button
+            type="button"
             onClick={handleSubmit}
-            disabled={rating === 0 || isSubmitting}
+            disabled={data.length !== listSurvey.length}
             className={`w-full py-3 rounded-lg font-bold ${
-              rating === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
+              data.length !== listSurvey.length
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-green-500 hover:bg-green-600 text-white'
             }`}
           >
             {isSubmitting ? 'در حال ثبت...' : 'ثبت امتیاز'}

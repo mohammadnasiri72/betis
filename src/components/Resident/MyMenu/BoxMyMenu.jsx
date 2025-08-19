@@ -3,6 +3,7 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Card, Collapse } from '@mui/material';
+import { Flex, Rate } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
@@ -39,8 +40,6 @@ export default function BoxMyMenu({ menu, setFlag }) {
         .catch((err) => {});
     }
   };
-
-  
 
   return (
     <>
@@ -131,15 +130,16 @@ export default function BoxMyMenu({ menu, setFlag }) {
               <span className="text-xs">{menu.description}</span>
             </div>
           )}
-          {menu.statusId === 3 && (
-            <div className="flex justify-between items-center text-xs px-3">
-              <span>به سفارش خود امتیاز دهید</span>
-              <Link className="flex items-center gap-2 text-teal-500 hover:bg-teal-100 rounded-full px-3 py-1" to={`rate/${menu.id}`}>
+          {menu.statusId === 3 && menu.surveyScore === 0 && (
+            <div className="flex justify-between items-center text-xs px-3 pt-3">
+              <span className="text-lg">به سفارش خود امتیاز دهید</span>
+              <Link className="flex items-center gap-2 text-teal-500 hover:text-teal-600 " to={`rate/${menu.id}`}>
                 <span>ثبت نظر</span>
                 <FaAngleLeft />
               </Link>
             </div>
           )}
+
           <div className="flex justify-between items-center w-full p-2">
             <button
               onClick={handleExpandClick}
@@ -153,6 +153,19 @@ export default function BoxMyMenu({ menu, setFlag }) {
               />
             </button>
             {menu.statusId === 1 && <ModalCancelMenu setFlag={setFlag} menu={menu} />}
+            {menu.statusId === 3 && menu.surveyScore !== 0 && (
+              <Flex gap="middle" vertical>
+                <Rate
+                  allowHalf
+                  disabled
+                  style={{
+                    fontSize: '20px',
+                  }}
+                  value={menu.surveyScore}
+                  className="rtl-rate"
+                />
+              </Flex>
+            )}
           </div>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <div className="flex justify-between items-center text-xs px-3 py-1">

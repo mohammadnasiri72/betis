@@ -61,7 +61,7 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
           setIsLoading(false);
         });
     }
-  }, [accountResident, flag, numPages, flagRefreshPage , location.pathname]);
+  }, [accountResident, flag, numPages, flagRefreshPage, location.pathname]);
 
   const navigate = useNavigate();
 
@@ -145,7 +145,7 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
     );
   }
   if (stepPage === 1) {
-    return <SurveyPage listMyMenu={listMyMenu}/>;
+    return <SurveyPage listMyMenu={listMyMenu} />;
   }
   return <>notFound</>;
 }

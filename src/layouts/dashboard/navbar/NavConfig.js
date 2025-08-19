@@ -13,6 +13,7 @@ import { FaUsers, FaUserTie, FaWarehouse } from 'react-icons/fa';
 import { FaBuildingCircleExclamation, FaBuildingUser, FaMoneyBillTransfer, FaSquareParking } from 'react-icons/fa6';
 import { GiPayMoney } from 'react-icons/gi';
 import { GoHomeFill } from 'react-icons/go';
+import { HiClipboardDocumentList } from 'react-icons/hi2';
 import { ImUsers, ImUserTie } from 'react-icons/im';
 import { LuCalendarCheck, LuCalendarClock } from 'react-icons/lu';
 import { MdOutlineMiscellaneousServices, MdPets } from 'react-icons/md';
@@ -96,7 +97,8 @@ const sidebarConfig = [
     items: [
       { title: 'مدیریت پرسنل', path: '/dashboard/admin-staff', icon: <ImUserTie /> },
       { title: 'مدیریت نقش ها', path: '/dashboard/admin-role', icon: <ImUsers /> },
-      { title: 'مدیریت نظرسنجی', path: '/dashboard/admin-survey', icon: <RiSurveyFill /> },
+      { title: 'سوالات نظرسنجی', path: '/dashboard/admin-surveyquestion', icon: <RiSurveyFill /> },
+      { title: 'پاسخ های نظرسنجی', path: '/dashboard/admin-surveyanswer', icon: <HiClipboardDocumentList /> },
       {
         title: 'مدیریت انتقاد و پیشنهاد',
         path: '/dashboard/admin-feedback',
@@ -112,7 +114,6 @@ const sidebarConfig = [
         path: '/dashboard/admin-basicInfo',
         icon: <BsInfoSquareFill />,
       },
-
 
       { title: 'مدیریت دسترسی', path: '/dashboard/admin-roleClaim', icon: <BiUniversalAccess /> },
     ],

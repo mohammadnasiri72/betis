@@ -1,12 +1,15 @@
-import { Box, Chip, Divider, Paper, Typography } from '@mui/material';
+import { Chip, Divider, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FcSurvey } from 'react-icons/fc';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
+import { checkClaims } from '../../utils/claims';
 import ActionSurvey from './ActionSurvey';
 
 function BoxSurvey({ survey, listService, setFlag }) {
   const [filteredItems, setFilteredItems] = useState([]);
   const { themeMode } = useSettings();
+  const url = useLocation();
 
   useEffect(() => {
     const ids = survey.serviceSurveyQuestions.map((obj) => obj.serviceId);
@@ -25,9 +28,11 @@ function BoxSurvey({ survey, listService, setFlag }) {
             <FcSurvey className="text-2xl" />
             <span className="font-semibold">{survey.text}</span>
           </div>
-          <div className="">
-            <ActionSurvey setFlag={setFlag} listService={listService} survey={survey} />
-          </div>
+          {(checkClaims(url.pathname, 'put') || checkClaims(url.pathname, 'delete')) && (
+            <div className="">
+              <ActionSurvey setFlag={setFlag} listService={listService} survey={survey} />
+            </div>
+          )}
         </div>
 
         <Divider sx={{ my: 1 }} />

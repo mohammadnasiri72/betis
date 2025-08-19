@@ -134,3 +134,13 @@ body {
   z-index: 119999 !important;
 }
 
+.rtl-rate {
+  direction: ltr !important;
+}
+
+/* تغییر رنگ ستاره‌های غیرفعال */
+.ant-rate-star-zero .ant-rate-star-first,
+.ant-rate-star-zero .ant-rate-star-second {
+  color: #d9d9d9 !important; /* رنگ با شفافیت */
+  text-shadow: 0 0 2px #d9d9d9 !important; /* حاشیه برای وضوح بیشتر */
+}

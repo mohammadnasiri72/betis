@@ -10,8 +10,8 @@ import SimpleBackdrop from '../backdrop';
 import BoxSurvey from './BoxSurvey';
 import ModalNewSurvey from './ModalNewSurvey';
 
-function MainPageManageSurvey() {
-  const [isLoading, setIsLoading] = useState(false);
+function MainPageManageSurveyQuestion() {
+  const [isLoading, setIsLoading] = useState(true);
   const [valBuilding, setValBuilding] = useState({});
   const [listBuilding, setListBuilding] = useState([]);
   const [flag, setFlag] = useState(false);
@@ -24,7 +24,7 @@ function MainPageManageSurvey() {
 
   //   get list building
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     axios
       .get(`${mainDomain}/api/Building/GetList`, {
         headers: {
@@ -32,19 +32,19 @@ function MainPageManageSurvey() {
         },
       })
       .then((res) => {
-        setIsLoading(false);
+        // setIsLoading(false);
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
       .catch(() => {
-        setIsLoading(false);
+        // setIsLoading(false);
       });
   }, []);
 
   //   get list service
   useEffect(() => {
     if (valBuilding?.id) {
-      setIsLoading(true);
+      // setIsLoading(true);
       axios
         .get(`${mainDomain}/api/Service/GetList`, {
           params: {
@@ -58,10 +58,10 @@ function MainPageManageSurvey() {
           if (res.data.length > 0) {
             setListService(res.data);
           }
-          setIsLoading(false);
+          // setIsLoading(false);
         })
         .catch(() => {
-          setIsLoading(false);
+          // setIsLoading(false);
         });
     }
   }, [valBuilding]);
@@ -81,9 +81,12 @@ function MainPageManageSurvey() {
       })
       .then((res) => {
         setListSurvey(res.data);
-        setIsLoading(false);
+        // setIsLoading(false);
       })
       .catch(() => {
+        // setIsLoading(false);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, [valService, flag]);
@@ -157,6 +160,7 @@ function MainPageManageSurvey() {
       </div>
       <div>
         {listSurvey.length > 0 &&
+          !isLoading &&
           listSurvey
             .sort((a, b) => b.priority - a.priority)
             .map((survey) => (
@@ -166,7 +170,7 @@ function MainPageManageSurvey() {
             ))}
       </div>
       <div>
-        {listSurvey.length === 0 && (
+        {listSurvey.length === 0 && !isLoading && (
           <div>
             <Empty description={<span>سوالی ثبت نشده است</span>} />
           </div>
@@ -178,4 +182,4 @@ function MainPageManageSurvey() {
   );
 }
 
-export default MainPageManageSurvey;
+export default MainPageManageSurveyQuestion;

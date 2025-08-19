@@ -38,7 +38,8 @@ import ManageServiceRule from '../pages/ManageServiceRule';
 import ManageServiceTime from '../pages/ManageServiceTime';
 import ManageSomman from '../pages/ManageSomman';
 import ManageStaff from '../pages/ManageStaff';
-import ManageSurvey from '../pages/ManageSurvey';
+import ManageSurveyanswer from '../pages/ManageSurveyanswer';
+import ManageSurveyquestion from '../pages/ManageSurveyquestion';
 import ManageUnit from '../pages/ManageUnit';
 import ManageVehicle from '../pages/ManageVehicle';
 import ManageWarehouse from '../pages/ManageWarehouse';
@@ -257,8 +258,12 @@ export default function Router() {
       element: <ManageRole />,
     },
     {
-      path: 'admin-survey',
-      element: <ManageSurvey />,
+      path: 'admin-surveyquestion',
+      element: <ManageSurveyquestion />,
+    },
+    {
+      path: 'admin-surveyanswer',
+      element: <ManageSurveyanswer />,
     },
     {
       path: 'admin-serviceMenu',
@@ -268,7 +273,7 @@ export default function Router() {
       path: 'admin-roleClaim',
       element: <ManageRoleClaim />,
     },
-    
+
     {
       path: 'admin-guest',
       element: <ManageGuest />,
@@ -707,13 +712,23 @@ export default function Router() {
             ),
         },
         {
-          path: 'admin-survey',
+          path: 'admin-surveyquestion',
           element:
-            !localStorage.getItem('claims')?.includes('admin-survey:') &&
+            !localStorage.getItem('claims')?.includes('admin-surveyquestion:') &&
             !localStorage.getItem('roles')?.includes('Admin') ? (
               <Navigate to="/404" replace />
             ) : (
-              <ManageSurvey />
+              <ManageSurveyquestion />
+            ),
+        },
+        {
+          path: 'admin-surveyanswer',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-surveyAnswer:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageSurveyanswer />
             ),
         },
 
