@@ -57,6 +57,7 @@ import ResultPayment from '../pages/ResultPayment';
 import HomePage from '../pages/homePage';
 import ManageResidents from '../pages/manageResidents';
 import { mainDomain } from '../utils/mainDomain';
+import ServiceHome from '../pages/ServiceHome';
 
 // ----------------------------------------------------------------------
 
@@ -376,6 +377,10 @@ export default function Router() {
         {
           path: 'my-reserve',
           element: <MyReserve accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+        },
+        {
+          path: 'service-home',
+          element: <ServiceHome accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
         },
         {
           path: 'manageResidents',

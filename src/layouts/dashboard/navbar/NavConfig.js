@@ -4,20 +4,34 @@ import {
   BsBagCheckFill,
   BsBuildingFillGear,
   BsCardList,
+  BsFillHouseGearFill,
+  BsFillInfoCircleFill,
   BsFillLightningChargeFill,
   BsInfoSquareFill,
   BsMotherboardFill,
   BsShieldLock,
 } from 'react-icons/bs';
-import { FaUsers, FaUserTie, FaWarehouse } from 'react-icons/fa';
+import {
+  FaCar,
+  FaClipboardList,
+  FaCommentAlt,
+  FaMoneyBillWave,
+  FaTags,
+  FaUsers,
+  FaUserTie,
+  FaWarehouse,
+} from 'react-icons/fa';
 import { FaBuildingCircleExclamation, FaBuildingUser, FaMoneyBillTransfer, FaSquareParking } from 'react-icons/fa6';
 import { GiPayMoney } from 'react-icons/gi';
 import { GoHomeFill } from 'react-icons/go';
-import { HiClipboardDocumentList } from 'react-icons/hi2';
+import { HiClipboardList } from 'react-icons/hi';
+import { HiClipboardDocumentList, HiMiniUsers } from 'react-icons/hi2';
 import { ImUsers, ImUserTie } from 'react-icons/im';
+import { IoIosListBox } from 'react-icons/io';
+import { IoWallet } from 'react-icons/io5';
 import { LuCalendarCheck, LuCalendarClock } from 'react-icons/lu';
-import { MdOutlineMiscellaneousServices, MdPets } from 'react-icons/md';
-import { RiMoneyDollarBoxFill, RiSurveyFill } from 'react-icons/ri';
+import { MdManageAccounts, MdOutlineMiscellaneousServices, MdOutlinePets, MdPets } from 'react-icons/md';
+import { RiArtboardFill, RiMoneyDollarBoxFill, RiSurveyFill } from 'react-icons/ri';
 
 const sidebarConfig = [
   {
@@ -126,88 +140,80 @@ export const sidebarResident = [
   {
     title: 'خانه',
     path: 'home',
-    icon: '/images/home.svg',
-    iconDark: '/images/home-dark.svg',
+    icon: <GoHomeFill className="text-3xl" />,
   },
   {
     title: 'منو خدمات',
     path: 'menu-service',
-    icon: '/images/shopping-list.svg',
-    iconDark: '/images/shopping-list-dark.svg',
+    icon: <FaClipboardList className="text-xl" />,
   },
   {
     title: 'سفارشات من',
     path: 'my-menu',
-    icon: '/images/shopping-list.svg',
-    iconDark: '/images/shopping-list-dark.svg',
+    icon: <HiClipboardList className="text-xl" />,
   },
   {
     title: 'رزرو مشاعات',
     path: 'reserv-services',
-    icon: '/images/reserved.svg',
-    iconDark: '/images/reserved-dark.svg',
+    icon: <FaTags className="text-xl" />,
   },
   {
     title: 'رزرو های من',
     path: 'my-reserve',
-    icon: '/images/shopping-list-1.svg',
-    iconDark: '/images/shopping-list-1-dark.svg',
+    icon: <IoIosListBox className="text-xl" />,
   },
+
   {
     title: 'کیف پول من',
     path: 'my-wallet',
-    icon: '/images/wallet.svg',
-    iconDark: '/images/wallet-dark.svg',
+    icon: <IoWallet className="text-xl" />,
   },
   {
     title: 'بدهی من',
     path: 'my-debt',
-    icon: '/images/debt.svg',
-    iconDark: '/images/debt-dark.svg',
+    icon: <FaMoneyBillWave className="text-xl" />,
   },
 
   {
     title: 'حیوانات خانگی من',
     path: 'my-pet',
-    icon: '/images/pawprint.svg',
-    iconDark: '/images/pawprint-dark.svg',
+    icon: <MdOutlinePets className="text-xl" />,
   },
   {
     title: 'وسیله نقلیه من',
     path: 'my-vehicle',
-    icon: '/images/sports-car.svg',
-    iconDark: '/images/sports-car-dark.svg',
+    icon: <FaCar className="text-xl" />,
   },
 
   {
     title: 'مهمانان من',
     path: 'my-guest',
-    icon: '/images/users.svg',
-    iconDark: '/images/users-dark.svg',
+    icon: <HiMiniUsers className="text-xl" />,
   },
   {
     title: 'اطلاعات واحد',
     path: 'infoUnit',
-    icon: '/images/Group.svg',
-    iconDark: '/images/Group-dark.svg',
+    icon: <BsFillInfoCircleFill className="text-xl" />,
   },
 
   {
     title: 'تابلو اعلانات',
     path: 'boardNotice',
-    icon: '/images/board-notic-dark.svg',
-    iconDark: '/images/board-notic.svg',
+    icon: <RiArtboardFill className="text-xl" />,
   },
   {
     title: 'نظرات',
     path: 'feedback',
-    icon: '/images/bubble-chat.svg',
-    iconDark: '/images/bubble-chat-dark.svg',
+    icon: <FaCommentAlt className="text-xl" />,
   },
   {
     title: 'مدیریت ساکنین',
     path: 'manageResidents',
-    icon: '/images/bubble-chat.svg',
-    iconDark: '/images/bubble-chat-dark.svg',
+    icon: <MdManageAccounts className="text-xl" />,
+  },
+  {
+    title: 'آگهی من',
+    path: 'service-home',
+    icon: <BsFillHouseGearFill className="text-xl" />,
   },
 ];

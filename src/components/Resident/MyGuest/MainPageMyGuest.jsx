@@ -63,7 +63,7 @@ export default function MainPageMyGuest({ accountResident, flagRefreshPage }) {
       </div>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto">
         <p
-          style={{ color: themeMode === 'dark' ? '#fff' : '' }}
+          style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
           className="text-[1.1rem] font-semibold whitespace-nowrap"
         >
           مهمان من

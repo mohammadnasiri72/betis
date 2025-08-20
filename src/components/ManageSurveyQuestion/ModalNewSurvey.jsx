@@ -73,7 +73,6 @@ export default function ModalNewSurvey({ setFlag, listService }) {
 
   const handleClickOpen = () => {
     setOpen(true);
-    // Set all services as default when modal opens
   };
   const handleClose = () => {
     setOpen(false);

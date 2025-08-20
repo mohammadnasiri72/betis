@@ -134,6 +134,16 @@ body {
   z-index: 119999 !important;
 }
 
+.ant-modal {
+  z-index: 1300 !important;
+}
+.ant-modal-wrap {
+  z-index: 1300 !important;
+}
+.ant-modal-mask {
+  z-index: 1300 !important;
+}
+
 .rtl-rate {
   direction: ltr !important;
 }

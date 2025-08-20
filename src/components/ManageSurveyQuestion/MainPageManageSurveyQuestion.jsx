@@ -97,7 +97,7 @@ function MainPageManageSurveyQuestion() {
         style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
         className="sm:text-2xl text-lg font-semibold whitespace-nowrap"
       >
-        مدیریت نظرسنجی
+        مدیریت سوالات نظرسنجی
       </h3>
       <div className="flex justify-between mb-3 py-2 items-start px-2">
         <div className="flex flex-wrap items-center w-full">

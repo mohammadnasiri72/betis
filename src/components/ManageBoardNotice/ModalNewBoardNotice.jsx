@@ -371,7 +371,7 @@ export default function ModalNewBoardNotice({ setFlag, valBuilding, type }) {
         <DialogTitle
           sx={{ m: 0, p: 2, textAlign: 'start' }}
           id="customized-dialog-title"
-          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100'}
+          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-black'}
         >
           اعلان جدید اضافه کنید
         </DialogTitle>

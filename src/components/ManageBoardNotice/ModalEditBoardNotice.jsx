@@ -26,10 +26,10 @@ import axios from 'axios';
 import * as React from 'react';
 import { MdDriveFolderUpload } from 'react-icons/md';
 import Swal from 'sweetalert2';
+import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import ProgressBarUpload from '../ManageDebt/ProgressBarUpload';
 import SimpleBackdrop from '../backdrop';
-import useSettings from '../../hooks/useSettings';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -349,7 +349,6 @@ export default function ModalEditBoardNotice({ setFlag, valBuilding, handleClose
 
   return (
     <>
-      
       <BootstrapDialog
         sx={{ minHeight: 600 }}
         onClose={handleClose}
@@ -359,7 +358,7 @@ export default function ModalEditBoardNotice({ setFlag, valBuilding, handleClose
         <DialogTitle
           sx={{ m: 0, p: 2, textAlign: 'start' }}
           id="customized-dialog-title"
-          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100'}
+          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-black'}
         >
           ویرایش اعلان
         </DialogTitle>
