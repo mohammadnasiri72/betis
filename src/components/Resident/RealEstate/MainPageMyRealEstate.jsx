@@ -5,20 +5,46 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import useSettings from '../../hooks/useSettings';
-import { mainDomain } from '../../utils/mainDomain';
+import useSettings from '../../../hooks/useSettings';
+import { mainDomain } from '../../../utils/mainDomain';
+import SimpleBackdrop from '../../backdrop';
 import BoxRealEstate from './BoxRealEstate';
 import ModalNewSalesAd from './ModalNewSalesAd';
-import SimpleBackdrop from '../backdrop';
 
-MainPageServiceHome.propTypes = {
+MainPageMyRealEstate.propTypes = {
   accountResident: PropTypes.object,
   flagRefreshPage: PropTypes.bool,
 };
-function MainPageServiceHome({ accountResident, flagRefreshPage }) {
+function MainPageMyRealEstate({ accountResident, flagRefreshPage }) {
   const [flag, setFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listMyRealEstate, setListMyRealEstate] = useState([]);
+  const [typeRealEstate, setTypeRealEstate] = useState({});
+  const [subjectsRealEstate, setSubjectsRealEstate] = useState({});
+  const [statusesRealEstate, setStatusesRealEstate] = useState({});
+
+  const statusArray = Object.entries(statusesRealEstate).map(([key, value]) => ({
+  id: Number(key),
+  title: value
+}));
+
+
+
+  useEffect(() => {
+    const request1 = axios.get(`${mainDomain}/api/RealEstate/types`);
+    const request2 = axios.get(`${mainDomain}/api/RealEstate/subjects`);
+    const request3 = axios.get(`${mainDomain}/api/RealEstate/statuses`);
+
+    Promise.all([request1, request2, request3])
+      .then((responses) => {
+        setTypeRealEstate(responses[0].data);
+        setSubjectsRealEstate(responses[1].data);
+        setStatusesRealEstate(responses[2].data);
+      })
+      .catch((error) => {
+        console.error('خطا در دریافت داده:', error);
+      });
+  }, []);
 
   useEffect(() => {
     if (accountResident?.id) {
@@ -61,13 +87,25 @@ function MainPageServiceHome({ accountResident, flagRefreshPage }) {
           >
             آگهی من
           </h1>
-          <ModalNewSalesAd unitId={accountResident.id} setFlag={setFlag} />
+          <ModalNewSalesAd
+            unitId={accountResident.id}
+            setFlag={setFlag}
+            typeRealEstate={typeRealEstate}
+            subjectsRealEstate={subjectsRealEstate}
+          />
         </div>
         <Divider />
         {listMyRealEstate.length > 0 &&
           listMyRealEstate.map((e) => (
             <div key={e.id}>
-              <BoxRealEstate realEstate={e} setFlag={setFlag} unitId={accountResident.id}/>
+              <BoxRealEstate
+                realEstate={e}
+                setFlag={setFlag}
+                unitId={accountResident.id}
+                typeRealEstate={typeRealEstate}
+                subjectsRealEstate={subjectsRealEstate}
+                statusArray={statusArray}
+              />
             </div>
           ))}
       </div>
@@ -76,4 +114,4 @@ function MainPageServiceHome({ accountResident, flagRefreshPage }) {
   );
 }
 
-export default MainPageServiceHome;
+export default MainPageMyRealEstate;

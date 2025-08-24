@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Button, Modal } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -20,17 +20,20 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-ModalNewSalesAd.propTypes = {
-  unitId: PropTypes.number,
+ModalNewServiceHome.propTypes = {
+  listUnit: PropTypes.array,
   setFlag: PropTypes.func,
+  typeRealEstate: PropTypes.object,
+  subjectsRealEstate: PropTypes.object,
 };
-function ModalNewSalesAd({ unitId, setFlag }) {
+function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEstate }) {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
-  const [typeRealEstate, setTypeRealEstate] = useState({});
+  const [valUnit, setValUnit] = useState('');
+  const [errValUnit, setErrValUnit] = useState(false);
+
   const [valTypeRealEstate, setValTypeRealEstate] = useState(1);
-  const [subjectsRealEstate, setSubjectsRealEstate] = useState({});
+
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(1);
   const [amount, setAmount] = useState('');
   const [errAmount, setErrAmount] = useState(false);
@@ -67,10 +70,13 @@ function ModalNewSalesAd({ unitId, setFlag }) {
     if (!amount) {
       setErrAmount(true);
     }
+    if (!valUnit.id) {
+      setErrValUnit(true);
+    }
 
-    if (amount) {
+    if (amount && valUnit.id) {
       const data = {
-        unitId,
+        unitId: valUnit.id,
         typeId: valTypeRealEstate,
         subjectId: valSubjectsRealEstate,
         description: desc,
@@ -110,26 +116,6 @@ function ModalNewSalesAd({ unitId, setFlag }) {
     }
   };
 
-  useEffect(() => {
-    if (open) {
-      setLoading(true);
-      const request1 = axios.get(`${mainDomain}/api/RealEstate/types`);
-      const request2 = axios.get(`${mainDomain}/api/RealEstate/subjects`);
-
-      Promise.all([request1, request2])
-        .then((responses) => {
-          setTypeRealEstate(responses[0].data);
-          setSubjectsRealEstate(responses[1].data);
-        })
-        .catch((error) => {
-          console.error('خطا در دریافت داده:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [open]);
-
   const optionsType = Object.entries(typeRealEstate).map(([key, value]) => ({
     id: parseInt(key),
     label: value,
@@ -146,6 +132,23 @@ function ModalNewSalesAd({ unitId, setFlag }) {
         <FiPlusCircle className="text-xl" />
         <span className="px-1 whitespace-nowrap">ثبت جدید</span>
       </Button>
+      {/* <Button
+              onClick={handleClickOpen}
+              variant="contained"
+              id="basic-button"
+              sx={{
+                boxShadow: 'none',
+                backgroundColor: themeMode === 'dark' ? '#212b36' : '#eef2ff',
+                color: themeMode === 'dark' ? '#fff' : '#4f46e5',
+                '&:hover': {
+                  backgroundColor: themeMode === 'dark' ? '#212436' : '#e0e7ff',
+                  color: themeMode === 'dark' ? '#eee' : '#4f47e5',
+                },
+              }}
+            >
+              <FiPlusCircle className="text-xl" />
+              <span className="px-1 whitespace-nowrap">ثبت جدید</span>
+            </Button> */}
       <Modal
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
@@ -158,7 +161,6 @@ function ModalNewSalesAd({ unitId, setFlag }) {
             </Button>
           </div>
         }
-        loading={loading}
         open={open}
         onCancel={handleClose}
       >
@@ -204,30 +206,53 @@ function ModalNewSalesAd({ unitId, setFlag }) {
             </Select>
           </FormControl>
         </div>
-        <div className="mt-5">
-          <TextField
-            inputRef={inputRef}
-            color={errAmount ? 'error' : 'primary'}
-            // focused={errAmount}
-            value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            onKeyPress={(e) => {
-              if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                e.preventDefault();
-              }
-            }}
-            onChange={(e) => {
-              const numbersOnly = e.target.value.replace(/\D/g, '');
-              setAmount(numbersOnly);
-              setErrAmount(false);
-            }}
-            fullWidth
-            size="small"
-            id="outlined-basic"
-            label="مبلغ پیشنهادی"
-            variant="outlined"
-          />
-          {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap mt-5 ">
+          <div className="w-full">
+            <TextField
+              inputRef={inputRef}
+              color={errAmount ? 'error' : 'primary'}
+              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              onKeyPress={(e) => {
+                if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const numbersOnly = e.target.value.replace(/\D/g, '');
+                setAmount(numbersOnly);
+                setErrAmount(false);
+              }}
+              fullWidth
+              size="small"
+              id="outlined-basic"
+              label="مبلغ پیشنهادی"
+              variant="outlined"
+            />
+            {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+          </div>
+          <div className="w-full ">
+            <Autocomplete
+              size="small"
+              className="w-full"
+              value={valUnit}
+              options={listUnit}
+              getOptionLabel={(option) => (option.title ? option.title : '')}
+              onChange={(event, newValue) => {
+                setValUnit(newValue);
+              }}
+              freeSolo
+              renderOption={(props, option) => (
+                <Box sx={{ fontSize: 14 }} component="li" {...props}>
+                  {option.title ? option.title : ''}
+                </Box>
+              )}
+              renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
+            />
+            {errValUnit && <p className="text-xs text-red-500 text-start">*لطفا واحد را انتخاب کنید</p>}
+          </div>
         </div>
+
         <div className="mt-5">
           <TextField
             value={desc}
@@ -248,4 +273,4 @@ function ModalNewSalesAd({ unitId, setFlag }) {
   );
 }
 
-export default ModalNewSalesAd;
+export default ModalNewServiceHome;

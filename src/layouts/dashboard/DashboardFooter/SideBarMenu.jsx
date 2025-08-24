@@ -95,7 +95,14 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
     {
       group: 'سرویس‌ها',
       icon: <MiscellaneousServicesIcon sx={{ ml: 1, fontSize: 22 }} />,
-      items: [sidebarResident[1], sidebarResident[2], sidebarResident[3], sidebarResident[4], sidebarResident[14]],
+      items: [
+        sidebarResident[1],
+        sidebarResident[2],
+        sidebarResident[3],
+        sidebarResident[4],
+        sidebarResident[14],
+        sidebarResident[15],
+      ],
     },
     {
       group: 'مالی',
@@ -186,7 +193,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
                     {groupObj.items.map((menuItem) => (
                       <StyledToggleButton value={menuItem.path} key={menuItem.path}>
                         <span className="pr-5">{menuItem.title}</span>
-                    {menuItem.icon}
+                        {menuItem.icon}
                         {/* <img className="w-5" src={themeMode === 'dark' ? menuItem.iconDark : menuItem.icon} alt="" /> */}
                       </StyledToggleButton>
                     ))}
@@ -265,7 +272,6 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
             },
           }}
         >
-         
           {!isLoading && <span className="text-sm font-semibold pr-3">خروج از حساب کاربری</span>}
           {isLoading && (
             <div className="flex items-center">
@@ -275,7 +281,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
               <span className="px-4 text-sm font-semibold">خارج شدن</span>
             </div>
           )}
-           <ExitToAppIcon sx={{ ml: 1, fontSize: 22 }} />
+          <ExitToAppIcon sx={{ ml: 1, fontSize: 22 }} />
         </StyledListItemButton>
       </Box>
     </div>

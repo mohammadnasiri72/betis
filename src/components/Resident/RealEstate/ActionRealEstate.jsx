@@ -10,10 +10,9 @@ ActionRealEstate.propTypes = {
   setFlag: PropTypes.func,
   unitId: PropTypes.number,
 };
-export default function ActionRealEstate({ setFlag, id, unitId }) {
+export default function ActionRealEstate({ setFlag, id, unitId, typeRealEstate, subjectsRealEstate }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,11 +23,8 @@ export default function ActionRealEstate({ setFlag, id, unitId }) {
 
   return (
     <>
-      <Stack
-        className='rounded-full  duration-300 p-2 cursor-pointer'
-        onClick={handleClick}
-      >
-        <HiOutlineDotsHorizontal className=' text-[#fff] ' />
+      <Stack className="rounded-full  duration-300 p-2 cursor-pointer" onClick={handleClick}>
+        <HiOutlineDotsHorizontal className=" text-[#fff] " />
       </Stack>
       <Menu
         id="basic-menu"
@@ -39,7 +35,13 @@ export default function ActionRealEstate({ setFlag, id, unitId }) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <ModalEditRealEstate unitId={unitId} setFlag={setFlag} id={id}/>
+        <ModalEditRealEstate
+          unitId={unitId}
+          setFlag={setFlag}
+          id={id}
+          typeRealEstate={typeRealEstate}
+          subjectsRealEstate={subjectsRealEstate}
+        />
 
         <ModalDeleteRealEstate setFlag={setFlag} id={id} />
       </Menu>

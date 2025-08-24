@@ -6,6 +6,7 @@ import { Navigate, useLocation, useNavigate, useRoutes } from 'react-router-dom'
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardLayout from '../layouts/dashboard';
 // components
+import MyRealEstate from '../pages/MyRealEstate';
 import LoadingScreen from '../components/LoadingScreen';
 import HomeResident from '../components/Resident/HomeResident';
 import BoardNoticeResident from '../pages/BoardNoticeResident';
@@ -31,6 +32,7 @@ import ManageReserve from '../pages/ManageReserve';
 import ManageResident from '../pages/ManageResident';
 import ManageRole from '../pages/ManageRole';
 import ManageRoleClaim from '../pages/ManageRoleClaim';
+import ManageServicHome from '../pages/ManageServicHome';
 import ManageService from '../pages/ManageService';
 import ManageServiceBlock from '../pages/ManageServiceBlock';
 import ManageServiceMenu from '../pages/ManageServiceMenu';
@@ -54,10 +56,10 @@ import MyVehicle from '../pages/MyVehicle';
 import MyWallet from '../pages/MyWallet';
 import ReservServices from '../pages/ReservServices';
 import ResultPayment from '../pages/ResultPayment';
+import ServiceHome from '../pages/ServiceHome';
 import HomePage from '../pages/homePage';
 import ManageResidents from '../pages/manageResidents';
 import { mainDomain } from '../utils/mainDomain';
-import ServiceHome from '../pages/ServiceHome';
 
 // ----------------------------------------------------------------------
 
@@ -267,6 +269,10 @@ export default function Router() {
       element: <ManageSurveyanswer />,
     },
     {
+      path: 'admin-servichome',
+      element: <ManageServicHome />,
+    },
+    {
       path: 'admin-serviceMenu',
       element: <ManageServiceMenu />,
     },
@@ -377,6 +383,10 @@ export default function Router() {
         {
           path: 'my-reserve',
           element: <MyReserve accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+        },
+        {
+          path: 'my-realEstate',
+          element: <MyRealEstate accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
         },
         {
           path: 'service-home',
@@ -734,6 +744,16 @@ export default function Router() {
               <Navigate to="/404" replace />
             ) : (
               <ManageSurveyanswer />
+            ),
+        },
+        {
+          path: 'admin-servichome',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-servichome:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageServicHome />
             ),
         },
 

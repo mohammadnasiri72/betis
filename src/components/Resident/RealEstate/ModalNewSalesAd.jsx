@@ -1,14 +1,14 @@
 /* eslint-disable radix */
 import { useEffect, useRef, useState } from 'react';
+import { FiPlusCircle } from 'react-icons/fi';
 
-import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Button, Modal } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { CiEdit } from 'react-icons/ci';
 import Swal from 'sweetalert2';
-import useSettings from '../../hooks/useSettings';
-import { mainDomain } from '../../utils/mainDomain';
+import useSettings from '../../../hooks/useSettings';
+import { mainDomain } from '../../../utils/mainDomain';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -20,37 +20,20 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-ModalEditRealEstate.propTypes = {
-  id: PropTypes.number,
+ModalNewSalesAd.propTypes = {
   unitId: PropTypes.number,
   setFlag: PropTypes.func,
 };
-function ModalEditRealEstate({ unitId, setFlag, id }) {
+function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }) {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(false);
-  const [typeRealEstate, setTypeRealEstate] = useState({});
+
   const [valTypeRealEstate, setValTypeRealEstate] = useState(1);
-  const [subjectsRealEstate, setSubjectsRealEstate] = useState({});
+
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(1);
   const [amount, setAmount] = useState('');
   const [errAmount, setErrAmount] = useState(false);
   const [desc, setDesc] = useState('');
-  const [realEstateEdit, setRealEstateEdit] = useState([]);
-
-
-  useEffect(() => {
-    if (realEstateEdit.id) {
-      const typeEdit = Object.keys(typeRealEstate).find((key) => typeRealEstate[key] === realEstateEdit.type);
-      const subjectsEdit = Object.keys(subjectsRealEstate).find(
-        (key) => subjectsRealEstate[key] === realEstateEdit.subject
-      );
-      setValTypeRealEstate(typeEdit);
-      setValSubjectsRealEstate(subjectsEdit);
-      setAmount(String(realEstateEdit.amount));
-      setDesc(realEstateEdit.description);
-    }
-  }, [realEstateEdit, typeRealEstate, subjectsRealEstate]);
 
   const inputRef = useRef(null);
 
@@ -86,7 +69,6 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
 
     if (amount) {
       const data = {
-        id,
         unitId,
         typeId: valTypeRealEstate,
         subjectId: valSubjectsRealEstate,
@@ -95,7 +77,7 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
       };
       setLoadingBtn(true);
       axios
-        .put(`${mainDomain}/api/RealEstate/Update`, data, {
+        .post(`${mainDomain}/api/RealEstate/Add`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -106,7 +88,7 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
           handleClose();
           Toast.fire({
             icon: 'success',
-            text: 'ویرایش آگهی با موفقیت انجام شد',
+            text: 'ثبت آگهی با موفقیت انجام شد',
             customClass: {
               container: 'toast-modal',
             },
@@ -127,32 +109,6 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
     }
   };
 
-  useEffect(() => {
-    if (open && id) {
-      setLoading(true);
-      const request1 = axios.get(`${mainDomain}/api/RealEstate/types`);
-      const request2 = axios.get(`${mainDomain}/api/RealEstate/subjects`);
-      const request3 = axios.get(`${mainDomain}/api/RealEstate/Get/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      Promise.all([request1, request2, request3])
-        .then((responses) => {
-          setTypeRealEstate(responses[0].data);
-          setSubjectsRealEstate(responses[1].data);
-          setRealEstateEdit(responses[2].data);
-        })
-        .catch((error) => {
-          console.error('خطا در دریافت داده:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [open, id]);
-
   const optionsType = Object.entries(typeRealEstate).map(([key, value]) => ({
     id: parseInt(key),
     label: value,
@@ -165,25 +121,22 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
 
   return (
     <>
-      <MenuItem onClick={handleClickOpen}>
-        <div className="flex items-center text-xs">
-          <CiEdit className="text-teal-500" />
-          <Stack className="px-1 whitespace-nowrap text-teal-500">ویرایش</Stack>
-        </div>
-      </MenuItem>
+      <Button onClick={handleClickOpen} type="primary">
+        <FiPlusCircle className="text-xl" />
+        <span className="px-1 whitespace-nowrap">ثبت جدید</span>
+      </Button>
       <Modal
-        title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ویرایش آگهی </h2>}
+        title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
           <div className="flex items-center gap-2 border-t pt-2">
             <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
-             ویرایش
+              ثبت درخواست
             </Button>
             <Button type="primary" danger onClick={handleClose}>
               انصراف
             </Button>
           </div>
         }
-        loading={loading}
         open={open}
         onCancel={handleClose}
       >
@@ -273,4 +226,4 @@ function ModalEditRealEstate({ unitId, setFlag, id }) {
   );
 }
 
-export default ModalEditRealEstate;
+export default ModalNewSalesAd;

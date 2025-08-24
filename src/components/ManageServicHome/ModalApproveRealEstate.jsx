@@ -12,8 +12,8 @@ import { Button } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { HiOutlineExclamation } from 'react-icons/hi';
-import { MdOutlineDelete } from 'react-icons/md';
+import { MdOutlineQuestionMark } from 'react-icons/md';
+import { SlLike } from 'react-icons/sl';
 import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
@@ -37,11 +37,11 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-ModalDeleteRealEstate.propTypes = {
+ModalApproveRealEstate.propTypes = {
   id: PropTypes.number,
   setFlag: PropTypes.func,
 };
-export default function ModalDeleteRealEstate({ setFlag, id }) {
+export default function ModalApproveRealEstate({ setFlag, id }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -58,18 +58,22 @@ export default function ModalDeleteRealEstate({ setFlag, id }) {
   const deleteRealEstateHandler = () => {
     setIsLoading(true);
     axios
-      .delete(`${mainDomain}/api/RealEstate/Delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
+      .put(
+        `${mainDomain}/api/RealEstate/${id}/approve`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
       .then(() => {
         setIsLoading(false);
         setFlag((e) => !e);
         handleClose();
         Toast.fire({
           icon: 'success',
-          text: 'حذف با موفقیت انجام شد',
+          text: 'تایید با موفقیت انجام شد',
           customClass: {
             container: 'toast-modal',
           },
@@ -89,11 +93,10 @@ export default function ModalDeleteRealEstate({ setFlag, id }) {
 
   return (
     <>
-     
       <MenuItem onClick={handleClickOpen}>
         <div className="flex items-center text-xs">
-          <MdOutlineDelete className="text-red-500" />
-          <Stack className="px-1 text-red-500">حذف</Stack>
+          <SlLike className="text-emerald-500" />
+          <Stack className="px-1 text-emerald-500">تایید</Stack>
         </div>
       </MenuItem>
       <BootstrapDialog
@@ -130,13 +133,13 @@ export default function ModalDeleteRealEstate({ setFlag, id }) {
         <DialogContent dividers>
           <div className="flex items-center">
             <Stack className="" shape="circle">
-              <span className="text-2xl text-red-100">
-                <HiOutlineExclamation className="text-red-600 bg-red-100 rounded-full p-2 text-5xl" />
+              <span className="text-2xl text-emerald-100">
+                <MdOutlineQuestionMark className="text-emerald-600 bg-emerald-100 rounded-full p-2 text-5xl" />
               </span>
             </Stack>
             <div className="text-start px-3">
-              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>حذف آگهی</h4>
-              <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>آیا از حذف مطمئن هستید؟</p>
+              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>تایید آگهی</h4>
+              <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>آیا از تایید مطمئن هستید؟</p>
             </div>
           </div>
         </DialogContent>
@@ -158,9 +161,9 @@ export default function ModalDeleteRealEstate({ setFlag, id }) {
                 onClick={() => {
                   deleteRealEstateHandler();
                 }}
-                className="border bg-red-400 text-white hover:!text-white hover:!border-red-500 px-3 py-1 rounded-lg border-[#0002] duration-300 hover:!bg-red-500"
+                className="border bg-emerald-400 text-white hover:!text-white hover:!border-emerald-500 px-3 py-1 rounded-lg border-[#0002] duration-300 hover:!bg-emerald-500"
               >
-                حذف
+                تایید
               </Button>
             </div>
           </div>
