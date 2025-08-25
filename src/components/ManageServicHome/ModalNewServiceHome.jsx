@@ -55,6 +55,7 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
     setAmount('');
     setDesc('');
     setErrAmount(false);
+    setErrValUnit(false);
   };
 
   const handleClickOpen = () => {
@@ -128,27 +129,11 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
 
   return (
     <>
-      <Button onClick={handleClickOpen} type="primary">
+      <Button size="large" onClick={handleClickOpen} type="primary">
         <FiPlusCircle className="text-xl" />
-        <span className="px-1 whitespace-nowrap">ثبت جدید</span>
+        <span className="whitespace-nowrap">ثبت جدید</span>
       </Button>
-      {/* <Button
-              onClick={handleClickOpen}
-              variant="contained"
-              id="basic-button"
-              sx={{
-                boxShadow: 'none',
-                backgroundColor: themeMode === 'dark' ? '#212b36' : '#eef2ff',
-                color: themeMode === 'dark' ? '#fff' : '#4f46e5',
-                '&:hover': {
-                  backgroundColor: themeMode === 'dark' ? '#212436' : '#e0e7ff',
-                  color: themeMode === 'dark' ? '#eee' : '#4f47e5',
-                },
-              }}
-            >
-              <FiPlusCircle className="text-xl" />
-              <span className="px-1 whitespace-nowrap">ثبت جدید</span>
-            </Button> */}
+
       <Modal
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
@@ -164,7 +149,7 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
         open={open}
         onCancel={handleClose}
       >
-        <div className="flex gap-2 items-center sm:flex-nowrap flex-wrap mt-5">
+        <div className="flex gap-2 items-start sm:flex-nowrap flex-wrap mt-5">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">نوع </InputLabel>
             <Select
@@ -207,7 +192,7 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
           </FormControl>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap mt-5 ">
+        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 ">
           <div className="w-full">
             <TextField
               inputRef={inputRef}
@@ -240,6 +225,7 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
               getOptionLabel={(option) => (option.title ? option.title : '')}
               onChange={(event, newValue) => {
                 setValUnit(newValue);
+                setErrValUnit(false);
               }}
               freeSolo
               renderOption={(props, option) => (
@@ -248,6 +234,25 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
                 </Box>
               )}
               renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: errValUnit ? 'red' : '',
+                  '&.Mui-focused': {
+                    color: errValUnit ? 'red' : '',
+                  },
+                },
+              }}
             />
             {errValUnit && <p className="text-xs text-red-500 text-start">*لطفا واحد را انتخاب کنید</p>}
           </div>

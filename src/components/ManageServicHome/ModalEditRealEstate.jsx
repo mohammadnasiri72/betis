@@ -54,7 +54,7 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
       setDesc(serviceHome.description);
       setValUnit(listUnit.find((e) => e.id === serviceHome.unitId));
     }
-  }, [serviceHome, typeRealEstate, subjectsRealEstate]);
+  }, [serviceHome, typeRealEstate, subjectsRealEstate , open]);
 
   useEffect(() => {
     if (inputRef.current && errAmount) {
@@ -70,6 +70,7 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
     setAmount('');
     setDesc('');
     setErrAmount(false);
+    setErrValUnit(false);
   };
 
   const handleClickOpen = () => {
@@ -85,14 +86,13 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
     if (!amount) {
       setErrAmount(true);
     }
-    if (!valUnit.id) {
+    if (!valUnit?.id) {
       setErrValUnit(true);
     }
 
     if (amount && valUnit.id) {
       const data = {
         id: serviceHome.id,
-        unitId: valUnit.id,
         typeId: valTypeRealEstate,
         subjectId: valSubjectsRealEstate,
         description: desc,
@@ -152,11 +152,11 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
       </MenuItem>
 
       <Modal
-        title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
+        title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ویرایش آگهی </h2>}
         footer={
           <div className="flex items-center gap-2 border-t pt-2">
             <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
-              ثبت درخواست
+              ویرایش
             </Button>
             <Button type="primary" danger onClick={handleClose}>
               انصراف
@@ -166,7 +166,7 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
         open={open}
         onCancel={handleClose}
       >
-        <div className="flex gap-2 items-center sm:flex-nowrap flex-wrap mt-5">
+        <div className="flex gap-2 items-start sm:flex-nowrap flex-wrap mt-5">
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">نوع </InputLabel>
             <Select
@@ -209,7 +209,7 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
           </FormControl>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap mt-5 ">
+        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 ">
           <div className="w-full">
             <TextField
               inputRef={inputRef}
@@ -236,13 +236,15 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
           <div className="w-full ">
             <Autocomplete
               size="small"
+              disabled
               className="w-full"
               value={valUnit}
               options={listUnit}
               getOptionLabel={(option) => (option.title ? option.title : '')}
-              onChange={(event, newValue) => {
-                setValUnit(newValue);
-              }}
+              // onChange={(event, newValue) => {
+              //   setValUnit(newValue);
+              //   setErrValUnit(false);
+              // }}
               freeSolo
               renderOption={(props, option) => (
                 <Box sx={{ fontSize: 14 }} component="li" {...props}>
@@ -250,6 +252,25 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
                 </Box>
               )}
               renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: errValUnit ? 'red' : '',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: errValUnit ? 'red' : '',
+                  '&.Mui-focused': {
+                    color: errValUnit ? 'red' : '',
+                  },
+                },
+              }}
             />
             {errValUnit && <p className="text-xs text-red-500 text-start">*لطفا واحد را انتخاب کنید</p>}
           </div>

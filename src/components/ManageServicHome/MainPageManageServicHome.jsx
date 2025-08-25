@@ -1,12 +1,14 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
+import SimpleBackdrop from '../backdrop';
 import BoxServiceHome from './BoxServiceHome';
 import ModalNewServiceHome from './ModalNewServiceHome';
+import TabStatus from './TabStatus';
 
 function MainPageManageServicHome() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,12 +21,27 @@ function MainPageManageServicHome() {
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(-1);
   const [listMyServicHome, setListMyServicHome] = useState([]);
   const [listUnit, setListUnit] = useState([]);
+  const [valUnit, setValUnit] = useState({ title: 'همه', id: -1 });
   const [statusesRealEstate, setStatusesRealEstate] = useState([]);
+  const [valueTab, setValueTab] = useState(0);
+  const [numTab0, setNumTab0] = useState(0);
 
-   const statusArray = Object.entries(statusesRealEstate).map(([key, value]) => ({
-  id: Number(key),
-  title: value
-}));
+  const statusArray = Object.entries(statusesRealEstate).map(([key, value]) => ({
+    id: Number(key),
+    title: value,
+  }));
+
+  const optionsType = Object.entries(typeRealEstate).map(([key, value]) => ({
+    id: Number(key),
+    label: value,
+  }));
+
+  const optionsSubject = Object.entries(subjectsRealEstate).map(([key, value]) => ({
+    id: Number(key),
+    label: value,
+  }));
+
+
 
   const { themeMode } = useSettings();
   const url = useLocation();
@@ -64,9 +81,9 @@ function MainPageManageServicHome() {
     if (valBuilding?.id) {
       const request1 = axios.get(`${mainDomain}/api/RealEstate/types`);
       const request2 = axios.get(`${mainDomain}/api/RealEstate/subjects`);
-       const request3 = axios.get(`${mainDomain}/api/RealEstate/statuses`);
+      const request3 = axios.get(`${mainDomain}/api/RealEstate/statuses`);
 
-      Promise.all([request1, request2 , request3])
+      Promise.all([request1, request2, request3])
         .then((responses) => {
           setTypeRealEstate(responses[0].data);
           setSubjectsRealEstate(responses[1].data);
@@ -83,10 +100,10 @@ function MainPageManageServicHome() {
       setIsLoading(true);
       setListMyServicHome([]);
       axios
-        .get(`${mainDomain}/api/RealEstate/Approved`, {
+        .get(`${mainDomain}/api/RealEstate/GetList`, {
           params: {
-            typeId: valTypeRealEstate,
-            subjectId: valSubjectsRealEstate,
+            unitId: valUnit.id,
+            statusId: valueTab,
           },
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -94,23 +111,16 @@ function MainPageManageServicHome() {
         })
         .then((res) => {
           setListMyServicHome(res.data);
+          if (valueTab === 0) {
+            setNumTab0(res.data.length);
+          }
         })
         .catch(() => {})
         .finally(() => {
           setIsLoading(false);
         });
     }
-  }, [valBuilding?.id, valTypeRealEstate, valSubjectsRealEstate , flag]);
-
-  const optionsType = Object.entries(typeRealEstate).map(([key, value]) => ({
-    id: Number(key),
-    label: value,
-  }));
-
-  const optionsSubject = Object.entries(subjectsRealEstate).map(([key, value]) => ({
-    id: Number(key),
-    label: value,
-  }));
+  }, [valBuilding?.id, flag, valUnit, valueTab]);
 
   return (
     <>
@@ -191,30 +201,96 @@ function MainPageManageServicHome() {
               </Select>
             </FormControl>
           </div>
+          <div className="sm:w-1/4 w-full flex items-center px-2">
+            <Autocomplete
+              size="small"
+              className="w-full"
+              value={valUnit}
+              options={[{ title: 'همه', id: -1 }, ...listUnit]}
+              getOptionLabel={(option) => (option.title ? option.title : '')}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setValUnit(newValue);
+                }
+                if (!newValue) {
+                  setValUnit({ title: 'همه', id: -1 });
+                }
+              }}
+              freeSolo
+              renderOption={(props, option) => (
+                <Box sx={{ fontSize: 14 }} component="li" {...props}>
+                  {option.title ? option.title : ''}
+                </Box>
+              )}
+              renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
+            />
+          </div>
         </div>
         {checkClaims(url.pathname, 'post') && (
-          <div>
-           <ModalNewServiceHome listUnit={listUnit} setFlag={setFlag} typeRealEstate={typeRealEstate} subjectsRealEstate={subjectsRealEstate}/>
+          <div className="px-2">
+            <ModalNewServiceHome
+              listUnit={listUnit}
+              setFlag={setFlag}
+              typeRealEstate={typeRealEstate}
+              subjectsRealEstate={subjectsRealEstate}
+            />
           </div>
         )}
       </div>
+      <div className="px-5">
+        <TabStatus valueTab={valueTab} setValueTab={setValueTab} numTab0={numTab0} setFlag={setFlag}/>
+      </div>
 
-      {listMyServicHome.length > 0 && (
+      {listMyServicHome
+        .filter((ev) =>
+          valTypeRealEstate === -1 ? ev : ev.type === optionsType.find((e) => e.id === valTypeRealEstate)?.label
+        )
+        .filter((ev) =>
+          valSubjectsRealEstate === -1
+            ? ev
+            : ev.subject === optionsSubject.find((e) => e.id === valSubjectsRealEstate)?.label
+        ).length > 0 && (
         <div className="flex items-center flex-wrap">
-          {listMyServicHome.map((e) => (
-            <div className="lg:w-1/2 w-full" key={e.id}>
-              <BoxServiceHome typeRealEstate={typeRealEstate} subjectsRealEstate={subjectsRealEstate} serviceHome={e} listUnit={listUnit} setFlag={setFlag} statusArray={statusArray}/>
-            </div>
-          ))}
+          {listMyServicHome
+            .filter((ev) =>
+              valTypeRealEstate === -1 ? ev : ev.type === optionsType.find((e) => e.id === valTypeRealEstate)?.label
+            )
+            .filter((ev) =>
+              valSubjectsRealEstate === -1
+                ? ev
+                : ev.subject === optionsSubject.find((e) => e.id === valSubjectsRealEstate)?.label
+            )
+            .map((e) => (
+              <div className="lg:w-1/2 w-full" key={e.id}>
+                <BoxServiceHome
+                  typeRealEstate={typeRealEstate}
+                  subjectsRealEstate={subjectsRealEstate}
+                  serviceHome={e}
+                  listUnit={listUnit}
+                  setFlag={setFlag}
+                  statusArray={statusArray}
+                />
+              </div>
+            ))}
         </div>
       )}
 
-      {listMyServicHome.length === 0 && !isLoading && (
-        <div className="w-full flex flex-col items-center">
-          <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
-          <p>موردی موجود نیست...</p>
-        </div>
-      )}
+      {listMyServicHome
+        .filter((ev) =>
+          valTypeRealEstate === -1 ? ev : ev.type === optionsType.find((e) => e.id === valTypeRealEstate)?.label
+        )
+        .filter((ev) =>
+          valSubjectsRealEstate === -1
+            ? ev
+            : ev.subject === optionsSubject.find((e) => e.id === valSubjectsRealEstate)?.label
+        ).length === 0 &&
+        !isLoading && (
+          <div className="w-full flex flex-col items-center">
+            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
+            <p>موردی موجود نیست...</p>
+          </div>
+        )}
+      {isLoading && <SimpleBackdrop />}
     </>
   );
 }

@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-
 import { Box, Card, CardContent, Chip, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { FaCalendarDays } from 'react-icons/fa6';
@@ -11,9 +9,22 @@ BoxRealEstate.propTypes = {
   setFlag: PropTypes.func,
   unitId: PropTypes.number,
 };
-function BoxRealEstate({ realEstate, setFlag, unitId, typeRealEstate, subjectsRealEstate, statusArray }) {
-  // ترجمه نوع به فارسی
+function BoxRealEstate({ realEstate, setFlag, unitId }) {
+  // تعیین رنگ وضعیت بر اساس مقدار
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'منتظر تایید':
+        return 'warning';
+      case 'تایید شده':
+        return 'success';
+      case 'رد شده':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
 
+  // ترجمه نوع به فارسی
   const translateType = (type) => {
     switch (type) {
       case 'sell':
@@ -49,40 +60,22 @@ function BoxRealEstate({ realEstate, setFlag, unitId, typeRealEstate, subjectsRe
                 <Typography variant="h5" component="h2" align="center">
                   {translateType(realEstate.type)} {translateSubject(realEstate.subject)}
                 </Typography>
+
+                <Chip size="small" label={realEstate.status} color={getStatusColor(realEstate.status)} />
               </div>
-              <ActionRealEstate
-                setFlag={setFlag}
-                id={realEstate.id}
-                unitId={unitId}
-                typeRealEstate={typeRealEstate}
-                subjectsRealEstate={subjectsRealEstate}
-              />
+              <ActionRealEstate setFlag={setFlag} id={realEstate.id} unitId={unitId} />
             </div>
           </Box>
 
           <CardContent sx={{ paddingTop: 2, margin: 0 }}>
-            <div className="flex justify-between items-center border-b pb-2">
+            <div className="flex justify-between items-center">
               <div className="flex items-center gap-1 text-sm">
                 <span>مبلغ پیشنهادی : </span>
                 <span className="font-bold text-lg">{realEstate.amount.toLocaleString()}</span>
                 <span>تومان</span>
               </div>
-              <Chip
-                size="small"
-                label={realEstate.status}
-                color={
-                  statusArray.find((e) => e.title === realEstate.status)?.id === 0
-                    ? 'warning'
-                    : statusArray.find((e) => e.title === realEstate.status)?.id === 1
-                    ? 'success'
-                    : statusArray.find((e) => e.title === realEstate.status)?.id === 2
-                    ? 'error'
-                    : 'default'
-                }
-              />
             </div>
-
-            <div className="mt-2">
+            <div>
               <p className="w-full text-start">{realEstate.description || 'توضیحاتی وارد نشده است'}</p>
               <div className="flex items-center gap-3 mt-2">
                 <div className="flex items-center gap-1">
