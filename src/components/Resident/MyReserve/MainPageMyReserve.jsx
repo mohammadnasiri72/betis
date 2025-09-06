@@ -14,12 +14,16 @@ import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import BoxMyReserve from './BoxMyReserve';
+import TabMyReserv from './TabMyReserv';
 
 export default function MainPageMyReserve({ accountResident, flagRefreshPage }) {
   const [listMyReserve, setListMyReserve] = useState([]);
   const [listService, setListService] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [flag, setFlag] = useState(true);
+  const [valueTab, setValueTab] = useState(-1);
+
+  console.log(listMyReserve);
 
   const { themeMode } = useSettings();
 
@@ -38,7 +42,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
     { label: 'همه', statusId: -1 },
   ];
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init();
@@ -47,7 +51,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
   // get list my reserv
   useEffect(() => {
     setIsLoading(true);
-    setListMyReserve([])
+    setListMyReserve([]);
     axios
       .get(`${mainDomain}/api/Reservation/GetList`, {
         params: {
@@ -93,53 +97,55 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
   }, [accountResident]);
 
   // --- Local filter logic ---
-  const filteredList = listMyReserve.filter(item => {
-    // فیلتر وضعیت
-    const statusMatch = statusTabs[tabValue].statusId === -1 ? true : item.statusId === statusTabs[tabValue].statusId;
-    // فیلتر تاریخ
-    let dateMatch = true;
-    if (startDate) {
-      dateMatch = new Date(item.date) >= new Date(startDate.toDate());
-    }
-    if (endDate && dateMatch) {
-      dateMatch = new Date(item.date) <= new Date(endDate.toDate());
-    }
-    return statusMatch && dateMatch;
-  });
-
-  
+  const filteredList = listMyReserve
+    .filter((item) => {
+      // فیلتر وضعیت
+      const statusMatch = statusTabs[tabValue].statusId === -1 ? true : item.statusId === statusTabs[tabValue].statusId;
+      // فیلتر تاریخ
+      let dateMatch = true;
+      if (startDate) {
+        dateMatch = new Date(item.date) >= new Date(startDate.toDate());
+      }
+      if (endDate && dateMatch) {
+        dateMatch = new Date(item.date) <= new Date(endDate.toDate());
+      }
+      return statusMatch && dateMatch;
+    })
+    .filter((e) => (valueTab === -1 ? e : e.serviceTime?.serviceId === valueTab));
 
   return (
     <>
       <div className="px-3 flex items-center">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto px-2">
-        <div className='flex justify-between items-center'>
+        <div className="flex justify-between items-center">
           <Tooltip title="ثبت رزرو جدید">
-            <IconButton onClick={() => {
-              navigate('/resident/reserv-services')
-            }}>
-              <PiPlusCircleFill className='text-3xl text-teal-500' />
+            <IconButton
+              onClick={() => {
+                navigate('/resident/reserv-services');
+              }}
+            >
+              <PiPlusCircleFill className="text-3xl text-teal-500" />
             </IconButton>
           </Tooltip>
-          <p className='text-[1.1rem] font-semibold' style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>لیست رزروهای من</p>
+          <p className="text-[1.1rem] font-semibold" style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>
+            لیست رزروهای من
+          </p>
           <Tooltip title="بروز رسانی">
-            <IconButton onClick={() => {
-              setFlag((e) => !e)
-            }}>
-              <img className='w-6' src="/images/refresh.png" alt="" />
+            <IconButton
+              onClick={() => {
+                setFlag((e) => !e);
+              }}
+            >
+              <img className="w-6" src="/images/refresh.png" alt="" />
             </IconButton>
           </Tooltip>
         </div>
         {/* --- Tabs for status filter --- */}
+        <TabMyReserv accountResident={accountResident} valueTab={valueTab} setValueTab={setValueTab} />
         <Box sx={{ width: '100%', mt: 2, mb: 2 }}>
           <Tabs
             value={tabValue}
@@ -158,7 +164,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
         {/* --- Date pickers for local filter --- */}
         <Box sx={{ display: 'flex', gap: 2, mb: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
           <DatePicker
-          className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
+            className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
             format="YYYY/MM/DD"
             calendar={persian}
             locale={persianFa}
@@ -170,7 +176,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
             style={{ width: '100%' }}
           />
           <DatePicker
-          className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
+            className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
             format="YYYY/MM/DD"
             calendar={persian}
             locale={persianFa}
@@ -196,7 +202,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
           ))}
         {filteredList.length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center">
-            <img className="w-32" src={themeMode === 'dark' ? "/images/img-2-dark.png" : "/images/img-2.png"} alt="" />
+            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
             <p>رزروی ثبت نشده است...</p>
           </div>
         )}

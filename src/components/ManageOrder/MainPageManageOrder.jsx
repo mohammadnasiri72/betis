@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxOrder from './BoxOrder';
+import RateService from './RateService';
 import ToggleButtonFilterStatusOrder from './ToggleButtonFilterStatusOrder';
 
 export default function MainPageManageOrder() {
@@ -415,15 +416,18 @@ export default function MainPageManageOrder() {
           />
         </div>
 
-        <ToggleButtonFilterStatusOrder
-          totalCount={totalCount}
-          totalCountPending={totalCountPending}
-          value={valStatusOrder}
-          setValue={setValStatusOrder}
-          setFlagTimer={setFlagTimer}
-          getOrderList={getOrderList}
-          setNumPages={setNumPages}
-        />
+          <ToggleButtonFilterStatusOrder
+            totalCount={totalCount}
+            totalCountPending={totalCountPending}
+            value={valStatusOrder}
+            setValue={setValStatusOrder}
+            setFlagTimer={setFlagTimer}
+            getOrderList={getOrderList}
+            setNumPages={setNumPages}
+          />
+       
+
+        <RateService valService={valService} />
       </div>
       <div className="flex flex-wrap">
         {listOrder.length > 0 &&

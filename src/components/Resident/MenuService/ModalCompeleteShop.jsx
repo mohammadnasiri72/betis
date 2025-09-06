@@ -66,7 +66,6 @@ export default function ModalCompeleteShop({
     handleClose();
   }, [flagShop]);
 
-  
   React.useEffect(() => {
     let totalPrice = 0;
     orderItems.map((e) => {
@@ -118,8 +117,8 @@ export default function ModalCompeleteShop({
         onClick={handleClickOpen}
         className="fixed bg-[#495677] text-white lg:left-1/3 sm:left-1/4 left-0 lg:right-1/3 sm:right-1/4 right-0 bottom-24 py-2 cursor-pointer rounded-lg duration-300 hover:bg-yellow-500"
       >
-        <span className="">تکمیل خرید</span>
-        <span>({numTotalShop})</span>
+        <span className="">تکمیل سفارش </span>
+        <span>( {numTotalShop} )</span>
       </div>
       <BootstrapDialog
         fullWidth
@@ -149,7 +148,7 @@ export default function ModalCompeleteShop({
               {/* select from time */}
               <div className=" relative w-full flex items-center mt-3 px-5">
                 <DatePicker
-                className={themeMode==='dark'? "bg-dark rmdp-mobile":'rmdp-mobile'}
+                  className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
                   minDate={new DateObject({ calendar: persian }).subtract(0, 'days')}
                   format="DD MMMM YYYY"
                   render={<CustomMultipleInput />}
@@ -209,7 +208,7 @@ export default function ModalCompeleteShop({
                   <span> تومان </span>
                 </div>
               </div>
-             
+
               <div className="w-full mt-3 px-5">
                 <TextField
                   size="small"
@@ -225,7 +224,6 @@ export default function ModalCompeleteShop({
                   value={description}
                 />
               </div>
-              
             </div>
             {isLoading && <SimpleBackdrop />}
           </DialogContent>

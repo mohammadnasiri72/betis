@@ -1,8 +1,7 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import PropTypes from 'prop-types';
 import TimerPendingOrder from './TimerPendingOrder';
 
 function CustomTabPanel(props) {
@@ -50,7 +49,7 @@ export default function ToggleButtonFilterStatusOrder({
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', zIndex: '2' }}>
       <Box
         sx={{
           borderBottom: 1,

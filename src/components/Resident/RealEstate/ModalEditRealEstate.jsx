@@ -166,14 +166,29 @@ function ModalEditRealEstate({ unitId, setFlag, id, typeRealEstate, subjectsReal
       <Modal
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ویرایش آگهی </h2>}
         footer={
-          <div className="flex items-center gap-2 border-t pt-2">
-            <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
-              ویرایش
-            </Button>
-            <Button type="primary" danger onClick={handleClose}>
-              انصراف
-            </Button>
-          </div>
+          // <div className="flex items-center gap-2 border-t pt-2">
+          //   <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
+          //     ویرایش
+          //   </Button>
+          //   <Button type="primary" danger onClick={handleClose}>
+          //     انصراف
+          //   </Button>
+          // </div>
+           <div className="flex items-center gap-2 border-t pt-2 w-full">
+                      <Button
+                        size="large"
+                        className="w-full bg-[#495677] duration-300 hover:!bg-[#eab308]"
+                        disabled={loadingBtn}
+                        loading={loadingBtn}
+                        type="primary"
+                        onClick={setNewSalesAd}
+                      >
+                        ویرایش
+                      </Button>
+                      {/* <Button type="primary" danger onClick={handleClose}>
+                        انصراف
+                      </Button> */}
+                    </div>
         }
         loading={loading}
         open={open}

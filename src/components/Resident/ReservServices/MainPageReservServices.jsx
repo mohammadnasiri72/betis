@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
+import { LoadingOutlined } from '@ant-design/icons';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Card, CardActions, CardContent, CardMedia, Chip, Skeleton, Typography } from '@mui/material';
+import { Divider, Modal } from 'antd';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
@@ -11,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { FaCheckCircle } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
+import { IoHandRight } from 'react-icons/io5';
 import { MdCancel, MdMoreTime } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
@@ -49,6 +53,9 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
   const [open3, setOpen3] = useState(false);
   const [message, setMessage] = useState('');
   const [amountFine, setAmountFine] = useState(0);
+  const [loadingTextBlockService, setLoadingTextBlockService] = useState(false);
+  const [openModalBlockService, setOpenModalBlockService] = useState(false);
+  const [dataa, setDataa] = useState([]);
 
   // console.log(servic.relatedTypeId === 1 ?);
 
@@ -166,12 +173,12 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setOpen(true);
         }
         if (!res.data?.success && res.data?.amountFine === 0) {
-          setMessage(res.data?.message)	
+          setMessage(res.data?.message);
           setOpen2(true);
         }
         if (!res.data?.success && res.data?.amountFine > 0) {
-          setMessage(res.data?.message)
-          setAmountFine(res.data?.amountFine)
+          setMessage(res.data?.message);
+          setAmountFine(res.data?.amountFine);
           setOpen3(true);
         }
 
@@ -254,6 +261,39 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
     }
   }, [serviceTimeId, selectedDateFa]);
 
+  const handleClickService = (service) => {
+    setLoadingTextBlockService(true);
+
+    axios
+      .get(`${mainDomain}/api/ServiceBlocking/GetList`, {
+        params: {
+          serviceId: service?.id,
+          unitId: -1,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.filter((e) => e.unitId === accountResident.id).length > 0) {
+          setOpenModalBlockService(true);
+          setDataa(res.data.filter((e) => e.unitId === accountResident.id));
+        } else if (res.data.filter((e) => e.unitId === 0).length > 0) {
+          setOpenModalBlockService(true);
+          setDataa(res.data.filter((e) => e.unitId === 0));
+        } else {
+          setLevelStepper(1);
+          setServic(service);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoadingTextBlockService(false);
+      });
+  };
+
   return (
     <>
       {levelStepper === 0 && (
@@ -285,7 +325,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
               listService
                 .filter((e) => e.typeId !== 2)
                 .map((service) => (
-                  <div key={service?.id} className=" w-1/2 px-1 mt-4">
+                  <div key={service?.id} className=" sm:w-1/2 w-full px-1 mt-4">
                     <Card className="w-full h-full flex flex-col justify-between">
                       <div>
                         <CardMedia sx={{ height: 150 }} image={mainDomain + service.imageSrc} title="green iguana" />
@@ -361,19 +401,22 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
                       </div>
 
                       <CardActions
-                        onClick={() => {
-                          if (service.isActive) {
-                            setLevelStepper(1);
-                            setServic(service);
-                          }
-                        }}
                         className={
                           service.isActive
                             ? 'bg-[#495677] w-full px-5 py-1 flex justify-center cursor-pointer duration-300 hover:bg-yellow-500 text-white'
                             : 'bg-red-500 w-full px-5 py-1 flex justify-center cursor-not-allowed text-white'
                         }
                       >
-                        {service.isActive && <button className="py-3">مشاهده جزئیات و رزرو</button>}
+                        {service.isActive && (
+                          <button
+                            onClick={() => {
+                              handleClickService(service);
+                            }}
+                            className="py-3"
+                          >
+                            مشاهده جزئیات و رزرو
+                          </button>
+                        )}
                         {!service.isActive && (
                           <button disabled className="cursor-not-allowed py-3">
                             موقتا غیر فعال
@@ -619,8 +662,62 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           </div>
         )}
       </div>
-      <ModalUnsucc open={open2} setOpen={setOpen2} message={message}/>
-      <ModalUnsucc2 open={open3} setOpen={setOpen3} message={message} amountFine={amountFine} reservHandlerSucc={reservHandlerSucc}/>
+      <ModalUnsucc open={open2} setOpen={setOpen2} message={message} />
+      <ModalUnsucc2
+        open={open3}
+        setOpen={setOpen3}
+        message={message}
+        amountFine={amountFine}
+        reservHandlerSucc={reservHandlerSucc}
+      />
+
+      {loadingTextBlockService && (
+        <div className="fixed bottom-0 top-0 left-0 right-0 flex justify-center items-center bg-[#fff5]">
+          <LoadingOutlined style={{ fontSize: 40, color: '#495677' }} spin />
+        </div>
+      )}
+
+      <Modal
+        closable={{ 'aria-label': 'Custom Close Button' }}
+        open={openModalBlockService}
+        onOk={() => {
+          setOpenModalBlockService(false);
+        }}
+        onCancel={() => {
+          setOpenModalBlockService(false);
+        }}
+        footer={[
+          <div className="flex justify-center">
+            <button
+              className="bg-[#495677] text-white px-4 py-1 rounded-lg hover:bg-slate-600 duration-300"
+              key="ok"
+              onClick={() => {
+                setOpenModalBlockService(false);
+              }}
+            >
+              متوجه شدم
+            </button>
+          </div>,
+        ]}
+      >
+        {dataa && (
+          <div className="flex flex-col items-center">
+            <IoHandRight className="text-red-100 bg-red-500 text-7xl p-2 rounded-full" />
+            <span className="text-2xl font-semibold text-red-500 py-3 ">سرویس مسدود شده !!!</span>
+            <div className="flex flex-col items-start gap-2 pb-3">
+              <div className="">
+                {dataa.length > 0 && dataa[0].startDateFa
+                  ? `این سرویس ${dataa[0]?.unitId === 0 ? '' : 'برای شما'} از تاریخ ${dataa[0].startDateFa} تا تاریخ ${
+                      dataa[0].endDateFa
+                    } مسدود شده است`
+                  : `این سرویس ${dataa[0]?.unitId !== 0 ? 'برای شما' : ''} تا اطلاع ثانوی مسدود شده است`}
+              </div>
+              {dataa[0]?.description && <span className="text-xs text-[#0008]">{dataa[0].description}</span>}
+            </div>
+          </div>
+        )}
+        <Divider style={{ margin: 0, padding: 0 }} />
+      </Modal>
     </>
   );
 }

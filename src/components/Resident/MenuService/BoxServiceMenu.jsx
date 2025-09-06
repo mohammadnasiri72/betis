@@ -102,7 +102,7 @@ function BoxServiceMenu({ menu, setNumTotalShop, numTotalShop, orderItems, setOr
                   }}
                   className="text-xs bg-emerald-500 text-white px-3 py-2 rounded-lg duration-300 hover:bg-emerald-600"
                 >
-                  افزودن به سبد خرید
+                  افزودن
                 </button>
               </div>
             )}

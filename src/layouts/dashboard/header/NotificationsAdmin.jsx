@@ -63,7 +63,7 @@ export default function NotificationsAdmin() {
               setTotalUnRead(res.data);
             })
             .catch((err) => {
-              if (err.response.status === 400) {
+              if (err.response.status === 400 || err.response.status === 401) {
                 localStorage.removeItem('token');
                 clearInterval(intervalNotif);
                 navigate('/login');

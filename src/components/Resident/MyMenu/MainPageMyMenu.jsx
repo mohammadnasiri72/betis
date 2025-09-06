@@ -7,6 +7,7 @@ import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import BoxMyMenu from './BoxMyMenu';
 import SurveyPage from './SurveyPage';
+import TabMyMenu from './TabMyMenu';
 
 export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
   const [listMyMenu, setListMyMenu] = useState([]);
@@ -16,11 +17,11 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [stepPage, setStepPage] = useState(0);
+  const [valueTab, setValueTab] = useState(-1);
 
   const { themeMode } = useSettings();
 
   const location = useLocation();
-
 
   useEffect(() => {
     if (location.pathname.includes('/rate/')) {
@@ -39,7 +40,7 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
         .get(`${mainDomain}/api/Order/GetListPaged`, {
           params: {
             buildingId: accountResident.buildingId,
-            serviceId: -1,
+            serviceId: valueTab,
             unitId: accountResident?.id,
             statusId: -1,
             orderBy: '',
@@ -99,6 +100,12 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
               </IconButton>
             </Tooltip>
           </div>
+          <TabMyMenu
+            accountResident={accountResident}
+            valueTab={valueTab}
+            setValueTab={setValueTab}
+            setFlag={setFlag}
+          />
           {listMyMenu.length > 0 &&
             listMyMenu.map((menu) => (
               <div key={menu?.id} className="p-1">

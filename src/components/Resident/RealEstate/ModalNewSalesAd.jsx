@@ -1,11 +1,11 @@
 /* eslint-disable radix */
 import { useEffect, useRef, useState } from 'react';
-import { FiPlusCircle } from 'react-icons/fi';
 
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Button, Modal } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { FaPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -121,20 +121,36 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
 
   return (
     <>
-      <Button onClick={handleClickOpen} type="primary">
-        <FiPlusCircle className="text-xl" />
-        <span className="px-1 whitespace-nowrap">ثبت جدید</span>
-      </Button>
+     
+      <button
+        type="button"
+        onClick={handleClickOpen}
+        className={
+          themeMode === 'dark'
+            ? 'px-5 py-1 bg-slate-700 text-[##fff8] rounded-lg hover:bg-slate-800 duration-300 flex items-center text-sm'
+            : 'px-5 py-1 bg-[#495677] text-white rounded-lg hover:bg-[#eab308] duration-300 flex items-center text-sm'
+        }
+      >
+        <span>ثبت جدید</span>
+        <FaPlus />
+      </button>
       <Modal
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
-          <div className="flex items-center gap-2 border-t pt-2">
-            <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
+          <div className="flex items-center gap-2 border-t pt-2 w-full">
+            <Button
+              size="large"
+              className="w-full bg-[#495677] duration-300 hover:!bg-[#eab308]"
+              disabled={loadingBtn}
+              loading={loadingBtn}
+              type="primary"
+              onClick={setNewSalesAd}
+            >
               ثبت درخواست
             </Button>
-            <Button type="primary" danger onClick={handleClose}>
+            {/* <Button type="primary" danger onClick={handleClose}>
               انصراف
-            </Button>
+            </Button> */}
           </div>
         }
         open={open}

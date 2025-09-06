@@ -83,7 +83,7 @@ export default function ModalNewSurvey({ setFlag, listService }) {
     setNumber(1);
     setBody('');
     setIsActive(true);
-    setValService(listService);
+    // setValService(listService);
     setErrValService(false);
     setErrBody(false);
   };

@@ -1,10 +1,13 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
+import { LoadingOutlined } from '@ant-design/icons';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Card, CardActions, CardContent, CardMedia, Chip, Skeleton, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import { Divider, Modal } from 'antd';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
@@ -12,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { FaCheckCircle } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
+import { IoHandRight } from 'react-icons/io5';
 import { MdCancel, MdMoreTime } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
@@ -43,9 +47,11 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
   const [flagShop, setFlagShop] = useState(false);
   const [isShowTime, setIsShowTime] = useState(false);
 
+  const [loadingTextBlockService, setLoadingTextBlockService] = useState(false);
+  const [openModalBlockService, setOpenModalBlockService] = useState(false);
+  const [dataa, setDataa] = useState([]);
+
   const { themeMode } = useSettings();
-
-
 
   useEffect(() => {
     setPageState(0);
@@ -71,12 +77,6 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
     timerProgressBar: true,
     customClass: 'toast-modal',
   });
-  const formatTime = (value) => {
-    const hours = Math.floor(value);
-    const minutes = Math.floor((value - hours) * 60);
-    // ثانیه‌ها همیشه :00 هستند
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
-  };
 
   const setOrderHandler = () => {
     let data = {};
@@ -126,7 +126,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
         setIsLoadingOrder(false);
         Toast.fire({
           icon: 'error',
-          text: err.response ? err.response.data : 'خطای شبکه',
+          text: err?.response ? err?.response.data : 'خطای شبکه',
           customClass: {
             container: 'toast-modal',
           },
@@ -222,15 +222,46 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
     }
   }, [serviceSelected, flag]);
 
+  const handleClickService = (service) => {
+    setLoadingTextBlockService(true);
+
+    axios
+      .get(`${mainDomain}/api/ServiceBlocking/GetList`, {
+        params: {
+          serviceId: service?.id,
+          unitId: -1,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.filter((e) => e.unitId === accountResident.id).length > 0) {
+          setOpenModalBlockService(true);
+          setDataa(res.data.filter((e) => e.unitId === accountResident.id));
+         
+        } else if (res.data.filter((e) => e.unitId === 0).length > 0) {
+          setOpenModalBlockService(true);
+          setDataa(res.data.filter((e) => e.unitId === 0));
+         
+        } else {
+          navigate(`/resident/menu-service/${service.title}`);
+          setPageState(1);
+          setServiceSelected(service);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoadingTextBlockService(false);
+      });
+  };
+
   return (
     <>
       <div className="px-3 flex items-center">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -244,7 +275,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
               listService
                 .filter((e) => e.typeId === 2)
                 .map((service) => (
-                  <div key={service?.id} className=" w-1/2 px-1 mt-2">
+                  <div key={service?.id} className=" sm:w-1/2 w-full px-1 mt-2">
                     <Card className="w-full h-full flex flex-col justify-between">
                       <div>
                         <CardMedia sx={{ height: 150 }} image={mainDomain + service.imageSrc} title="green iguana" />
@@ -320,18 +351,32 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
                       </div>
 
                       <CardActions
-                        onClick={() => {
-                          navigate(`/resident/menu-service/${service.title}`);
-                          setPageState(1);
-                          setServiceSelected(service);
-                        }}
+                        // onClick={() => {
+                        //   handleClickService(service);
+
+                        //   navigate(`/resident/menu-service/${service.title}`);
+                        //   setPageState(1);
+                        //   setServiceSelected(service);
+                        // }}
                         className={
                           service.isActive
                             ? 'bg-[#495677] w-full px-5 py-3 flex justify-center cursor-pointer duration-300 hover:bg-yellow-500 text-white'
                             : 'bg-red-500 w-full px-5 py-3 flex justify-center cursor-not-allowed text-white'
                         }
                       >
-                        {service.isActive && <button className='py-3'>مشاهده منو و ثبت سفارش</button>}
+                        {service.isActive && (
+                          <button
+                            disabled={loadingTextBlockService}
+                            onClick={() => {
+                              handleClickService(service);
+                            }}
+                            className="py-3"
+                          >
+                            <div className="flex items-center gap-2 whitespace-nowrap">
+                              <span>مشاهده منو و ثبت سفارش</span>
+                            </div>
+                          </button>
+                        )}
                         {!service.isActive && (
                           <button disabled className="cursor-not-allowed">
                             موقتا غیر فعال
@@ -423,6 +468,54 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
           )}
         </div>
       )}
+
+      {loadingTextBlockService && (
+        <div className="fixed bottom-0 top-0 left-0 right-0 flex justify-center items-center bg-[#fff5]">
+          <LoadingOutlined style={{ fontSize: 40, color: '#495677' }} spin />
+        </div>
+      )}
+
+      <Modal
+        closable={{ 'aria-label': 'Custom Close Button' }}
+        open={openModalBlockService}
+        onOk={() => {
+          setOpenModalBlockService(false);
+        }}
+        onCancel={() => {
+          setOpenModalBlockService(false);
+        }}
+        footer={[
+          <div className="flex justify-center">
+            <button
+              className="bg-[#495677] text-white px-4 py-1 rounded-lg hover:bg-slate-600 duration-300"
+              key="ok"
+              onClick={() => {
+                setOpenModalBlockService(false);
+              }}
+            >
+              متوجه شدم
+            </button>
+          </div>,
+        ]}
+      >
+        {dataa && (
+          <div className="flex flex-col items-center">
+            <IoHandRight className="text-red-100 bg-red-500 text-7xl p-2 rounded-full" />
+            <span className="text-2xl font-semibold text-red-500 py-3 ">سرویس مسدود شده !!!</span>
+            <div className="flex flex-col items-start gap-2 pb-3">
+              <div className="">
+                {dataa.length > 0 && dataa[0].startDateFa
+                  ? `این سرویس ${dataa[0]?.unitId === 0 ? '' : 'برای شما'} از تاریخ ${dataa[0].startDateFa} تا تاریخ ${
+                      dataa[0].endDateFa
+                    } مسدود شده است`
+                  : `این سرویس ${dataa[0]?.unitId !== 0 ? 'برای شما' : ''} تا اطلاع ثانوی مسدود شده است`}
+              </div>
+              {dataa[0]?.description && <span className="text-xs text-[#0008]">{dataa[0].description}</span>}
+            </div>
+          </div>
+        )}
+        <Divider style={{ margin: 0, padding: 0 }} />
+      </Modal>
     </>
   );
 }

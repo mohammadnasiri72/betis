@@ -3,20 +3,18 @@
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Card, Collapse } from '@mui/material';
-import { Flex, Rate } from 'antd';
+import { Flex } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
-import { FaAngleLeft } from 'react-icons/fa';
+import { FaAngleLeft, FaRegStar, FaStar } from 'react-icons/fa';
+import Rating from 'react-rating';
 import { Link } from 'react-router-dom';
-import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import ModalCancelMenu from './ModalCancelMenu';
 
 export default function BoxMyMenu({ menu, setFlag }) {
   const [expanded, setExpanded] = useState(false);
   const [listServiceMenu, setListServiceMenu] = useState([]);
-
-  const { themeMode } = useSettings();
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -155,14 +153,12 @@ export default function BoxMyMenu({ menu, setFlag }) {
             {menu.statusId === 1 && <ModalCancelMenu setFlag={setFlag} menu={menu} />}
             {menu.statusId === 3 && menu.surveyScore !== 0 && (
               <Flex gap="middle" vertical>
-                <Rate
-                  allowHalf
-                  disabled
-                  style={{
-                    fontSize: '20px',
-                  }}
-                  value={menu.surveyScore}
-                  className="rtl-rate"
+                <Rating
+                  initialRating={menu.surveyScore}
+                  fractions={10} // تعداد بخش‌های هر ستاره
+                  emptySymbol={<FaRegStar style={{ color: '#ddd', fontSize: '24px' }} />}
+                  fullSymbol={<FaStar style={{ color: '#ffc107', fontSize: '24px' }} />}
+                  readonly
                 />
               </Flex>
             )}
