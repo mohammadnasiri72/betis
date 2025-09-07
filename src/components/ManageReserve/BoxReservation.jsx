@@ -28,7 +28,6 @@ export default function BoxReservation({ reserve, listService, setFlag }) {
   const [expanded, setExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(reserve);
 
   const url = useLocation();
 

@@ -6,7 +6,6 @@ import { Navigate, useLocation, useNavigate, useRoutes } from 'react-router-dom'
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 import DashboardLayout from '../layouts/dashboard';
 // components
-import MyRealEstate from '../pages/MyRealEstate';
 import LoadingScreen from '../components/LoadingScreen';
 import HomeResident from '../components/Resident/HomeResident';
 import BoardNoticeResident from '../pages/BoardNoticeResident';
@@ -51,6 +50,7 @@ import MyGuest from '../pages/MyGuest';
 import MyInfoUnit from '../pages/MyInfoUnit';
 import MyMenu from '../pages/MyMenu';
 import MyPet from '../pages/MyPet';
+import MyRealEstate from '../pages/MyRealEstate';
 import MyReserve from '../pages/MyReserve';
 import MyVehicle from '../pages/MyVehicle';
 import MyWallet from '../pages/MyWallet';
@@ -383,6 +383,12 @@ export default function Router() {
         {
           path: 'my-reserve',
           element: <MyReserve accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+          children: [
+            {
+              path: 'rate/:number',
+              element: <MyReserve accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+            },
+          ],
         },
         {
           path: 'my-realEstate',

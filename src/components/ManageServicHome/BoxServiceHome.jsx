@@ -44,10 +44,10 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
     <>
       <div className="p-3">
         <Card sx={{ maxWidth: 800, margin: '0px auto', boxShadow: 3, borderRadius: 2, p: 0 }}>
-          <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 1 }}>
+          <Box sx={{ bgcolor: '#495677', color: 'white', p: 1 }}>
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-start justify-center gap-1">
-                <Typography variant="h5" component="h2" align="center">
+                <Typography sx={{fontSize:'16px !important'}} variant="h6" component="h6" align="center">
                   {translateType(serviceHome.type)} {translateSubject(serviceHome.subject)}
                 </Typography>
               </div>

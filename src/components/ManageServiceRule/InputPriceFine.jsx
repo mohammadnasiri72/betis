@@ -48,10 +48,10 @@ function InputPriceFine({ showPrice, setShowPrice, errAmountFine, setErrAmountFi
             setAmountFine(Number(formatted.replaceAll(',', '')));
           }
         }}
-        placeholder="مبلغ جریمه استفاده مازاد"
+        placeholder="مبلغ هزینه استفاده مازاد"
         className={`w-full !outline-none ${errAmountFine ? 'border-2 border-red-500 rounded-lg' : ''}`}
       />
-      {errAmountFine && <span className="text-red-500 text-xs flex p-1">*مبلغ جریمه استفاده مازاد را وارد کنید</span>}
+      {errAmountFine && <span className="text-red-500 text-xs flex p-1">*مبلغ هزینه استفاده مازاد را وارد کنید</span>}
       {suggestedPrice && (
         <div className="text-start px-2" style={{ fontSize: '10px' }}>
           {Num2persian(Number(suggestedPrice.replaceAll(',', '')))} تومان{' '}

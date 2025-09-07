@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiPlusCircle } from 'react-icons/fi';
 
-import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { Button, Modal } from 'antd';
+import { Autocomplete, Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Modal, Spin } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
@@ -129,20 +129,55 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
 
   return (
     <>
-      <Button size="large" onClick={handleClickOpen} type="primary">
+     
+      <Button
+        onClick={handleClickOpen}
+        variant="contained"
+        id="basic-button"
+        sx={{
+          boxShadow: 'none',
+          backgroundColor: themeMode === 'dark' ? '#212b36' : '#eef2ff',
+          color: themeMode === 'dark' ? '#fff' : '#4f46e5',
+          '&:hover': {
+            backgroundColor: themeMode === 'dark' ? '#212436' : '#e0e7ff',
+            color: themeMode === 'dark' ? '#eee' : '#4f47e5',
+          },
+        }}
+      >
         <FiPlusCircle className="text-xl" />
-        <span className="whitespace-nowrap">ثبت جدید</span>
+        <span className="px-1 whitespace-nowrap">ثبت جدید</span>
       </Button>
 
       <Modal
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
           <div className="flex items-center gap-2 border-t pt-2">
-            <Button disabled={loadingBtn} loading={loadingBtn} type="primary" onClick={setNewSalesAd}>
-              ثبت درخواست
-            </Button>
-            <Button type="primary" danger onClick={handleClose}>
-              انصراف
+            
+            <Button
+              disabled={loadingBtn}
+              size="large"
+              sx={{
+                boxShadow: 'none',
+                width: '100%',
+                py: 1,
+                backgroundColor: '#00005e',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#00007e',
+                },
+              }}
+              variant="contained"
+              autoFocus
+              onClick={setNewSalesAd}
+            >
+              {loadingBtn ? (
+                <div className="flex items-center">
+                  <span className="px-2">ثبت</span>
+                  <Spin />
+                </div>
+              ) : (
+                <span>ثبت</span>
+              )}
             </Button>
           </div>
         }

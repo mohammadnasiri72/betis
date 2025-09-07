@@ -49,6 +49,7 @@ export default function MainPageManageReserve() {
 
   const { themeMode } = useSettings();
 
+
   // get list building & yearId
   useEffect(() => {
     Promise.all([
@@ -92,10 +93,10 @@ export default function MainPageManageReserve() {
         .then((res) => {
           setListUnit(res[0].data);
           setValUnit({ title: 'همه', id: -1 });
-          setListService(res[1].data);
+          setListService(res[1].data.filter((e) => e.typeId !== 2));
           setValService(-1);
-          getListReserve({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 0 });
           getListReserve({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 1 });
+          getListReserve({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 0 });
           setValueStatus(0);
         })
         .catch(() => {});
@@ -110,6 +111,7 @@ export default function MainPageManageReserve() {
 
   useEffect(() => {
     if (flagTimer !== 0) {
+      
       axios
         .get(`${mainDomain}/api/Reservation/GetListPaged`, {
           params: {
@@ -128,6 +130,8 @@ export default function MainPageManageReserve() {
           },
         })
         .then((res) => {
+         
+          
           if (res.data.totalCount > totalCountPending) {
             if (valueStatus === 0) {
               setListReserve(res.data.items);

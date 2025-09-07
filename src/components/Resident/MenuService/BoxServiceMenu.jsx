@@ -3,8 +3,8 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { Card } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { mainDomain } from '../../../utils/mainDomain';
 import useSettings from '../../../hooks/useSettings';
+import { mainDomain } from '../../../utils/mainDomain';
 
 function BoxServiceMenu({ menu, setNumTotalShop, numTotalShop, orderItems, setOrderItems, flagShop }) {
   const [isShop, setIsShop] = useState(false);
@@ -43,25 +43,25 @@ function BoxServiceMenu({ menu, setNumTotalShop, numTotalShop, orderItems, setOr
                 </div>
               </div>
             </div>
-              <div className="flex items-center">
-                <span className="font-semibold">{numberWithCommas(menu.price)} </span>
-                <span className="text-xs px-1">تومان</span>
-              </div>
-
-            
+            <div className="flex items-center">
+              <span className="font-semibold">{numberWithCommas(menu.price)} </span>
+              <span className="text-xs px-1">تومان</span>
+            </div>
           </div>
-          <div className="flex items-center px-2">
-            <DescriptionOutlinedIcon />
-            <span
-              className={
-                themeMode === 'dark'
-                  ? 'pr-5 text-justify text-xs text-[#fff8]'
-                  : 'pr-5 text-justify text-xs text-[#0008]'
-              }
-            >
-              {menu.description}
-            </span>
-          </div>
+          {menu.description && (
+            <div className="flex items-center px-2">
+              <DescriptionOutlinedIcon />
+              <span
+                className={
+                  themeMode === 'dark'
+                    ? 'pr-5 text-justify text-xs text-[#fff8]'
+                    : 'pr-5 text-justify text-xs text-[#0008]'
+                }
+              >
+                {menu.description}
+              </span>
+            </div>
+          )}
           <div className="flex items-center justify-between pt-3 px-2">
             {menu.inventory !== -1 && (
               <div className="flex items-center px-2">
