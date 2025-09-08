@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router';
+import { useSwipeable } from 'react-swipeable';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import { sidebarResident } from '../navbar/NavConfig';
@@ -27,6 +28,8 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
   const [isLoading, setIsLoading] = useState(false);
   const [openGroup, setOpenGroup] = useState({});
   const [srcLogo, setsrcLogo] = useState('');
+  const [swipeDirection, setSwipeDirection] = useState('');
+  const [position, setPosition] = useState(0);
   const navigate = useNavigate();
   const url = window.location.pathname;
 
@@ -288,6 +291,16 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
     </div>
   );
 
+  const handlers = useSwipeable({
+    onSwipedRight: () => {
+      setSwipeDirection('راست');
+      setPosition(100);
+      setOpen(false);
+    },
+
+    trackMouse: true, // برای تست در دسکتاپ هم باشه
+  });
+
   return (
     <>
       {!open && (
@@ -376,23 +389,17 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
         open={open}
         onClose={toggleDrawer(false)}
       >
-        {DrawerList}
-        {/* <div
-          onClick={() => {
-            setOpen(false);
-          }}
-          className="absolute top-0 left-0"
-        >
-          asdasd
-        </div> */}
-        <div className="absolute top-2 left-4">
-          <IconButton
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            <IoCloseSharp />
-          </IconButton>
+        <div {...handlers}>
+          {DrawerList}
+          <div className="absolute top-2 left-4">
+            <IconButton
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <IoCloseSharp />
+            </IconButton>
+          </div>
         </div>
       </Drawer>
     </>
