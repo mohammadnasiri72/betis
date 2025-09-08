@@ -28,8 +28,6 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
   const [isLoading, setIsLoading] = useState(false);
   const [openGroup, setOpenGroup] = useState({});
   const [srcLogo, setsrcLogo] = useState('');
-  const [swipeDirection, setSwipeDirection] = useState('');
-  const [position, setPosition] = useState(0);
   const navigate = useNavigate();
   const url = window.location.pathname;
 
@@ -39,7 +37,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
     }
   }, [logoImg]);
 
-  const { themeMode, themeColorPresets, colorOption } = useSettings();
+  const { themeMode } = useSettings();
 
   const StyledToggleButton = styled(ToggleButton)({
     display: 'flex',
@@ -293,8 +291,6 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
 
   const handlers = useSwipeable({
     onSwipedRight: () => {
-      setSwipeDirection('راست');
-      setPosition(100);
       setOpen(false);
     },
 
