@@ -39,7 +39,6 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
     }
   };
 
-
   return (
     <>
       <div className="p-3">
@@ -47,7 +46,7 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
           <Box sx={{ bgcolor: '#495677', color: 'white', p: 1 }}>
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-start justify-center gap-1">
-                <Typography sx={{fontSize:'16px !important'}} variant="h6" component="h6" align="center">
+                <Typography sx={{ fontSize: '16px !important' }} variant="h6" component="h6" align="center">
                   {translateType(serviceHome.type)} {translateSubject(serviceHome.subject)}
                 </Typography>
               </div>
@@ -64,10 +63,15 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
 
           <CardContent sx={{ paddingTop: 2, margin: 0 }}>
             <div className="flex justify-between items-center border-b pb-2">
-              <div className="flex items-center gap-1 text-sm">
-                <span>مبلغ پیشنهادی : </span>
-                <span className="font-bold text-lg">{serviceHome.amount.toLocaleString()}</span>
-                <span>تومان</span>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <FaCalendarDays className="text-[#0009] text-sm" />
+                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[0]}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <MdTimer className="text-[#0009] text-sm" />
+                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1]}</span>
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 <Chip size="small" label={listUnit.find((e) => e.id === serviceHome.unitId)?.title} color="info" />
@@ -88,17 +92,19 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
             </div>
 
             <div className="mt-2">
-              <p className="w-full text-start">{serviceHome.description || 'توضیحاتی وارد نشده است'}</p>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1">
-                  <FaCalendarDays className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[0]}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdTimer className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1]}</span>
-                </div>
+              <div className="flex items-center gap-1 text-sm">
+                <span>مبلغ پیشنهادی : </span>
+                {serviceHome.amount > 0 && (
+                  <div>
+                    <span className="font-bold text-lg">{serviceHome.amount.toLocaleString()}</span>
+                    <span className="px-1">تومان</span>
+                  </div>
+                )}
+                {serviceHome.amount === 0 && <span className="font-bold">توافقی</span>}
               </div>
+              <p className="w-full text-start text-sm text-[#0008] mt-2">
+                {serviceHome.description || 'توضیحاتی وارد نشده است'}
+              </p>
             </div>
           </CardContent>
         </Card>

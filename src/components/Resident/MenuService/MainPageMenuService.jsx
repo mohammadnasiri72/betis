@@ -63,10 +63,17 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
 
   const resetState = () => {
     setNumTotalShop(0);
-    setValCashOrDebt(1);
     setDescription('');
     setOrderItems([]);
   };
+
+  useEffect(() => {
+    if (serviceSelected.paymentTypeId === 2) {
+      setValCashOrDebt(2);
+    } else {
+      setValCashOrDebt(1);
+    }
+  }, [serviceSelected]);
 
   // import sweet alert 2
   const Toast = Swal.mixin({
@@ -239,11 +246,9 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
         if (res.data.filter((e) => e.unitId === accountResident.id).length > 0) {
           setOpenModalBlockService(true);
           setDataa(res.data.filter((e) => e.unitId === accountResident.id));
-         
         } else if (res.data.filter((e) => e.unitId === 0).length > 0) {
           setOpenModalBlockService(true);
           setDataa(res.data.filter((e) => e.unitId === 0));
-         
         } else {
           navigate(`/resident/menu-service/${service.title}`);
           setPageState(1);
@@ -279,7 +284,6 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
                     <Card className="w-full h-full flex flex-col justify-between">
                       <div>
                         <CardMedia sx={{ height: 150 }} image={mainDomain + service.imageSrc} title="green iguana" />
-
                         <CardContent className=" relative ">
                           <div className="flex justify-between items-center -mt-4">
                             <Typography gutterBottom variant="h6" component="div">
@@ -444,6 +448,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
               setIsShowTime={setIsShowTime}
               orderItems={orderItems}
               listServiceMenu={listServiceMenu}
+              serviceSelected={serviceSelected}
             />
           )}
           {listServiceMenu.length === 0 && !isLoadingMenu && (

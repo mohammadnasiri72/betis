@@ -151,7 +151,7 @@ export default function ModalEditServiceRule({
 
   // set new serviceRule
   const editServiceRule = () => {
-    if (amountFine === 0 && showPrice === 1) {
+    if (!amountFine  && showPrice === 1) {
       setErrAmountFine(true);
     } else {
       setIsLoading(true);

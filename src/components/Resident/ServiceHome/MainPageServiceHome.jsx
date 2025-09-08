@@ -88,12 +88,20 @@ function MainPageServiceHome({ accountResident, flagRefreshPage }) {
 
   return (
     <>
-      <div className="px-3 flex items-center">
+      <div className="px-3 flex items-center justify-between">
         <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
+        <Button
+          variant="outlined"
+          endIcon={<ArrowBackIcon />}
+          onClick={() => navigate('/resident/my-realEstate')}
+          sx={{ mr: 1 }}
+        >
+          ثبت آگهی
+        </Button>
       </div>
-      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto">
+      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto px-2">
         <h1
           style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
           className="text-[1.1rem] font-semibold whitespace-nowrap"

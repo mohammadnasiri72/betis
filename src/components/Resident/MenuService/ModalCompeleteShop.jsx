@@ -50,6 +50,7 @@ export default function ModalCompeleteShop({
   setIsShowTime,
   orderItems,
   listServiceMenu,
+  serviceSelected,
 }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -61,6 +62,7 @@ export default function ModalCompeleteShop({
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+
 
   React.useEffect(() => {
     handleClose();
@@ -183,6 +185,7 @@ export default function ModalCompeleteShop({
                 <div className="flex ">
                   <div className="px-2">
                     <button
+                      disabled={serviceSelected.paymentTypeId === 2}
                       onClick={() => setValCashOrDebt(1)}
                       style={{ backgroundColor: valCashOrDebt === 1 ? 'rgb(110 231 183)' : '' }}
                       className="flex items-center border rounded-lg px-3 py-1 shadow-lg duration-500"
@@ -193,6 +196,7 @@ export default function ModalCompeleteShop({
                   </div>
                   <div className="px-2">
                     <button
+                      disabled={serviceSelected.paymentTypeId === 1}
                       onClick={() => setValCashOrDebt(2)}
                       style={{ backgroundColor: valCashOrDebt === 2 ? 'rgb(110 231 183)' : '' }}
                       className="flex items-center border rounded-lg px-3 py-1 shadow-lg duration-500"

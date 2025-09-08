@@ -233,6 +233,7 @@ function MainPageManageServicHome() {
               setFlag={setFlag}
               typeRealEstate={typeRealEstate}
               subjectsRealEstate={subjectsRealEstate}
+              setValueTab={setValueTab}
             />
           </div>
         )}

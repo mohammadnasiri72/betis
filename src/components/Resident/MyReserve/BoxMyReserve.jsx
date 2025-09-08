@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { BiMaleFemale } from 'react-icons/bi';
 import { FaAngleLeft, FaCheckCircle, FaFemale, FaMale, FaRegStar, FaStar } from 'react-icons/fa';
 import { MdAccessTime, MdCancel } from 'react-icons/md';
+import { TbListNumbers } from 'react-icons/tb';
 import Rating from 'react-rating';
 import { Link } from 'react-router-dom';
 import useSettings from '../../../hooks/useSettings';
@@ -133,7 +134,6 @@ export default function BoxMyReserve({ myReserve, setIsLoading, setFlag, listSer
                 </Link>
               </div>
             )}
-           
           </CardContent>
           <div className="flex justify-between items-center w-full -mt-3 p-2">
             <button
@@ -156,16 +156,16 @@ export default function BoxMyReserve({ myReserve, setIsLoading, setFlag, listSer
               />
             )}
             {myReserve.statusId === 3 && myReserve.surveyScore > 0 && (
-                <Flex gap="middle" vertical>
-                  <Rating
-                    initialRating={myReserve.surveyScore}
-                    fractions={10} // تعداد بخش‌های هر ستاره
-                    emptySymbol={<FaRegStar style={{ color: '#ddd', fontSize: '16px' }} />}
-                    fullSymbol={<FaStar style={{ color: '#ffc107', fontSize: '16px' }} />}
-                    readonly
-                  />
-                </Flex>
-              )}
+              <Flex gap="middle" vertical>
+                <Rating
+                  initialRating={myReserve.surveyScore}
+                  fractions={10} // تعداد بخش‌های هر ستاره
+                  emptySymbol={<FaRegStar style={{ color: '#ddd', fontSize: '16px' }} />}
+                  fullSymbol={<FaStar style={{ color: '#ffc107', fontSize: '16px' }} />}
+                  readonly
+                />
+              </Flex>
+            )}
           </div>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <div className="flex justify-between px-5 pb-2">
@@ -210,6 +210,43 @@ export default function BoxMyReserve({ myReserve, setIsLoading, setFlag, listSer
                 <span className="px-1">مربی</span>
               </div>
             </div>
+            {myReserve?.reservationRelatedInfo && (
+              <div className="flex w-full items-center justify-between p-3">
+                <div className="flex justify-center items-center px-1 mt-2">
+                  <p className="text-sm px-1 font-semibold flex justify-center">
+                    {myReserve?.reservationRelatedInfo?.desc}
+                  </p>
+                </div>
+                <div className="px-1">
+                  {myReserve?.reservationRelatedInfo?.typeId === 1 && (
+                    <Chip
+                      label={`${myReserve?.reservationRelatedInfo?.value}`}
+                      icon={<TbListNumbers className="text-xl" />}
+                    />
+                  )}
+                  {myReserve?.reservationRelatedInfo?.typeId === 0 && (
+                    <p
+                      className={
+                        themeMode === 'dark'
+                          ? 'border p-2 border-[#fff8] text-sm'
+                          : 'border p-2 border-[#0008] bg-[#e7ebf0] text-sm'
+                      }
+                    >
+                      {`ایران${myReserve?.reservationRelatedInfo?.value.slice(
+                        6,
+                        8
+                      )}-${myReserve?.reservationRelatedInfo?.value.slice(
+                        3,
+                        6
+                      )}${myReserve?.reservationRelatedInfo?.value.slice(
+                        2,
+                        3
+                      )}${myReserve?.reservationRelatedInfo?.value.slice(0, 2)}`}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </Collapse>
         </Card>
       </div>

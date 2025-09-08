@@ -45,13 +45,11 @@ export default function ToggleButtonFilterStatus({
   setPageIndex,
   totalCountTa,
 }) {
-  const handleChange = (event, newValue) => {    
+  const handleChange = (event, newValue) => {
     setValue(newValue);
     getListReserve({ statusId: newValue === 5 ? -1 : newValue, pageIndex: 1 });
     setPageIndex(1);
   };
-
-  
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -72,9 +70,7 @@ export default function ToggleButtonFilterStatus({
           allowScrollButtonsMobile
           aria-label="scrollable force tabs example"
         >
-
-
-          <Tab 
+          <Tab
             onClick={() => {
               if (value === 0) {
                 getListReserve();
@@ -91,17 +87,15 @@ export default function ToggleButtonFilterStatus({
             {...a11yProps(0)}
           />
 
-
           <Tab
             onClick={() => {
               if (value === 1) {
                 getListReserve();
               }
             }}
-            label={`تایید شده ${ totalCountTa !== 0 ? `(${totalCountTa})` : ''}`}
+            label={`تایید شده ${`(${totalCountTa})`}`}
             {...a11yProps(1)}
           />
-
 
           <Tab
             onClick={() => {
@@ -113,7 +107,6 @@ export default function ToggleButtonFilterStatus({
             {...a11yProps(2)}
           />
 
-
           <Tab
             onClick={() => {
               if (value === 3) {
@@ -123,7 +116,6 @@ export default function ToggleButtonFilterStatus({
             label={`انجام شده ${value === 3 && totalCount !== '' ? `(${totalCount})` : ''}`}
             {...a11yProps(3)}
           />
-
 
           <Tab
             onClick={() => {
@@ -135,7 +127,6 @@ export default function ToggleButtonFilterStatus({
             {...a11yProps(4)}
           />
 
-
           <Tab
             onClick={() => {
               if (value === 5) {
@@ -145,8 +136,6 @@ export default function ToggleButtonFilterStatus({
             label={`همه ${value === 5 && totalCount !== '' ? `(${totalCount})` : ''}`}
             {...a11yProps(5)}
           />
-
-
         </Tabs>
       </Box>
     </Box>

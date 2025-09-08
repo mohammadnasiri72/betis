@@ -7,6 +7,8 @@ import { Flex } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 import { FaAngleLeft, FaRegStar, FaStar } from 'react-icons/fa';
+import { HiMiniCurrencyDollar } from 'react-icons/hi2';
+import { MdAccessTimeFilled } from 'react-icons/md';
 import Rating from 'react-rating';
 import { Link } from 'react-router-dom';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -55,23 +57,26 @@ export default function BoxMyMenu({ menu, setFlag }) {
           <div className="flex justify-between px-3 py-3 ">
             <div className="flex items-start">
               <img
-                className="w-20 h-20 rounded-full object-cover"
+                className="sm:w-20 w-16 sm:h-20 h-16 rounded-full object-cover"
                 src={`${mainDomain}${menu.serviceImageSrc}`}
                 alt=""
               />
               <div className="flex flex-col items-start justify-center px-1">
                 <span className="font-semibold px-3">{menu.serviceTitle}</span>
 
-                <div className="text-start px-3 mt-2 ">
-                  <span className="text-xs"> ثبت سفارش : </span>
-                  <span className="font-semibold text-xs">
+                <div className="flex items-center mt-2 px-3 gap-1 whitespace-nowrap">
+                  {/* <span className="text-xs"> ثبت سفارش : </span> */}
+                  <MdAccessTimeFilled />
+                  <span className="font-semibold text-xs whitespace-nowrap">
                     {menu.createdDateTimeFa.slice(11, 16)} - {menu.createdDateTimeFa.slice(0, 11)}{' '}
                   </span>
                 </div>
-                <div className="px-3 flex justify-between">
-                  <div className="text-start">
-                    <span className="text-xs">مجموع سفارش : </span>
+                <div className="px-3 flex justify-between mt-1">
+                  <div className="flex items-center gap-1 whitespace-nowrap">
+                    {/* <span className="text-xs">مجموع سفارش : </span> */}
+                    <HiMiniCurrencyDollar />
                     <span className="font-semibold text-xs">{numberWithCommas(menu.totalPrice)} تومان</span>
+                    <span className="text-xs bg-slate-50 text-slate-600 rounded-full">{menu.paymentStatus}</span>
                   </div>
                 </div>
               </div>
@@ -100,23 +105,21 @@ export default function BoxMyMenu({ menu, setFlag }) {
               >
                 {menu.status}
               </span>
-              <span className="text-xs bg-slate-50 text-slate-600 rounded-full px-2 py-1 mt-2">
-                {menu.paymentStatus}
-              </span>
+
               <span> </span>
             </div>
           </div>
 
           <div className="flex justify-between">
-            <div className="text-start px-3 py-1">
-              <span className="text-xs"> تاریخ تحویل سفارش : </span>
+            <div className="flex sm:flex-row flex-col items-start px-3 py-1">
+              <span className="text-xs whitespace-nowrap"> تاریخ تحویل سفارش : </span>
               <span className="font-semibold text-xs">{menu.dateDeliveryFa.slice(0, 11)}</span>
             </div>
             {menu.startDelivery && (
-              <div className="text-start px-3 py-1">
-                <span className="text-xs"> زمان تحویل سفارش : </span>
+              <div className="flex sm:flex-row flex-col items-start px-3 py-1">
+                <span className="text-xs whitespace-nowrap"> زمان تحویل سفارش : </span>
 
-                <span className="font-semibold text-xs">
+                <span className="font-semibold text-xs whitespace-nowrap">
                   {menu.endDelivery.slice(0, 5)} - {menu.startDelivery.slice(0, 5)}
                 </span>
               </div>
@@ -143,7 +146,7 @@ export default function BoxMyMenu({ menu, setFlag }) {
               onClick={handleExpandClick}
               className="px-2 py-1 rounded-lg text-yellow-500 flex items-center duration-300 hover:text-yellow-600 text-sm"
             >
-              <span className="mt-1">مشاهده جزئیات سفارش</span>
+              <span className="mt-1">مشاهده جزئیات</span>
               <ExpandMoreIcon
                 className="duration-300"
                 style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
@@ -156,8 +159,8 @@ export default function BoxMyMenu({ menu, setFlag }) {
                 <Rating
                   initialRating={menu.surveyScore}
                   fractions={10} // تعداد بخش‌های هر ستاره
-                  emptySymbol={<FaRegStar style={{ color: '#ddd', fontSize: '24px' }} />}
-                  fullSymbol={<FaStar style={{ color: '#ffc107', fontSize: '24px' }} />}
+                  emptySymbol={<FaRegStar className="text-[#ddd] text-xl" />}
+                  fullSymbol={<FaStar className="text-[#ffc107] text-xl" />}
                   readonly
                 />
               </Flex>

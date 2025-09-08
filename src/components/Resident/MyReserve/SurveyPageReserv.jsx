@@ -38,7 +38,6 @@ function SurveyPageReserv({ setFlag }) {
 
   const { themeMode } = useSettings();
 
-
   const navigate = useNavigate();
   const params = useParams();
 
@@ -302,7 +301,7 @@ function SurveyPageReserv({ setFlag }) {
                 <Chip size="small" label={`${reserve.dateFa}`} icon={<EventIcon />} />
                 <Chip
                   size="small"
-                  label={`${reserve.serviceTime.startTime.slice(0, 5)} تا ${reserve.serviceTime.endTime.slice(0, 5)}`}
+                  label={`${reserve.startTime.slice(0, 5)} تا ${reserve.endTime.slice(0, 5)}`}
                   icon={<MdAccessTime />}
                 />
               </div>

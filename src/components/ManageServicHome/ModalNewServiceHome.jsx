@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
+import InputPriceFine from './InputPriceFine';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -25,13 +26,14 @@ ModalNewServiceHome.propTypes = {
   setFlag: PropTypes.func,
   typeRealEstate: PropTypes.object,
   subjectsRealEstate: PropTypes.object,
+  setValueTab: PropTypes.func,
 };
-function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEstate }) {
+function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEstate, setValueTab }) {
   const [open, setOpen] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [valUnit, setValUnit] = useState('');
   const [errValUnit, setErrValUnit] = useState(false);
-
+  const [showPrice, setShowPrice] = useState(0);
   const [valTypeRealEstate, setValTypeRealEstate] = useState(1);
 
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(1);
@@ -54,8 +56,10 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
     setValSubjectsRealEstate(1);
     setAmount('');
     setDesc('');
+    setValUnit('');
     setErrAmount(false);
     setErrValUnit(false);
+    setShowPrice(0);
   };
 
   const handleClickOpen = () => {
@@ -68,14 +72,14 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
   };
 
   const setNewSalesAd = () => {
-    if (!amount) {
+    if (!amount && showPrice === 1) {
       setErrAmount(true);
     }
     if (!valUnit.id) {
       setErrValUnit(true);
     }
 
-    if (amount && valUnit.id) {
+    if ((amount || showPrice === 0) && valUnit.id) {
       const data = {
         unitId: valUnit.id,
         typeId: valTypeRealEstate,
@@ -91,6 +95,7 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
           },
         })
         .then(() => {
+          setValueTab(0);
           resetState();
           setFlag((e) => !e);
           handleClose();
@@ -129,7 +134,6 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
 
   return (
     <>
-     
       <Button
         onClick={handleClickOpen}
         variant="contained"
@@ -152,7 +156,6 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
         title={<h2 className={`text-lg ${themeMode === 'dark' ? 'text-white' : 'text-black'}`}>ثبت آگهی جدید</h2>}
         footer={
           <div className="flex items-center gap-2 border-t pt-2">
-            
             <Button
               disabled={loadingBtn}
               size="large"
@@ -205,53 +208,29 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
                 ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">موضوع</InputLabel>
-            <Select
-              size="small"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={valSubjectsRealEstate}
-              label="موضوع "
-              onChange={(e) => {
-                setValSubjectsRealEstate(e.target.value);
-              }}
-            >
-              {optionsSubject.length > 0 &&
-                optionsSubject.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-        </div>
-
-        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 ">
-          <div className="w-full">
-            <TextField
-              inputRef={inputRef}
-              color={errAmount ? 'error' : 'primary'}
-              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              onKeyPress={(e) => {
-                if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                  e.preventDefault();
-                }
-              }}
-              onChange={(e) => {
-                const numbersOnly = e.target.value.replace(/\D/g, '');
-                setAmount(numbersOnly);
-                setErrAmount(false);
-              }}
-              fullWidth
-              size="small"
-              id="outlined-basic"
-              label="مبلغ پیشنهادی"
-              variant="outlined"
-            />
-            {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+          <div className="w-full sm:mt-0 mt-3">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">موضوع</InputLabel>
+              <Select
+                size="small"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={valSubjectsRealEstate}
+                label="موضوع "
+                onChange={(e) => {
+                  setValSubjectsRealEstate(e.target.value);
+                }}
+              >
+                {optionsSubject.length > 0 &&
+                  optionsSubject.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
           </div>
-          <div className="w-full ">
+          <div className="w-full sm:mt-0 mt-3">
             <Autocomplete
               size="small"
               className="w-full"
@@ -291,6 +270,40 @@ function ModalNewServiceHome({ listUnit, setFlag, typeRealEstate, subjectsRealEs
             />
             {errValUnit && <p className="text-xs text-red-500 text-start">*لطفا واحد را انتخاب کنید</p>}
           </div>
+        </div>
+
+        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 w-full">
+          {/* <div className="w-full">
+            <TextField
+              inputRef={inputRef}
+              color={errAmount ? 'error' : 'primary'}
+              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              onKeyPress={(e) => {
+                if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const numbersOnly = e.target.value.replace(/\D/g, '');
+                setAmount(numbersOnly);
+                setErrAmount(false);
+              }}
+              fullWidth
+              size="small"
+              id="outlined-basic"
+              label="مبلغ پیشنهادی"
+              variant="outlined"
+            />
+            {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+          </div> */}
+          <InputPriceFine
+            showPrice={showPrice}
+            setShowPrice={setShowPrice}
+            errAmountFine={errAmount}
+            setErrAmountFine={setErrAmount}
+            setAmountFine={setAmount}
+            amountFineEdit={amount}
+          />
         </div>
 
         <div className="mt-5">

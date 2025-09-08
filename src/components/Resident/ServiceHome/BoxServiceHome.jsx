@@ -52,17 +52,7 @@ function BoxServiceHome({ serviceHome, listUnit }) {
 
           <CardContent sx={{ paddingTop: 2, margin: 0 }}>
             <div className="flex justify-between items-center border-b pb-2">
-              <div className="flex items-center gap-1 text-sm">
-                <span>مبلغ پیشنهادی : </span>
-                <span className="font-bold text-lg">{serviceHome.amount.toLocaleString()}</span>
-                <span>تومان</span>
-              </div>
-              <Chip size="small" label={listUnit.find((e) => e.id === serviceHome.unitId)?.title} color="info" />
-            </div>
-
-            <div className="mt-2">
-              <p className="w-full text-start">{serviceHome.description || 'توضیحاتی وارد نشده است'}</p>
-              <div className="flex items-center gap-3 mt-2">
+              <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   <FaCalendarDays className="text-[#0009] text-sm" />
                   <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[0]}</span>
@@ -72,6 +62,24 @@ function BoxServiceHome({ serviceHome, listUnit }) {
                   <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1]}</span>
                 </div>
               </div>
+              <Chip size="small" label={listUnit.find((e) => e.id === serviceHome.unitId)?.title} color="info" />
+            </div>
+
+            <div className="mt-2">
+              <div className="flex items-center gap-1 text-sm">
+                <span>مبلغ پیشنهادی : </span>
+                {serviceHome.amount > 0 && (
+                  <div>
+                    <span className="font-bold text-lg">{serviceHome.amount.toLocaleString()}</span>
+                    <span className="px-1">تومان</span>
+                  </div>
+                )}
+                {serviceHome.amount === 0 && <span className="font-bold">توافقی</span>}
+              </div>
+              <p className="w-full text-start text-sm text-[#0008] mt-2">
+                {serviceHome.description || 'توضیحاتی وارد نشده است'}
+              </p>
+              
             </div>
           </CardContent>
         </Card>

@@ -23,10 +23,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 function ModalUnsucc2({ open, setOpen, message, amountFine, reservHandlerSucc }) {
   const { themeMode } = useSettings();
 
+
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(amountFine);
 
   return (
     <>
@@ -69,12 +69,12 @@ function ModalUnsucc2({ open, setOpen, message, amountFine, reservHandlerSucc })
               </span>
             </Stack>
             <div className="text-start px-3">
-              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>مشکل در رزرو</h4>
+              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>توجه!!</h4>
               <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>
                 {message || 'مشکلی در رزرو پیش آمده است!!!'}
               </p>
               <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>
-                در صورت تمایل به رزرو مبلغ {amountFine.toLocaleString()} تومان از حساب شما کسر میگردد
+                در صورت تمایل به رزرو مبلغ {amountFine.toLocaleString()} بابت هزینه استفاده مازاد از حساب شما کسر می‌گردد
               </p>
             </div>
           </div>

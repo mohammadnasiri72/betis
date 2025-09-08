@@ -68,7 +68,7 @@ function ModalUnsucc({ open, setOpen , message}) {
               </span>
             </Stack>
             <div className="text-start px-3">
-              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>مشکل در رزرو</h4>
+              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>توجه!!</h4>
               <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>{message || "مشکلی در رزرو پیش آمده است!!!"}</p>
             </div>
           </div>

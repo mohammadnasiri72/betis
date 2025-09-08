@@ -27,9 +27,9 @@ import { FiPlusCircle } from 'react-icons/fi';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import 'react-multi-date-picker/styles/layouts/mobile.css';
 import Swal from 'sweetalert2';
+import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import SimpleBackdrop from '../backdrop';
-import useSettings from '../../hooks/useSettings';
 import InputPriceFine from './InputPriceFine';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -94,7 +94,9 @@ export default function ModalNewServiceRule({ setFlag, listService, valService, 
     setValType(1);
     setNumber(1);
     setValcheckBoxType('allWeekDays');
-    setShowPrice(0)
+    setShowPrice(0);
+    setAmountFine(0)
+    setErrAmountFine(false)
   };
 
   useEffect(() => {
@@ -114,11 +116,10 @@ export default function ModalNewServiceRule({ setFlag, listService, valService, 
       });
   }, []);
 
-  
-
   // set new serviceRule
   const setNewServiceRule = () => {
-    if (amountFine === 0 && showPrice === 1) {
+
+    if (!amountFine  && showPrice === 1) {
       setErrAmountFine(true);
     } else {
       setIsLoading(true);

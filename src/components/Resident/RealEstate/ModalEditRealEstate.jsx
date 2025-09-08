@@ -9,6 +9,7 @@ import { CiEdit } from 'react-icons/ci';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
+import InputPriceFine from './InputPriceFine';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -35,6 +36,7 @@ function ModalEditRealEstate({ unitId, setFlag, id, typeRealEstate, subjectsReal
   const [errAmount, setErrAmount] = useState(false);
   const [desc, setDesc] = useState('');
   const [realEstateEdit, setRealEstateEdit] = useState([]);
+  const [showPrice, setShowPrice] = useState(0);
 
   useEffect(() => {
     if (realEstateEdit.id) {
@@ -236,7 +238,7 @@ function ModalEditRealEstate({ unitId, setFlag, id, typeRealEstate, subjectsReal
             </Select>
           </FormControl>
         </div>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <TextField
             inputRef={inputRef}
             color={errAmount ? 'error' : 'primary'}
@@ -259,7 +261,17 @@ function ModalEditRealEstate({ unitId, setFlag, id, typeRealEstate, subjectsReal
             variant="outlined"
           />
           {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
-        </div>
+        </div> */}
+        <div className="mt-5">
+                  <InputPriceFine
+                    showPrice={showPrice}
+                    setShowPrice={setShowPrice}
+                    errAmountFine={errAmount}
+                    setErrAmountFine={setErrAmount}
+                    setAmountFine={setAmount}
+                    amountFineEdit={amount}
+                  />
+                </div>
         <div className="mt-5">
           <TextField
             value={desc}

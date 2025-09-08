@@ -9,6 +9,7 @@ import { FaPlus } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
+import InputPriceFine from './InputPriceFine';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -27,11 +28,12 @@ ModalNewSalesAd.propTypes = {
 function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }) {
   const [open, setOpen] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
+  const [showPrice, setShowPrice] = useState(0);
 
   const [valTypeRealEstate, setValTypeRealEstate] = useState(1);
 
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(1);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
   const [errAmount, setErrAmount] = useState(false);
   const [desc, setDesc] = useState('');
 
@@ -48,9 +50,10 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
   const resetState = () => {
     setValTypeRealEstate(1);
     setValSubjectsRealEstate(1);
-    setAmount('');
+    setAmount(0);
     setDesc('');
     setErrAmount(false);
+    setShowPrice(0);
   };
 
   const handleClickOpen = () => {
@@ -63,11 +66,11 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
   };
 
   const setNewSalesAd = () => {
-    if (!amount) {
+    if (!amount && showPrice === 1) {
       setErrAmount(true);
     }
 
-    if (amount) {
+    if (amount || showPrice === 0) {
       const data = {
         unitId,
         typeId: valTypeRealEstate,
@@ -121,7 +124,6 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
 
   return (
     <>
-     
       <button
         type="button"
         onClick={handleClickOpen}
@@ -148,9 +150,6 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
             >
               ثبت درخواست
             </Button>
-            {/* <Button type="primary" danger onClick={handleClose}>
-              انصراف
-            </Button> */}
           </div>
         }
         open={open}
@@ -198,7 +197,7 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
             </Select>
           </FormControl>
         </div>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <TextField
             inputRef={inputRef}
             color={errAmount ? 'error' : 'primary'}
@@ -221,6 +220,16 @@ function ModalNewSalesAd({ unitId, setFlag, typeRealEstate, subjectsRealEstate }
             variant="outlined"
           />
           {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+        </div> */}
+        <div className="mt-5">
+          <InputPriceFine
+            showPrice={showPrice}
+            setShowPrice={setShowPrice}
+            errAmountFine={errAmount}
+            setErrAmountFine={setErrAmount}
+            setAmountFine={setAmount}
+            amountFineEdit={amount}
+          />
         </div>
         <div className="mt-5">
           <TextField

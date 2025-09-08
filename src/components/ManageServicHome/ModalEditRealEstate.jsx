@@ -9,6 +9,7 @@ import { CiEdit } from 'react-icons/ci';
 import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
+import InputPriceFine from './InputPriceFine';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -32,7 +33,7 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [valUnit, setValUnit] = useState('');
   const [errValUnit, setErrValUnit] = useState(false);
-
+  const [showPrice, setShowPrice] = useState(0);
   const [valTypeRealEstate, setValTypeRealEstate] = useState(1);
 
   const [valSubjectsRealEstate, setValSubjectsRealEstate] = useState(1);
@@ -53,8 +54,13 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
       setAmount(String(serviceHome.amount));
       setDesc(serviceHome.description);
       setValUnit(listUnit.find((e) => e.id === serviceHome.unitId));
+      if (serviceHome.amount > 0) {
+        setShowPrice(1);
+      } else {
+        setShowPrice(0);
+      }
     }
-  }, [serviceHome, typeRealEstate, subjectsRealEstate , open]);
+  }, [serviceHome, typeRealEstate, subjectsRealEstate, open]);
 
   useEffect(() => {
     if (inputRef.current && errAmount) {
@@ -187,53 +193,29 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
                 ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">موضوع</InputLabel>
-            <Select
-              size="small"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={valSubjectsRealEstate}
-              label="موضوع "
-              onChange={(e) => {
-                setValSubjectsRealEstate(e.target.value);
-              }}
-            >
-              {optionsSubject.length > 0 &&
-                optionsSubject.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-        </div>
-
-        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 ">
-          <div className="w-full">
-            <TextField
-              inputRef={inputRef}
-              color={errAmount ? 'error' : 'primary'}
-              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              onKeyPress={(e) => {
-                if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
-                  e.preventDefault();
-                }
-              }}
-              onChange={(e) => {
-                const numbersOnly = e.target.value.replace(/\D/g, '');
-                setAmount(numbersOnly);
-                setErrAmount(false);
-              }}
-              fullWidth
-              size="small"
-              id="outlined-basic"
-              label="مبلغ پیشنهادی"
-              variant="outlined"
-            />
-            {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+          <div className="sm:mt-0 mt-3 w-full">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">موضوع</InputLabel>
+              <Select
+                size="small"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={valSubjectsRealEstate}
+                label="موضوع "
+                onChange={(e) => {
+                  setValSubjectsRealEstate(e.target.value);
+                }}
+              >
+                {optionsSubject.length > 0 &&
+                  optionsSubject.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
           </div>
-          <div className="w-full ">
+          <div className="w-full sm:mt-0 mt-3">
             <Autocomplete
               size="small"
               disabled
@@ -274,6 +256,40 @@ function ModalEditRealEstate({ serviceHome, setFlag, typeRealEstate, subjectsRea
             />
             {errValUnit && <p className="text-xs text-red-500 text-start">*لطفا واحد را انتخاب کنید</p>}
           </div>
+        </div>
+
+        <div className="flex items-start gap-2 flex-wrap sm:flex-nowrap mt-5 ">
+          {/* <div className="w-full">
+            <TextField
+              inputRef={inputRef}
+              color={errAmount ? 'error' : 'primary'}
+              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              onKeyPress={(e) => {
+                if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const numbersOnly = e.target.value.replace(/\D/g, '');
+                setAmount(numbersOnly);
+                setErrAmount(false);
+              }}
+              fullWidth
+              size="small"
+              id="outlined-basic"
+              label="مبلغ پیشنهادی"
+              variant="outlined"
+            />
+            {errAmount && <p className="text-red-500 text-xs text-start">*مبلغ پیشنهادی را وارد کنید</p>}
+          </div> */}
+          <InputPriceFine
+            showPrice={showPrice}
+            setShowPrice={setShowPrice}
+            errAmountFine={errAmount}
+            setErrAmountFine={setErrAmount}
+            setAmountFine={setAmount}
+            amountFineEdit={amount}
+          />
         </div>
 
         <div className="mt-5">

@@ -62,10 +62,15 @@ function BoxRealEstate({ realEstate, setFlag, unitId, typeRealEstate, subjectsRe
 
           <CardContent sx={{ paddingTop: 2, margin: 0 }}>
             <div className="flex justify-between items-center border-b pb-2">
-              <div className="flex items-center gap-1 text-sm">
-                <span>مبلغ پیشنهادی : </span>
-                <span className="font-bold text-lg">{realEstate.amount.toLocaleString()}</span>
-                <span>تومان</span>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <FaCalendarDays className="text-[#0009] text-sm" />
+                  <span className="text-xs text-[#0009]">{realEstate.createdFa.split(' ')[0]}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <MdTimer className="text-[#0009] text-sm" />
+                  <span className="text-xs text-[#0009]">{realEstate.createdFa.split(' ')[1]}</span>
+                </div>
               </div>
               <Chip
                 size="small"
@@ -83,17 +88,19 @@ function BoxRealEstate({ realEstate, setFlag, unitId, typeRealEstate, subjectsRe
             </div>
 
             <div className="mt-2">
-              <p className="w-full text-start">{realEstate.description || 'توضیحاتی وارد نشده است'}</p>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="flex items-center gap-1">
-                  <FaCalendarDays className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{realEstate.createdFa.split(' ')[0]}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdTimer className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{realEstate.createdFa.split(' ')[1]}</span>
-                </div>
+              <div className="flex items-center gap-1 text-sm">
+                <span>مبلغ پیشنهادی : </span>
+                {realEstate.amount > 0 && (
+                  <div>
+                    <span className="font-bold text-lg">{realEstate.amount.toLocaleString()}</span>
+                    <span className="px-1">تومان</span>
+                  </div>
+                )}
+                {realEstate.amount === 0 && <span className="font-bold">توافقی</span>}
               </div>
+              <p className="w-full text-start text-sm text-[#0008] mt-2">
+                {realEstate.description || 'توضیحاتی وارد نشده است'}
+              </p>
             </div>
           </CardContent>
         </Card>

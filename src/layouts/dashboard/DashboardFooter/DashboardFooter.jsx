@@ -106,8 +106,8 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
             </ToggleButton>
           </ToggleButtonGroup>
         </Stack> */}
-        <div className="flex items-center  justify-center bg-[#00005e] pb-5 rounded-t-3xl">
-          <div className="flex justify-around w-full gap-1 mt-5">
+        <div className="flex items-center  justify-center bg-[#00005e] rounded-t-3xl py-2">
+          <div className="flex justify-around w-full gap-1">
             <SideBarMenu logoImg={logoImg} open={open} setOpen={setOpen} setFlagRefreshPage={setFlagRefreshPage} />
             {/* <div className="cursor-pointer rounded-full bg-[#495677] p-4">
               <img src="/images/List.png" alt="" />

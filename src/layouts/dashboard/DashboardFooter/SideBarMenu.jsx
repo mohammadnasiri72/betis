@@ -16,6 +16,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { IoCloseSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -155,7 +156,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
       </div>
       <Box
         sx={{
-          width: 300,
+          width: 230,
           overflowX: 'hidden',
           direction: 'rtl',
           pb: 12,
@@ -360,7 +361,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
       <Drawer
         sx={{
           '& .MuiDrawer-paper': {
-            width: '320px',
+            width: '250px',
             background:
               themeMode === 'dark'
                 ? 'linear-gradient(135deg, rgba(30,32,48,0.98) 80%, rgba(80,90,180,0.18) 100%)'
@@ -376,6 +377,23 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
         onClose={toggleDrawer(false)}
       >
         {DrawerList}
+        {/* <div
+          onClick={() => {
+            setOpen(false);
+          }}
+          className="absolute top-0 left-0"
+        >
+          asdasd
+        </div> */}
+        <div className="absolute top-2 left-4">
+          <IconButton
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <IoCloseSharp />
+          </IconButton>
+        </div>
       </Drawer>
     </>
   );

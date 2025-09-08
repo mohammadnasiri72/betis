@@ -1,16 +1,16 @@
 import { Input, Select } from 'antd';
 import Num2persian from 'num2persian';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function InputPriceFine({ showPrice, setShowPrice, errAmountFine, setErrAmountFine, setAmountFine, amountFineEdit }) {
   const [suggestedPrice, setSuggestedPrice] = useState('');
 
   useEffect(() => {
-    if (amountFineEdit >0) {
-      setSuggestedPrice(amountFineEdit.toLocaleString());
+    if (amountFineEdit > 0) {
+      setSuggestedPrice(Number(amountFineEdit).toLocaleString());
       setAmountFine(amountFineEdit);
-    }else{
-      setSuggestedPrice('')
+    } else {
+      setSuggestedPrice('');
     }
   }, [amountFineEdit]);
 
@@ -50,10 +50,10 @@ function InputPriceFine({ showPrice, setShowPrice, errAmountFine, setErrAmountFi
             setAmountFine(Number(formatted.replaceAll(',', '')));
           }
         }}
-        placeholder="مبلغ هزینه استفاده مازاد"
+        placeholder="مبلغ پیشنهادی"
         className={`w-full !outline-none ${errAmountFine ? 'border-2 border-red-500 rounded-lg' : ''}`}
       />
-      {errAmountFine && <span className="text-red-500 text-xs flex p-1">*مبلغ هزینه استفاده مازاد را وارد کنید</span>}
+      {errAmountFine && <span className="text-red-500 text-xs flex p-1">*مبلغ پیشنهادی را وارد کنید</span>}
       {suggestedPrice && (
         <div className="text-start px-2" style={{ fontSize: '10px' }}>
           {Num2persian(Number(suggestedPrice.replaceAll(',', '')))} تومان{' '}

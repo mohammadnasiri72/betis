@@ -17,7 +17,7 @@ MainPageMyRealEstate.propTypes = {
 };
 function MainPageMyRealEstate({ accountResident, flagRefreshPage }) {
   const [flag, setFlag] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [listMyRealEstate, setListMyRealEstate] = useState([]);
   const [typeRealEstate, setTypeRealEstate] = useState({});
   const [subjectsRealEstate, setSubjectsRealEstate] = useState({});
@@ -80,7 +80,7 @@ function MainPageMyRealEstate({ accountResident, flagRefreshPage }) {
         </Button>
       </div>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <div className="flex flex-wrap justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center px-2">
           <h1
             style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
             className="text-[1.1rem] font-semibold whitespace-nowrap"
