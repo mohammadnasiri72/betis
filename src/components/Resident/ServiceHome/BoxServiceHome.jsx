@@ -59,7 +59,7 @@ function BoxServiceHome({ serviceHome, listUnit }) {
                 </div>
                 <div className="flex items-center gap-1">
                   <MdTimer className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1]}</span>
+                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1].slice(0, 5)}</span>
                 </div>
               </div>
               <Chip size="small" label={listUnit.find((e) => e.id === serviceHome.unitId)?.title} color="info" />

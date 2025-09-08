@@ -50,6 +50,7 @@ export default function BoxReservation({ reserve, listService, setFlag }) {
       );
     }
   }, [listService, reserve]);
+
   return (
     <>
       <div
@@ -231,34 +232,36 @@ export default function BoxReservation({ reserve, listService, setFlag }) {
                       {reserve?.reservationRelatedInfo?.desc}
                     </p>
                   </div>
-                  <div className="px-1">
-                    {reserve?.reservationRelatedInfo?.typeId === 1 && (
-                      <Chip
-                        label={`${reserve?.reservationRelatedInfo?.value}`}
-                        icon={<TbListNumbers className="text-xl" />}
-                      />
-                    )}
-                    {reserve?.reservationRelatedInfo?.typeId === 0 && (
-                      <p
-                        className={
-                          themeMode === 'dark'
-                            ? 'border p-2 border-[#fff8] text-sm'
-                            : 'border p-2 border-[#0008] bg-[#e7ebf0] text-sm'
-                        }
-                      >
-                        {`ایران${reserve?.reservationRelatedInfo?.value.slice(
-                          6,
-                          8
-                        )}-${reserve?.reservationRelatedInfo?.value.slice(
-                          3,
-                          6
-                        )}${reserve?.reservationRelatedInfo?.value.slice(
-                          2,
-                          3
-                        )}${reserve?.reservationRelatedInfo?.value.slice(0, 2)}`}
-                      </p>
-                    )}
-                  </div>
+                  {reserve?.reservationRelatedInfo?.typeId === 1 && (
+                    <div className="px-1">
+                      {reserve?.reservationRelatedInfo?.value?.length === 7 && (
+                        <Chip
+                          label={`${reserve?.reservationRelatedInfo?.value}`}
+                          icon={<TbListNumbers className="text-xl" />}
+                        />
+                      )}
+                      {reserve?.reservationRelatedInfo?.value?.length === 8 && (
+                        <p
+                          className={
+                            themeMode === 'dark'
+                              ? 'border p-2 border-[#fff8] text-sm'
+                              : 'border p-2 border-[#0008] bg-[#e7ebf0] text-sm'
+                          }
+                        >
+                          {`ایران${reserve?.reservationRelatedInfo?.value.slice(
+                            6,
+                            8
+                          )}-${reserve?.reservationRelatedInfo?.value.slice(
+                            3,
+                            6
+                          )}${reserve?.reservationRelatedInfo?.value.slice(
+                            2,
+                            3
+                          )}${reserve?.reservationRelatedInfo?.value.slice(0, 2)}`}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </Collapse>

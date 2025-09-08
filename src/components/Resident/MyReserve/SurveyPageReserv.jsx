@@ -230,7 +230,7 @@ function SurveyPageReserv({ setFlag }) {
           >
             <div className="">
               <div>
-                {reserve?.reservationRelatedInfo && (
+                {reserve?.reservationRelatedInfo && reserve?.reservationRelatedInfo?.typeId === 1 && (
                   <div className="px-1 w-full mt-2">
                     <Card className=" rounded-lg p-2 h-full">
                       <div className="flex">
@@ -248,13 +248,13 @@ function SurveyPageReserv({ setFlag }) {
 
                           <div className="flex mt-2 justify-around">
                             <div className="px-1">
-                              {reserve?.reservationRelatedInfo?.typeId === 1 && (
+                              {reserve?.reservationRelatedInfo?.value?.length === 7 && (
                                 <Chip
                                   label={`${reserve?.reservationRelatedInfo?.value}`}
                                   icon={<TbListNumbers className="text-xl" />}
                                 />
                               )}
-                              {reserve?.reservationRelatedInfo?.typeId === 0 && (
+                              {reserve?.reservationRelatedInfo?.value?.length === 8 && (
                                 <p
                                   className={
                                     themeMode === 'dark'

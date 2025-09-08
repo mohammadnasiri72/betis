@@ -70,7 +70,7 @@ function BoxServiceHome({ serviceHome, listUnit, setFlag, statusArray, typeRealE
                 </div>
                 <div className="flex items-center gap-1">
                   <MdTimer className="text-[#0009] text-sm" />
-                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1]}</span>
+                  <span className="text-xs text-[#0009]">{serviceHome.createdFa.split(' ')[1].slice(0, 5)}</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">

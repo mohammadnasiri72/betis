@@ -22,6 +22,7 @@ import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReservation from './BoxReservation';
 import ToggleButtonFilterStatus from './ToggleButtonFilterStatus';
+import RateService from '../ManageOrder/RateService';
 
 export default function MainPageManageReserve() {
   const [isLoading, setIsLoading] = useState(true);
@@ -435,6 +436,7 @@ export default function MainPageManageReserve() {
         setPageIndex={setPageIndex}
         totalCountTa={totalCountTa}
       />
+      <RateService valService={valService.id} />
       <div className="flex flex-wrap px-2 mt-4">
         {listReserve.length > 0 &&
           listReserve

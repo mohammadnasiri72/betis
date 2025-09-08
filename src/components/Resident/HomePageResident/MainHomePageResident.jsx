@@ -135,7 +135,7 @@ export default function MainHomePageResident({ accountResident, flagLoby }) {
       <div className="px-3 lg:px-0 w-full mx-auto ">
 
         <div className="rounded-b-[1.5rem] bg-[#00005e]">
-          <img className='img-building-resident' src={mainDomain + accountResident.buildingImageSrc} alt="" />
+          <img className='img-building-resident min-h-[280px] ' src={mainDomain + accountResident.buildingImageSrc} alt="" />
           <div className="flex justify-between items-center px-5 py-2">
             <span className="text-[#fff]">{accountResident?.buildingName ? accountResident.buildingName : ''}</span>
             <img className="w-20" src="/images/Layer_3.png" alt="" />

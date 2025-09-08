@@ -2,12 +2,14 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Card, Chip } from '@mui/material';
 import { useState } from 'react';
+import { FaCalendarDays } from 'react-icons/fa6';
+import { MdTimer } from 'react-icons/md';
 import { TbListNumbers } from 'react-icons/tb';
+import useSettings from '../../../hooks/useSettings';
 import SimpleBackdrop from '../../backdrop';
 import ActionGuest from './ActionGuest';
 import ModalArrived from './ModalArrived';
 import ModalDeleteGuest from './ModalDeleteGuest';
-import useSettings from '../../../hooks/useSettings';
 
 export default function BoxGuest({ guest, setFlag, accountResident }) {
   const [isDelete, setIsDelete] = useState(false);
@@ -21,7 +23,7 @@ export default function BoxGuest({ guest, setFlag, accountResident }) {
         <Card>
           <div className="flex justify-between items-start px-3 pt-2">
             <div className="flex justify-start items-center">
-              <AccountCircleIcon sx={{ fontSize: '45px', color:themeMode==='dark'? '': '#495677' }} />
+              <AccountCircleIcon sx={{ fontSize: '45px', color: themeMode === 'dark' ? '' : '#495677' }} />
               <div className="flex flex-col justify-center items-center px-3">
                 <span className="font-semibold">{guest.name}</span>
                 {guest.contactNumber && <span className="text-xs">({guest.contactNumber})</span>}
@@ -40,14 +42,23 @@ export default function BoxGuest({ guest, setFlag, accountResident }) {
               <ModalDeleteGuest guest={guest} setFlag={setFlag} setIsLoading={setIsLoading} setIsDelete={setIsDelete} />
             )}
           </div>
-          <div className="flex justify-start items-center px-3 py-2">
+          <div className="flex flex-wrap justify-start items-center px-3 py-2">
             <span className="text-xs pl-1">تاریخ و ساعت ورود :</span>
-            {guest.endArrivalTime && (
-              <span className="px-1 font-semibold text-sm">
-                {guest.endArrivalTime.slice(0, 5)} - {guest.startArrivalTime.slice(0, 5)} -
-              </span>
-            )}
-            <span className="font-semibold text-sm">{guest.dateArrivalFa}</span>
+           
+            <div className="flex items-center gap-3 mt-2">
+              <div className="flex items-center gap-1">
+                <FaCalendarDays className="text-[#0009] text-sm" />
+                <span className="font-semibold text-sm">{guest.dateArrivalFa}</span>
+              </div>
+              {guest.endArrivalTime && (
+                <div className="flex items-center gap-1">
+                  <MdTimer className="text-[#0009] text-sm" />
+                  <span className="px-1 font-semibold text-sm">
+                    {guest.endArrivalTime.slice(0, 5)} - {guest.startArrivalTime.slice(0, 5)}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex justify-start items-center px-3 py-2 text-xs ">
             <span>

@@ -8,7 +8,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import { GoQuestion } from 'react-icons/go';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
@@ -31,6 +30,8 @@ export default function ModalConfirmSubmit({
   valEnd,
   servic,
   setLevelVehicle,
+  levelVehicle,
+  setLevelStepper,
   open,
   setOpen,
 }) {
@@ -47,7 +48,13 @@ export default function ModalConfirmSubmit({
     <>
       <div className="w-full flex gap-2">
         <button
-          onClick={() => setLevelVehicle(1)}
+          onClick={() => {
+            if (levelVehicle === 2) {
+              setLevelVehicle(1);
+            } else {
+              setLevelStepper(1);
+            }
+          }}
           className="w-full text-xs text-white bg-slate-500 hover:bg-slate-600 duration-300 py-2 rounded-lg"
         >
           بازگشت

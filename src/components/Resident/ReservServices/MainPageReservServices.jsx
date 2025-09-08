@@ -544,8 +544,10 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
                               valEnd={valEnd}
                               servic={servic}
                               setLevelVehicle={setLevelVehicle}
+                              levelVehicle={levelVehicle}
                               open={open}
                               setOpen={setOpen}
+                              setLevelStepper={setLevelStepper}
                             />
                           </div>
                         </div>

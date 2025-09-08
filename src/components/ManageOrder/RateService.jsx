@@ -7,7 +7,7 @@ function RateService({ valService }) {
   const [rateData, setRateData] = useState([]);
 
   useEffect(() => {
-    if (valService && valService !== -1) {
+    if (valService && valService >0) {
       axios
         .get(
           `${mainDomain}/api/SurveyAnswer/Statistic/${valService}`,
@@ -27,13 +27,12 @@ function RateService({ valService }) {
 
   return (
     <>
-      
-      {valService !== -1 && (
+      {valService>0 && (
         <div className="flex items-center justify-end w-full -translate-y-8">
           <div className="text-xs text-[#0008] px-1">( امتیاز {rateData.totalParticipants} نفر )</div>
           <div className="flex items-center ">
             <FaStar style={{ color: '#ffc107', fontSize: '12px' }} />
-            <span className="text-xs font-semibold">{rateData.averageScore}</span>
+            <span className="text-xs font-semibold px-1">{rateData.averageScore}</span>
           </div>
         </div>
       )}
