@@ -418,7 +418,9 @@ export default function MainPageManageOrder() {
           />
         </div>
 
-          <ToggleButtonFilterStatusOrder
+         <div className='flex w-full'>
+           <div className='w-full'>
+            <ToggleButtonFilterStatusOrder
             totalCount={totalCount}
             totalCountPending={totalCountPending}
             value={valStatusOrder}
@@ -427,9 +429,11 @@ export default function MainPageManageOrder() {
             getOrderList={getOrderList}
             setNumPages={setNumPages}
           />
+           </div>
        
 
         <RateService valService={valService} />
+         </div>
       </div>
       <div className="flex flex-wrap">
         {listOrder.length > 0 &&

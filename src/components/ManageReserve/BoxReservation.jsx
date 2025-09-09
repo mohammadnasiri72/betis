@@ -226,7 +226,7 @@ export default function BoxReservation({ reserve, listService, setFlag }) {
                 </div>
               </div>
               {reserve?.reservationRelatedInfo && (
-                <div className="flex w-full items-center justify-between p-3">
+                <div className="flex w-full items-center justify-between px-3 py-1">
                   <div className="flex justify-center items-center px-1 mt-2">
                     <p className="text-sm px-1 font-semibold flex justify-center">
                       {reserve?.reservationRelatedInfo?.desc}

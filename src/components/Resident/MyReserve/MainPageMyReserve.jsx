@@ -1,13 +1,14 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, IconButton, Skeleton, Tab, Tabs, Tooltip } from '@mui/material';
+import { Box, Button, IconButton, Skeleton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
+import { AiOutlineClose } from 'react-icons/ai';
 import { PiPlusCircleFill } from 'react-icons/pi';
 import DatePicker from 'react-multi-date-picker';
 import { useLocation, useNavigate } from 'react-router';
@@ -122,7 +123,59 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
       return statusMatch && dateMatch;
     })
     .filter((e) => (valueTab === -1 ? e : e.serviceTime?.serviceId === valueTab));
-    
+
+  function CustomMultipleInput({ onFocus, value, onChange }) {
+    return (
+      <div className="relative">
+        <TextField
+          onFocus={onFocus}
+          value={value}
+          onChange={onChange}
+          size="small"
+          type="text"
+          className="w-full"
+          id="outlined-multiline-flexible"
+          label="تاریخ شروع "
+          name="name"
+        />
+        {value && (
+          <AiOutlineClose
+            onClick={() => {
+              setStartDate('');
+            }}
+            className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
+          />
+        )}
+      </div>
+    );
+  }
+
+  function CustomMultipleInput2({ onFocus, value, onChange }) {
+    return (
+      <div className="relative">
+        <TextField
+          onFocus={onFocus}
+          value={value}
+          onChange={onChange}
+          size="small"
+          type="text"
+          className="w-full"
+          id="outlined-multiline-flexible"
+          label="تاریخ پایان "
+          name="name"
+        />
+        {value && (
+          <AiOutlineClose
+            onClick={() => {
+              setEndDate('');
+            }}
+            className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
+          />
+        )}
+      </div>
+    );
+  }
+
   if (stepPage === 0) {
     return (
       <>
@@ -174,30 +227,38 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
           </Box>
           {/* --- Date pickers for local filter --- */}
           <Box sx={{ display: 'flex', gap: 2, mb: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-            <DatePicker
-              className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
-              format="YYYY/MM/DD"
-              calendar={persian}
-              locale={persianFa}
-              value={startDate}
-              onChange={setStartDate}
-              placeholder="تاریخ شروع"
-              inputClass="outline-none border rounded-lg w-full h-10 px-3"
-              containerStyle={{ width: '100%' }}
-              style={{ width: '100%' }}
-            />
-            <DatePicker
-              className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
-              format="YYYY/MM/DD"
-              calendar={persian}
-              locale={persianFa}
-              value={endDate}
-              onChange={setEndDate}
-              placeholder="تاریخ پایان"
-              inputClass="outline-none border rounded-lg w-full h-10 px-3"
-              containerStyle={{ width: '100%' }}
-              style={{ width: '100%' }}
-            />
+            <div className="flex gap-2 w-full">
+              <DatePicker
+                className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
+                format="DD MMMM YYYY"
+                render={<CustomMultipleInput />}
+                calendarPosition="bottom-right"
+                containerStyle={{ width: '100%' }}
+                inputClass="outline-none border rounded-lg w-full h-10 px-3 mt-3"
+                locale={persianFa}
+                calendar={persian}
+                value={startDate}
+                onChange={(event) => {
+                  setStartDate(event);
+                }}
+                placeholder="تاریخ شروع رزرو"
+              />
+              <DatePicker
+                className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
+                format="DD MMMM YYYY"
+                render={<CustomMultipleInput2 />}
+                calendarPosition="bottom-right"
+                containerStyle={{ width: '100%' }}
+                inputClass="outline-none border rounded-lg w-full h-10 px-3 mt-3"
+                locale={persianFa}
+                calendar={persian}
+                value={endDate}
+                onChange={(event) => {
+                  setEndDate(event);
+                }}
+                placeholder="تاریخ پایان رزرو"
+              />
+            </div>
           </Box>
           {/* --- List --- */}
           {filteredList.length > 0 &&
@@ -233,6 +294,6 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
     );
   }
   if (stepPage === 1) {
-    return <SurveyPageReserv setFlag={setFlag}/>;
+    return <SurveyPageReserv setFlag={setFlag} />;
   }
 }

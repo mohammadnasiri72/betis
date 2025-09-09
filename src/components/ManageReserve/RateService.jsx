@@ -28,7 +28,7 @@ function RateService({ valService }) {
   return (
     <>
       {valService > 0 && (
-        <div className="flex items-center justify-end w-32">
+        <div className="flex items-center justify-end whitespace-nowrap w-32">
           <div className="text-xs text-[#0008] px-1">( امتیاز {rateData.totalParticipants} نفر )</div>
           <div className="flex items-center ">
             <FaStar style={{ color: '#ffc107', fontSize: '12px' }} />
@@ -36,8 +36,8 @@ function RateService({ valService }) {
           </div>
         </div>
       )}
-      {valService === -1 && (
-        <div className="flex items-center justify-end w-32 opacity-0 invisible">
+      {!valService && (
+        <div className="flex items-center justify-end whitespace-nowrap w-32 opacity-0 invisible">
           <div className="text-xs text-[#0008] px-1">( امتیاز {rateData.totalParticipants} نفر )</div>
           <div className="flex items-center ">
             <FaStar style={{ color: '#ffc107', fontSize: '12px' }} />

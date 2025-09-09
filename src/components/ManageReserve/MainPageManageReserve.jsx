@@ -21,8 +21,8 @@ import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReservation from './BoxReservation';
+import RateService from './RateService';
 import ToggleButtonFilterStatus from './ToggleButtonFilterStatus';
-import RateService from '../ManageOrder/RateService';
 
 export default function MainPageManageReserve() {
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +49,6 @@ export default function MainPageManageReserve() {
   const [pageSize, setPageSize] = useState(12);
 
   const { themeMode } = useSettings();
-
 
   // get list building & yearId
   useEffect(() => {
@@ -112,7 +111,6 @@ export default function MainPageManageReserve() {
 
   useEffect(() => {
     if (flagTimer !== 0) {
-      
       axios
         .get(`${mainDomain}/api/Reservation/GetListPaged`, {
           params: {
@@ -131,8 +129,6 @@ export default function MainPageManageReserve() {
           },
         })
         .then((res) => {
-         
-          
           if (res.data.totalCount > totalCountPending) {
             if (valueStatus === 0) {
               setListReserve(res.data.items);
@@ -426,7 +422,9 @@ export default function MainPageManageReserve() {
           </div>
         </div>
       </div>
-      <ToggleButtonFilterStatus
+      <div className='flex'>
+       <div className='w-full'>
+         <ToggleButtonFilterStatus
         totalCount={totalCount}
         totalCountPending={totalCountPending}
         value={valueStatus}
@@ -436,7 +434,9 @@ export default function MainPageManageReserve() {
         setPageIndex={setPageIndex}
         totalCountTa={totalCountTa}
       />
+       </div>
       <RateService valService={valService.id} />
+      </div>
       <div className="flex flex-wrap px-2 mt-4">
         {listReserve.length > 0 &&
           listReserve

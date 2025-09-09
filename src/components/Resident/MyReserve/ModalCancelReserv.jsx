@@ -98,7 +98,7 @@ export default function ModalCancelReserv({ setIsLoading, setFlag, myReserve, se
           className="px-3 py-1 rounded-lg border-red-500 border text-red-500 flex items-center justify-center duration-300 hover:bg-red-100 text-xs"
         >
           <CgTrash className="text-lg" />
-          <span>لغو رزرو</span>
+          <span className='whitespace-nowrap'>لغو</span>
         </button>
       )}
       {loadingBtn && (

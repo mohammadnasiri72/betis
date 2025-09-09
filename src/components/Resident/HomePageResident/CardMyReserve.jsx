@@ -35,7 +35,6 @@ export default function CardMyReserve({ listService, myReserve, setFlag, isLoadi
     );
   };
 
-  // console.log(myReserve);
   // if (!isLoading) {
   //   return (
   //     <Box
@@ -70,11 +69,7 @@ export default function CardMyReserve({ listService, myReserve, setFlag, isLoadi
 
 
         <div
-          className={
-            themeMode === 'dark'
-              ? 'w-full py-2 px-1 flex items-center justify-between flex-wrap'
-              : 'w-full py-2 px-1 flex items-center justify-between flex-wrap'
-          }
+          className='w-full py-2 px-1 flex items-center justify-between'
         >
           <div className="flex items-center flex-wrap">
             <span className="font-medium px-1 text-sm max-w-96 min-w-52 text-start">

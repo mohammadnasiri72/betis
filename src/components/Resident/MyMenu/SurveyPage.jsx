@@ -208,7 +208,7 @@ function SurveyPage() {
           </div>
           {/* اطلاعات سفارش */}
           <div
-            className={` p-4 bg-gray-50 fixed bottom-[95px]  left-0 max-w-md mx-auto right-0 duration-300 overflow-auto z-[60] ${
+            className={` p-4 bg-gray-50 fixed bottom-[70px]  left-0 max-w-md mx-auto right-0 duration-300 overflow-auto z-[60] ${
               openModal ? 'top-[30%]' : 'top-[100%]'
             }`}
           >

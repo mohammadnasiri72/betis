@@ -210,21 +210,21 @@ export default function BoxMyReserve({ myReserve, setIsLoading, setFlag, listSer
                 <span className="px-1">مربی</span>
               </div>
             </div>
-            {myReserve?.reservationRelatedInfo && (
-              <div className="flex w-full items-center justify-between p-3">
+            {myReserve?.reservationRelatedInfo && myReserve?.reservationRelatedInfo?.typeId === 1 && (
+              <div className="flex w-full items-center justify-between px-3 py-1">
                 <div className="flex justify-center items-center px-1 mt-2">
                   <p className="text-sm px-1 font-semibold flex justify-center">
                     {myReserve?.reservationRelatedInfo?.desc}
                   </p>
                 </div>
                 <div className="px-1">
-                  {myReserve?.reservationRelatedInfo?.typeId === 1 && (
+                  {myReserve?.reservationRelatedInfo?.value?.length === 7 && (
                     <Chip
                       label={`${myReserve?.reservationRelatedInfo?.value}`}
                       icon={<TbListNumbers className="text-xl" />}
                     />
                   )}
-                  {myReserve?.reservationRelatedInfo?.typeId === 0 && (
+                  {myReserve?.reservationRelatedInfo?.value?.length === 8 && (
                     <p
                       className={
                         themeMode === 'dark'
