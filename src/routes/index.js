@@ -424,6 +424,12 @@ export default function Router() {
         {
           path: 'feedback',
           element: <FeedBackResident accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+          children: [
+            {
+              path: ':feedback',
+              element: <FeedBackResident accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+            },
+          ],
         },
         {
           path: 'boardNotice',
