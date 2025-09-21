@@ -1,32 +1,34 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-nested-ternary */
 // AllTickets_MUI_RTL_TelegramChat.jsx
 
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import SearchIcon from '@mui/icons-material/Search';
+import { Divider, Pagination, Skeleton } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import CssBaseline from '@mui/material/CssBaseline';
-import InputAdornment from '@mui/material/InputAdornment';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Stack from '@mui/material/Stack';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import { Empty } from 'antd';
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import { MdDateRange, MdOutlineAccessTimeFilled } from 'react-icons/md';
+import { RiAdminFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import useSettings from '../../../hooks/useSettings';
+import { mainDomain } from '../../../utils/mainDomain';
+import FilterBox from './FilterBox';
 
 const cacheRtl = createCache({ key: 'muirtl', stylisPlugins: [prefixer, rtlPlugin] });
 
@@ -46,60 +48,7 @@ const darkPalette = {
   text: { primary: '#f9fafb', secondary: '#d1d5db' },
 };
 
-const mockTickets = [
-  {
-    id: 'TCK-001',
-    title: 'مشکل ورود به حساب',
-    priority: 'high',
-    status: 'open',
-    createdAt: '2025-09-18T10:12:00Z',
-    customer: 'علی رضایی',
-  },
-  {
-    id: 'TCK-002',
-    title: 'درخواست بازپرداخت',
-    priority: 'normal',
-    status: 'pending',
-    createdAt: '2025-09-17T08:30:00Z',
-    customer: 'نگار مرادی',
-  },
-  {
-    id: 'TCK-003',
-    title: 'گزارش باگ در صفحه پرداخت',
-    priority: 'high',
-    status: 'open',
-    createdAt: '2025-09-16T14:05:00Z',
-    customer: 'شرکت الف',
-  },
-  {
-    id: 'TCK-004',
-    title: 'درخواست تغییر پلان',
-    priority: 'low',
-    status: 'closed',
-    createdAt: '2025-09-12T09:00:00Z',
-    customer: 'رضا موسوی',
-  },
-];
-
-function PriorityChip({ p }) {
-  const color = p === 'high' ? 'error' : p === 'normal' ? 'warning' : 'success';
-  return <Chip label={p === 'high' ? 'زیاد' : p === 'normal' ? 'متوسط' : 'کم'} color={color} size="small" />;
-}
-
-function StatusChip({ s }) {
-  const icon =
-    s === 'open' ? (
-      <MarkEmailUnreadIcon fontSize="small" />
-    ) : s === 'pending' ? (
-      <PendingActionsIcon fontSize="small" />
-    ) : (
-      <CheckCircleIcon fontSize="small" />
-    );
-  const label = s === 'open' ? 'باز' : s === 'pending' ? 'در انتظار' : 'بسته';
-  return <Chip icon={icon} label={label} size="small" variant="outlined" />;
-}
-
-export default function AllTickets() {
+export default function AllTickets({ accountResident, setTicketSelected, statusTicket, priority, subject }) {
   const { themeMode } = useSettings();
   const navigate = useNavigate();
   const theme = createTheme({
@@ -108,129 +57,211 @@ export default function AllTickets() {
     typography: { fontFamily: 'Vazirmatn, Roboto, Arial' },
   });
 
-  const [query, setQuery] = React.useState('');
-  const [filter, setFilter] = React.useState('all');
-  const [selectedTicket, setSelectedTicket] = React.useState(null);
-  const [messages, setMessages] = React.useState([]);
-  const [newMessage, setNewMessage] = React.useState('');
+  const [loading, setLoading] = React.useState(true);
+  const [listTickets, setListTickets] = React.useState([]);
+  const [numPages, setNumPages] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [totalCount, setTotalCount] = React.useState(0);
 
-  const filtered = mockTickets.filter((t) => {
-    const matchesQuery = !query || t.title.includes(query) || t.id.includes(query) || t.customer.includes(query);
-    const matchesFilter = filter === 'all' || t.status === filter;
-    return matchesQuery && matchesFilter;
-  });
+  const [statusTicketSelected, setStatusTicketSelected] = React.useState(-1);
+  const [prioritySelected, setPrioritySelected] = React.useState(-1);
+  const [subjectSelected, setSubjectSelected] = React.useState(-1);
 
-  React.useEffect(() => {
-    if (selectedTicket) {
-      setMessages([
-        { id: 1, sender: 'customer', text: 'سلام، مشکلی در ورود دارم.' },
-        { id: 2, sender: 'admin', text: 'سلام، لطفاً جزئیات را توضیح دهید.' },
-        { id: 3, sender: 'customer', text: 'وقتی رمز را وارد می‌کنم، خطا می‌دهد.' },
-        { id: 4, sender: 'admin', text: 'متوجه شدم، لطفاً مرورگر را ریستارت کنید و دوباره امتحان کنید.' },
-      ]);
+  console.log(listTickets);
+
+  useEffect(() => {
+    if (accountResident?.buildingId) {
+      setLoading(true);
+      setListTickets([]);
+      axios
+        .get(`${mainDomain}/api/Ticket/GetListPaged`, {
+          params: {
+            buildingId: accountResident.buildingId,
+            dataFa: '',
+            unitId: accountResident.id,
+            serviceId: -1,
+            subjectId: subjectSelected,
+            statusId: statusTicketSelected,
+            priorityId: prioritySelected,
+            pageIndex: numPages,
+            pageSize: 20,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          setListTickets(res.data.items);
+          setTotalPages(res.data.totalPages);
+          setTotalCount(res.data.totalCount);
+        })
+        .catch(() => {})
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [selectedTicket]);
-
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
-    setMessages([...messages, { id: Date.now(), sender: 'customer', text: newMessage }]);
-    setNewMessage('');
-  };
+  }, [accountResident, numPages, statusTicketSelected, prioritySelected, subjectSelected]);
 
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Box dir="rtl" sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <>
-              <AppBar position="static" color="primary" sx={{ borderRadius: 2, mb: 3 }}>
-                <Toolbar>
-                  <div className="flex justify-between items-center w-full">
-                    <div className="flex items-center gap-3">
-                      <Typography variant="h6" sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>
-                        لیست تیکت‌ها
-                      </Typography>
-                      <TextField
-                        size="small"
-                        placeholder="جستجو"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        sx={{ width: 250, bgcolor: 'background.paper', borderRadius: 1 }}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <SearchIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </div>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      startIcon={<AddCircleOutlineIcon />}
-                      sx={{ ml: 2 }}
-                      onClick={() => {
-                        navigate('/resident/feedback/newTicket');
-                      }}
+          <Box component="main" sx={{ flexGrow: 1, p: 3, position: 'relative' }}>
+            <AppBar position="static" color="primary" sx={{ borderRadius: 2, mb: 1 }}>
+              <Toolbar>
+                <div className="flex justify-between items-center w-full">
+                  <div className="flex items-center">
+                    <Typography
+                      variant="h6"
+                      sx={{ color: themeMode === 'dark' ? '#fff' : '#000', whiteSpace: 'nowrap' }}
                     >
-                      تیکت جدید
-                    </Button>
+                      لیست تیکت‌ها
+                    </Typography>
                   </div>
-                </Toolbar>
-              </AppBar>
-
-              <List>
-                {filtered.map((t) => (
-                  <ListItem
-                    key={t.id}
-                    alignItems="flex-start"
-                    sx={{
-                      borderBottom: 1,
-                      borderColor: 'divider',
-                      bgcolor: 'background.paper',
-                      borderRadius: 2,
-                      mb: 1,
-                      p: 2,
-                      boxShadow: 1,
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<AddCircleOutlineIcon />}
+                    sx={{ ml: 2, whiteSpace: 'nowrap' }}
+                    onClick={() => {
+                      navigate('/resident/feedback/newTicket');
                     }}
                   >
-                    <Avatar sx={{ ml: 2, bgcolor: 'primary.main', color: 'white' }}>{t.customer[0]}</Avatar>
-                    <Box sx={{ flex: 1 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight="bold"
-                          sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+                    تیکت جدید
+                  </Button>
+                </div>
+              </Toolbar>
+            </AppBar>
+
+            <div className="w-full">
+              <FilterBox
+                statusTicket={statusTicket}
+                priority={priority}
+                subject={subject}
+                statusTicketSelected={statusTicketSelected}
+                setStatusTicketSelected={setStatusTicketSelected}
+                prioritySelected={prioritySelected}
+                setPrioritySelected={setPrioritySelected}
+                subjectSelected={subjectSelected}
+                setSubjectSelected={setSubjectSelected}
+              />
+            </div>
+
+            <List sx={{ mt: 5 }}>
+              {listTickets.length > 0 &&
+                listTickets.map((t) => (
+                  <div
+                    key={t.id}
+                    className="bg-slate-200 rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
+                    onClick={() => {
+                      navigate('/resident/feedback/detailsTicket');
+                      setTicketSelected(t);
+                    }}
+                  >
+                    <ListItem alignItems="flex-start">
+                      <div className="flex justify-between items-center w-full">
+                        <div className="flex items-center justify-center">
+                          <Avatar sx={{ mr: 2 }}>
+                            <RiAdminFill />
+                          </Avatar>
+                          <div className="flex flex-col items-start justify-center">
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight="bold"
+                              sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+                            >
+                              {t.subjectTitle}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {t.description}
+                            </Typography>
+                          </div>
+                        </div>
+
+                        <span
+                          className={`text-xs rounded-full px-2 py-1 ${
+                            t.status === 0
+                              ? 'text-orange-500 bg-orange-100'
+                              : t.status === 1
+                              ? 'text-emerald-500 bg-emerald-100'
+                              : t.priority === 2
+                              ? 'text-slate-800 bg-slate-100'
+                              : ''
+                          }`}
                         >
-                          {t.title}
-                        </Typography>
-                        <Stack direction="row" spacing={1}>
-                          <PriorityChip p={t.priority} />
-                          <StatusChip s={t.status} />
-                        </Stack>
-                      </Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        {t.customer} — {new Date(t.createdAt).toLocaleString('fa-IR')}
-                      </Typography>
-                      <Button
-                        size="small"
-                        sx={{ mt: 1 }}
-                        onClick={() => {
-                          setSelectedTicket(t);
-                          navigate('/resident/feedback/detailsTicket');
-                        }}
-                      >
-                        مشاهده جزئیات
-                      </Button>
-                    </Box>
-                  </ListItem>
+                          {t.statusTitle}
+                        </span>
+                        {/* <div className="flex flex-col items-end text-xs text-[#0008]">
+                          <div className="flex items-center gap-1">
+                            <span>{t.createdAtFa.split(' ')[0]}</span>
+                            <MdDateRange />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span>{t.createdAtFa.split(' ')[1].slice(0, 5)}</span>
+                            <MdOutlineAccessTimeFilled />
+                          </div>
+                        </div> */}
+                      </div>
+                    </ListItem>
+                    <Divider />
+                    {/* <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                      <Chip
+                        label={t.priorityTitle}
+                        color={
+                          t.priority === 0
+                            ? 'success'
+                            : t.priority === 1
+                            ? 'info'
+                            : t.priority === 2
+                            ? 'warning'
+                            : t.priority === 3
+                            ? 'error'
+                            : 'default'
+                        }
+                      />
+                    </Stack> */}
+                    <div className="flex items-center text-xs text-[#0008] px-3 gap-3 pt-1">
+                      <div className="flex items-center gap-1">
+                        <MdDateRange />
+                        <span>{t.createdAtFa.split(' ')[0]}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MdOutlineAccessTimeFilled />
+                        <span>{t.createdAtFa.split(' ')[1].slice(0, 5)}</span>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </List>
-            </>
+              {listTickets.length === 0 && loading && (
+                <div className="flex flex-col items-center gap-3">
+                  <Skeleton variant="rounded" width={'100%'} height={130} />
+                  <Skeleton variant="rounded" width={'100%'} height={130} />
+                  <Skeleton variant="rounded" width={'100%'} height={130} />
+                </div>
+              )}
+              {listTickets.length === 0 && !loading && (
+                <div>
+                  <Empty />
+                </div>
+              )}
+            </List>
           </Box>
         </Box>
+        {totalCount > 20 && (
+          <div className="flex justify-center items-center mt-2">
+            <Stack spacing={2}>
+              <Pagination
+                page={numPages}
+                onChange={(e, value) => {
+                  setNumPages(value);
+                }}
+                count={totalPages}
+              />
+            </Stack>
+            <span>{totalCount} رکورد</span>
+          </div>
+        )}
       </ThemeProvider>
     </CacheProvider>
   );

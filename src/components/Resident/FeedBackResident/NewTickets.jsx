@@ -1,5 +1,5 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
@@ -10,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Empty } from 'antd';
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import { MdDriveFolderUpload, MdSend } from 'react-icons/md';
@@ -28,7 +27,7 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function NewTickets({ subjectOptions, priorityOptions }) {
+function NewTickets({ subjectOptions, priorityOptions, listService }) {
   const { themeMode } = useSettings();
   const navigate = useNavigate();
 
@@ -45,12 +44,15 @@ function NewTickets({ subjectOptions, priorityOptions }) {
   const [caption, setCaption] = useState('');
 
   const [description, setDescription] = useState('');
+  const [errDescription, setErrDescription] = useState(false);
   const [messages, setMessages] = useState([]);
 
   // برای آپلود
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
+
+  console.log(description);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);
@@ -62,6 +64,9 @@ function NewTickets({ subjectOptions, priorityOptions }) {
     }
     if (!priority) {
       setErrPriority(true);
+    }
+    if (!description) {
+      setErrDescription(true);
     }
 
     if (!message && !fileUrl) return;
@@ -81,33 +86,45 @@ function NewTickets({ subjectOptions, priorityOptions }) {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // setMessages([
+          //   ...messages,
+          //   {
+          //     id: Date.now(),
+          //     sender: 'customer',
+          //     text: fileUrl ? caption : message,
+          //     file: fileUrl,
+          //     fileType,
+          //   },
+          // ]);
+
+          setMessage('');
+          setCaption('');
+          setFile(null);
+          setFileUrl('');
+          setFileType(null);
+          setUploadProgress(0);
+          Toast.fire({
+            icon: 'success',
+            text: 'تیکت با موفقیت ثبت شد',
+            customClass: {
+              container: 'toast-modal',
+            },
+          });
+          navigate('/resident/feedback/');
         })
         .catch((err) => {
-          console.log(err);
+          Toast.fire({
+            icon: 'error',
+            text: err?.response ? err?.response.data : 'خطای شبکه',
+            customClass: {
+              container: 'toast-modal',
+            },
+          });
         })
         .finally(() => {
           setIsloading(false);
         });
-
-      //   setMessages([
-      //     ...messages,
-      //     {
-      //       id: Date.now(),
-      //       sender: 'customer',
-      //       text: fileUrl ? caption : message,
-      //       file: fileUrl,
-      //       fileType,
-      //     },
-      //   ]);
-
-      setMessage('');
-      setCaption('');
-      setFile(null);
-      setFileUrl('');
-      setFileType(null);
-      setUploadProgress(0);
     }
   };
 
@@ -154,7 +171,10 @@ function NewTickets({ subjectOptions, priorityOptions }) {
     if (!priority) {
       setErrPriority(true);
     }
-    if (subject && priority) {
+    if (!description) {
+      setErrDescription(true);
+    }
+    if (subject && priority && description) {
       setAnchorEl(e.currentTarget);
     }
   };
@@ -172,28 +192,21 @@ function NewTickets({ subjectOptions, priorityOptions }) {
 
   return (
     <>
-      {/* دکمه بازگشت */}
-      <div className="px-3 flex items-center">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
-          بازگشت
-        </Button>
-      </div>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '70vh' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
         <Typography sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }} variant="h6">
           ایجاد تیکت جدید
         </Typography>
 
         {/* انتخاب موضوع و اولویت */}
-        <div className="flex items-start gap-2">
-          <div className="flex flex-col items-start">
+        <div className="flex flex-wrap items-start gap-5 px-3">
+          <div className="flex flex-col items-start w-full">
             <TextField
               focused={errPriority}
               color={errPriority ? 'error' : ''}
               size="small"
               select
-              sx={{ minWidth: '250px' }}
+              fullWidth
               label="اولویت"
               value={priority}
               onChange={(e) => {
@@ -210,13 +223,13 @@ function NewTickets({ subjectOptions, priorityOptions }) {
             {errPriority && <p className="text-xs text-red-500">*لطفا اولویت را انتخاب کنید</p>}
           </div>
 
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start w-full">
             <TextField
               focused={errSubject}
               color={errSubject ? 'error' : ''}
               size="small"
               select
-              sx={{ minWidth: '250px' }}
+              fullWidth
               label="موضوع تیکت"
               value={subject}
               onChange={(e) => {
@@ -233,66 +246,65 @@ function NewTickets({ subjectOptions, priorityOptions }) {
             {errSubject && <p className="text-xs text-red-500">*لطفا موضوع را انتخاب کنید</p>}
           </div>
 
-          {subject === '4' && (
-            <TextField
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
+          {/* <TextField
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+            size="small"
+            fullWidth
+            label="توضیحات موضوع"
+          /> */}
+          <div className="flex flex-col items-start w-full">
+            <Autocomplete
               size="small"
+              id="country-select-demo"
               fullWidth
-              label="توضیحات موضوع"
-            />
-          )}
-        </div>
-
-        {/* نمایش پیام‌ها */}
-        <Box
-          sx={{
-            overflowY: 'auto',
-            p: 2,
-            bgcolor: themeMode === 'dark' ? '#1f2937' : '#f5f6fa',
-            borderRadius: 2,
-            flexGrow: 1,
-          }}
-        >
-          {messages.length > 0 ? (
-            messages.map((msg) => (
-              <Box
-                key={msg.id}
-                sx={{
-                  display: 'flex',
-                  justifyContent: msg.sender === 'customer' ? 'flex-start' : 'flex-end',
-                  mb: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    bgcolor: msg.sender === 'customer' ? '#60a5fa' : '#d1d5db',
-                    color: msg.sender === 'customer' ? '#fff' : '#000',
-                    p: 1.5,
-                    borderRadius: 2,
-                    maxWidth: '70%',
-                    wordBreak: 'break-word',
+              options={listService}
+              autoHighlight
+              freeSolo // 👈 اینو اضافه کن تا تایپ آزاد هم بشه
+              getOptionLabel={(option) => option.title || ''}
+              value={listService.find((item) => item.title === description) || null}
+              onChange={(event, newValue) => {
+                // وقتی کاربر از لیست انتخاب میکنه
+                if (newValue) {
+                  setDescription(newValue.title);
+                }
+              }}
+              inputValue={description}
+              onInputChange={(event, newInputValue) => {
+                // وقتی کاربر تایپ میکنه
+                setDescription(newInputValue);
+                setErrDescription(false);
+              }}
+              renderOption={(props, option) => {
+                const { key, ...optionProps } = props;
+                return (
+                  <Box key={key} component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...optionProps}>
+                    {option.title}
+                  </Box>
+                );
+              }}
+              renderInput={(params) => (
+                <TextField
+                  focused={errDescription}
+                  color={errDescription ? 'error' : ''}
+                  {...params}
+                  size="small"
+                  label="توضیحات موضوع"
+                  slotProps={{
+                    htmlInput: {
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // جلوگیری از autofill
+                    },
                   }}
-                >
-                  {msg.file && (
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      📎 {msg.fileType}
-                    </Typography>
-                  )}
-                  {msg.text && (
-                    <Typography variant="body2" sx={{ mt: msg.file ? 1 : 0 }}>
-                      {msg.text}
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-            ))
-          ) : (
-            <Empty />
-          )}
-        </Box>
+                />
+              )}
+            />
+
+            {errDescription && <p className="text-xs text-red-500">*لطفا توضیحات را وارد کنید</p>}
+          </div>
+        </div>
 
         {/* پیش‌نمایش و پروگرس آپلود */}
         {isUploading && (
@@ -312,7 +324,10 @@ function NewTickets({ subjectOptions, priorityOptions }) {
               size="small"
               placeholder="توضیحات فایل (اختیاری)"
               value={caption}
-              onChange={(e) => setCaption(e.target.value)}
+              onChange={(e) => {
+                setCaption(e.target.value);
+                setMessage(e.target.value);
+              }}
               sx={{ mt: 1 }}
             />
           </Box>
@@ -320,7 +335,7 @@ function NewTickets({ subjectOptions, priorityOptions }) {
 
         {/* ورودی پیام */}
         {!file && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: '0.75rem' }}>
             <TextField
               fullWidth
               placeholder="پیام خود را تایپ کنید..."
@@ -331,7 +346,7 @@ function NewTickets({ subjectOptions, priorityOptions }) {
                   <InputAdornment position="start">
                     {message && (
                       <IconButton onClick={handleSend}>
-                        <MdSend />
+                        <MdSend className="text-cyan-800" />
                       </IconButton>
                     )}
                     {!message && (

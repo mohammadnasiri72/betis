@@ -1,110 +1,238 @@
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { Box, Divider, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
+/* eslint-disable react/button-has-type */
+import { Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
-import useSettings from '../../../hooks/useSettings';
+import { FaAngleDown } from 'react-icons/fa';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
 
-function FilterBox({ statusTicket, priority, subject }) {
-  const { themeMode } = useSettings();
- 
-  const [statusTicketSelected, setStatusTicketSelected] = useState(-1);
-  const [prioritySelected, setPrioritySelected] = useState(-1);
-  const [subjectSelected, setSubjectSelected] = useState(-1);
+function FilterBox({
+  statusTicket,
+  priority,
+  subject,
+  statusTicketSelected,
+  setStatusTicketSelected,
+  prioritySelected,
+  setPrioritySelected,
+  subjectSelected,
+  setSubjectSelected,
+}) {
+  const [anchorEl1, setAnchorEl1] = useState(null);
+  const [anchorEl2, setAnchorEl2] = useState(null);
+  const [anchorEl3, setAnchorEl3] = useState(null);
+  const open1 = Boolean(anchorEl1);
+  const open2 = Boolean(anchorEl2);
+  const open3 = Boolean(anchorEl3);
+  const handleClick1 = (event) => {
+    setAnchorEl1(event.currentTarget);
+  };
+  const handleClose1 = () => {
+    setAnchorEl1(null);
+  };
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+  const handleClose2 = () => {
+    setAnchorEl2(null);
+  };
+  const handleClick3 = (event) => {
+    setAnchorEl3(event.currentTarget);
+  };
+  const handleClose3 = () => {
+    setAnchorEl3(null);
+  };
 
   return (
-    <>
-      <Box
-        sx={{
-          width: 250,
-          borderLeft: 1,
-          borderColor: 'divider',
-          p: 2,
-          bgcolor: themeMode === 'dark' ? '#333' : '#fff',
-          position: 'fixed',
-          top: '60px',
-          bottom: '60px',
-          left: '0',
-          overflow: 'auto',
-        }}
-      >
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-          <FilterAltIcon color="primary" />
-          <Typography sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }} variant="h6">
-            فیلترها
-          </Typography>
-        </Stack>
-        <Divider sx={{ mb: 2 }} />
-        <FormControl size="small" color="primary" className="w-full">
-          <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-            وضعیت تیکت
-          </InputLabel>
-          <Select
-            size="small"
-            className="w-full"
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={statusTicketSelected}
-            label="وضعیت تیکت"
-            color="primary"
-            onChange={(e) => setStatusTicketSelected(e.target.value)}
-          >
-            <MenuItem value={-1}>همه</MenuItem>
-            {Object.keys(statusTicket).map((status) => (
-              <MenuItem key={status} value={status}>
-                {statusTicket[status]}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <div className="mt-5">
-          <FormControl size="small" color="primary" className="w-full">
-            <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-              اولویت تیکت
-            </InputLabel>
-            <Select
-              size="small"
-              className="w-full"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={prioritySelected}
-              label="اولویت تیکت"
-              color="primary"
-              onChange={(e) => setPrioritySelected(e.target.value)}
-            >
-              <MenuItem value={-1}>همه</MenuItem>
-              {Object.keys(priority).map((status) => (
-                <MenuItem key={status} value={status}>
-                  {priority[status]}
+    <div className="w-full absolute left-0 right-0">
+      <div className="w-full px-8">
+        <Swiper
+          slidesPerView={4}
+          className="w-full"
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
+            },
+            1200: {
+              slidesPerView: 4,
+            },
+          }}
+        >
+          <SwiperSlide>
+            <div className="w-full px-1">
+              <button
+                className={`rounded-full w-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
+                  statusTicketSelected === -1 ? '' : 'bg-blue-200'
+                }`}
+                onClick={handleClick1}
+              >
+                <span>وضعیت</span>
+                <FaAngleDown />
+              </button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl1}
+                open={open1}
+                onClose={handleClose1}
+                slotProps={{
+                  list: {
+                    'aria-labelledby': 'basic-button',
+                  },
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setStatusTicketSelected(-1);
+                    handleClose1();
+                  }}
+                  value={-1}
+                  sx={{
+                    background: statusTicketSelected === -1 ? 'rgb(203 213 225)' : '',
+                    '&:hover': {
+                      background: statusTicketSelected === -1 ? 'rgb(203 213 225)' : '',
+                    },
+                  }}
+                >
+                  همه
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-        <div className="mt-5">
-          <FormControl size="small" color="primary" className="w-full">
-            <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-              نوع تیکت
-            </InputLabel>
-            <Select
-              size="small"
-              className="w-full"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={subjectSelected}
-              label="نوع تیکت"
-              color="primary"
-              onChange={(e) => setSubjectSelected(e.target.value)}
-            >
-              <MenuItem value={-1}>همه</MenuItem>
-              {Object.keys(subject).map((status) => (
-                <MenuItem key={status} value={status}>
-                  {subject[status]}
+                {Object.keys(statusTicket).map((status) => (
+                  <MenuItem
+                    onClick={() => {
+                      setStatusTicketSelected(Number(status));
+                      handleClose1();
+                    }}
+                    key={status}
+                    value={status}
+                    sx={{
+                      background: statusTicketSelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      '&:hover': {
+                        background: statusTicketSelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      },
+                    }}
+                  >
+                    {statusTicket[status]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="w-full px-1">
+              <button
+                className={`rounded-full w-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
+                  subjectSelected === -1 ? '' : 'bg-blue-200'
+                }`}
+                onClick={handleClick3}
+              >
+                <span>موضوع</span>
+                <FaAngleDown />
+              </button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl3}
+                open={open3}
+                onClose={handleClose3}
+                slotProps={{
+                  list: {
+                    'aria-labelledby': 'basic-button',
+                  },
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setSubjectSelected(-1);
+                    handleClose3();
+                  }}
+                  value={-1}
+                  sx={{
+                    background: subjectSelected === -1 ? 'rgb(203 213 225)' : '',
+                    '&:hover': {
+                      background: subjectSelected === -1 ? 'rgb(203 213 225)' : '',
+                    },
+                  }}
+                >
+                  همه
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </Box>
-    </>
+                {Object.keys(priority).map((status) => (
+                  <MenuItem
+                    onClick={() => {
+                      setSubjectSelected(Number(status));
+                      handleClose3();
+                    }}
+                    key={status}
+                    value={status}
+                    sx={{
+                      background: subjectSelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      '&:hover': {
+                        background: subjectSelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      },
+                    }}
+                  >
+                    {subject[status]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="w-full px-1">
+              <button
+                className={`rounded-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] w-full ${
+                  prioritySelected === -1 ? '' : 'bg-blue-200'
+                }`}
+                onClick={handleClick2}
+              >
+                <span>اولویت</span>
+                <FaAngleDown />
+              </button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl2}
+                open={open2}
+                onClose={handleClose2}
+                slotProps={{
+                  list: {
+                    'aria-labelledby': 'basic-button',
+                  },
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setPrioritySelected(-1);
+                    handleClose2();
+                  }}
+                  value={-1}
+                  sx={{
+                    background: prioritySelected === -1 ? 'rgb(203 213 225)' : '',
+                    '&:hover': {
+                      background: prioritySelected === -1 ? 'rgb(203 213 225)' : '',
+                    },
+                  }}
+                >
+                  همه
+                </MenuItem>
+                {Object.keys(priority).map((status) => (
+                  <MenuItem
+                    onClick={() => {
+                      setPrioritySelected(Number(status));
+                      handleClose2();
+                    }}
+                    key={status}
+                    value={status}
+                    sx={{
+                      background: prioritySelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      '&:hover': {
+                        background: prioritySelected === Number(status) ? 'rgb(203 213 225)' : '',
+                      },
+                    }}
+                  >
+                    {priority[status]}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </div>
   );
 }
 
