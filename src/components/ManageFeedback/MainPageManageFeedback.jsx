@@ -15,7 +15,6 @@ import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import BoxFeedback from './BoxFeedback';
 import useSettings from '../../hooks/useSettings';
 

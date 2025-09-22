@@ -44,23 +44,12 @@ function FilterBox({
   return (
     <div className="w-full absolute left-0 right-0">
       <div className="w-full px-8">
-        <Swiper
-          slidesPerView={4}
-          className="w-full"
-          breakpoints={{
-            640: {
-              slidesPerView: 3,
-            },
-            1200: {
-              slidesPerView: 4,
-            },
-          }}
-        >
-          <SwiperSlide>
-            <div className="w-full px-1">
+        <Swiper slidesPerView="auto" className="w-full">
+          <SwiperSlide className="!w-auto">
+            <div className="flex justify-center px-1 w-auto">
               <button
-                className={`rounded-full w-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
-                  statusTicketSelected === -1 ? '' : 'bg-blue-200'
+                className={`rounded-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
+                  statusTicketSelected === -1 ? '' : '!bg-blue-200'
                 }`}
                 onClick={handleClick1}
               >
@@ -114,11 +103,11 @@ function FilterBox({
               </Menu>
             </div>
           </SwiperSlide>
-          <SwiperSlide>
-            <div className="w-full px-1">
+          <SwiperSlide className="!w-auto">
+            <div className="flex justify-center px-1 w-auto">
               <button
-                className={`rounded-full w-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
-                  subjectSelected === -1 ? '' : 'bg-blue-200'
+                className={`rounded-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
+                  subjectSelected === -1 ? '' : '!bg-blue-200'
                 }`}
                 onClick={handleClick3}
               >
@@ -172,11 +161,11 @@ function FilterBox({
               </Menu>
             </div>
           </SwiperSlide>
-          <SwiperSlide>
-            <div className="w-full px-1">
+          <SwiperSlide className="!w-auto">
+            <div className="flex justify-center px-1 w-auto">
               <button
-                className={`rounded-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] w-full ${
-                  prioritySelected === -1 ? '' : 'bg-blue-200'
+                className={`rounded-full bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002] ${
+                  prioritySelected === -1 ? '' : '!bg-blue-200'
                 }`}
                 onClick={handleClick2}
               >

@@ -1,16 +1,16 @@
 /* eslint-disable no-nested-ternary */
 import {
-  Avatar,
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  TextField,
-  Tooltip,
-  Typography,
+    Avatar,
+    Box,
+    Button,
+    CircularProgress,
+    IconButton,
+    InputAdornment,
+    Menu,
+    MenuItem,
+    TextField,
+    Tooltip,
+    Typography,
 } from '@mui/material';
 import { Empty } from 'antd';
 import axios from 'axios';
@@ -19,10 +19,13 @@ import { useEffect, useRef, useState } from 'react';
 import { FaEye, FaRegDotCircle } from 'react-icons/fa';
 import { MdDateRange, MdDriveFolderUpload, MdOutlineAccessTimeFilled, MdSend } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
-import useSettings from '../../../hooks/useSettings';
-import { mainDomain } from '../../../utils/mainDomain';
+import useSettings from '../../hooks/useSettings';
+import { checkClaims } from '../../utils/claims';
+import { mainDomain } from '../../utils/mainDomain';
+import ModalBackService from './ModalBackService';
+import ModalCloseDiscunect from './ModalCloseDiscunect';
 
 const groupMessagesByDate = (messages) => {
   const grouped = {};
@@ -79,30 +82,43 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function DetailsTickets({ ticketSelected }) {
+function DetailsTickets({listService}) {
+  const params = useParams();
+  const url = useLocation();
+  const ticketId = Number(params.messages);
+
   const [ticketEdited, setTicketEdited] = useState({});
+  const [flag, setFlag] = useState(false);
   const boxRef = useRef(null);
 
   useEffect(() => {
-    if (ticketSelected.id) {
+    if (ticketId) {
       setIsloading(true);
       axios
-        .get(`${mainDomain}/api/Ticket/Get/${ticketSelected.id}`, {
+        .get(`${mainDomain}/api/Ticket/Get/${ticketId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
         .then((res) => {
           setTicketEdited(res.data);
+          setTimeout(() => {
+            boxRef.current.scrollTo({
+              top: boxRef.current.scrollHeight,
+              behavior: 'smooth',
+            });
+          }, 100);
         })
-        .catch((err) => {})
+        .catch(() => {
+          navigate('/dashboard/admin-messages');
+        })
         .finally(() => {
           setIsloading(false);
         });
     } else {
-      navigate('/resident/feedback/');
+      navigate('/dashboard/admin-messages');
     }
-  }, [ticketSelected]);
+  }, [ticketId, flag]);
 
   const { themeMode } = useSettings();
   const navigate = useNavigate();
@@ -146,7 +162,7 @@ function DetailsTickets({ ticketSelected }) {
     if (message || fileUrl) {
       setIsloading(true);
       const data = {
-        ticketId: ticketSelected.id,
+        ticketId,
         message,
         fileUrl,
       };
@@ -157,31 +173,50 @@ function DetailsTickets({ ticketSelected }) {
           },
         })
         .then(() => {
-          setMessages([
-            ...messages,
-            {
-              id: Date.now(),
-              isResident: true,
-              message,
-              fileUrl,
-              fileType,
-              sentAtFa: nowFa,
-              fileSrc: avatarTemporary,
-            },
-          ]);
-
+          //   setMessages([
+          //     ...messages,
+          //     {
+          //       id: Date.now(),
+          //       isResident: false,
+          //       message,
+          //       fileUrl,
+          //       fileType,
+          //       sentAtFa: nowFa,
+          //       fileSrc: avatarTemporary,
+          //     },
+          //   ]);
+          setFlag((e) => !e);
           setMessage('');
           setCaption('');
           setFile(null);
           setFileUrl('');
           setFileType(null);
           setUploadProgress(0);
-          boxRef.current.scrollTo({
-            top: boxRef.current.scrollHeight,
-            behavior: 'smooth',
+
+          //   setTicketEdited((prev) => ({
+          //     ...prev,
+          //     status: 1,
+          //     statusTitle: 'پاسخ داده شده',
+          //     messages: {
+          //       id: Date.now(),
+          //       isResident: false,
+          //       message,
+          //       fileUrl,
+          //       fileType,
+          //       sentAtFa: nowFa,
+          //       fileSrc: avatarTemporary,
+          //     },
+          //   }));
+        })
+        .catch((err) => {
+          Toast.fire({
+            icon: 'error',
+            text: err.response ? err.response.data : 'خطای شبکه',
+            customClass: {
+              container: 'toast-modal',
+            },
           });
         })
-        .catch((err) => {})
         .finally(() => {
           setIsloading(false);
         });
@@ -245,19 +280,6 @@ function DetailsTickets({ ticketSelected }) {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
         <div className="flex justify-between items-start px-3">
-          {/* <div className="flex flex-col items-start gap-1 ">
-            <span className="text-lg font-semibold">{ticketEdited.subjectTitle}</span>
-            <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
-              <div className="flex items-center gap-1">
-                <MdDateRange />
-                <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <MdOutlineAccessTimeFilled />
-                <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
-              </div>
-            </div>
-          </div> */}
           <div className="flex items-start justify-center">
             <Avatar sx={{ mr: 1 }}>
               <RiAdminFill />
@@ -316,6 +338,14 @@ function DetailsTickets({ ticketSelected }) {
                 </IconButton>
               </Tooltip>
             </div>
+            <div className="flex items-center gap-1">
+              {checkClaims(url.pathname, 'post') && ticketEdited.status !== 2 && (
+                <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService}/>
+              )}
+              {checkClaims(url.pathname, 'post') && ticketEdited.status !== 2 && (
+                <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />
+              )}
+            </div>
           </div>
         </div>
 
@@ -357,22 +387,43 @@ function DetailsTickets({ ticketSelected }) {
                     key={msg.id}
                     sx={{
                       display: 'flex',
-                      justifyContent: msg.isResident ? 'flex-start' : 'flex-end',
+                      justifyContent: !msg.isResident ? 'flex-start' : 'flex-end',
                       mb: 2,
                     }}
                   >
                     <Box
                       sx={{
-                        bgcolor: msg.isResident ? '#60a5fa' : '#d1d5db',
-                        color: msg.isResident ? '#fff' : '#000',
-                        px: 1.5,
-                        py: 0.5,
+                        position: 'relative',
+                        bgcolor: !msg.isResident
+                          ? themeMode === 'dark'
+                            ? '#2563eb'
+                            : '#3b82f6'
+                          : themeMode === 'dark'
+                          ? '#374151'
+                          : '#e5e7eb',
+                        color: !msg.isResident ? '#fff' : themeMode === 'dark' ? '#fff' : '#000',
+                        px: 2,
+                        py: 1,
                         borderRadius: 2,
                         maxWidth: '70%',
                         wordBreak: 'break-word',
+
+                        // استایل حباب برای پیام‌های کاربر (سمت راست)
+                        ...(msg.isResident && {
+                          borderTopRightRadius: 4, // گوشه کوچک برای اثر حباب
+                        }),
+
+                        // استایل حباب برای پیام‌های طرف مقابل (سمت چپ)
+                        ...(!msg.isResident && {
+                          borderTopLeftRadius: 4,
+                        }),
+
+                        // سایه ملایم
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                       }}
                     >
-                      {msg.fileUrl && (
+                      {msg.isResident && <p className="text-xs text-end">{msg.authorName}</p>}
+                      {msg.fileSrc && (
                         <div className="flex items-center justify-between gap-2">
                           <Typography variant="body2" sx={{ fontWeight: 600 }}>
                             📎 فایل پیوست
@@ -383,7 +434,7 @@ function DetailsTickets({ ticketSelected }) {
                                 console.log(msg.fileSrc);
                               }}
                             >
-                              <FaEye className={`text-sm ${msg.isResident ? 'text-white' : 'text-black'}`} />
+                              <FaEye className={`text-sm ${!msg.isResident ? 'text-white' : 'text-black'}`} />
                             </IconButton>
                           </Tooltip>
                         </div>
@@ -392,7 +443,7 @@ function DetailsTickets({ ticketSelected }) {
                         <Typography
                           variant="body2"
                           sx={{
-                            mt: msg.fileUrl ? 1 : 0,
+                            mt: msg.fileSrc ? 1 : 0,
                             display: 'flex',
                             justifyContent: 'start',
                             textAlign: 'justify',
@@ -408,7 +459,7 @@ function DetailsTickets({ ticketSelected }) {
                             display: 'flex',
                             justifyContent: 'end',
                             fontSize: '10px',
-                            color: msg.isResident ? '#fff8' : '#0008',
+                            color: !msg.isResident ? '#fff8' : '#0008',
                           }}
                         >
                           {msg?.sentAtFa?.split(' ')[1].slice(0, 5)} {/* نمایش فقط زمان */}
@@ -455,8 +506,9 @@ function DetailsTickets({ ticketSelected }) {
         {!file && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TextField
+              disabled={ticketEdited.status === 2}
               fullWidth
-              placeholder="پیام خود را تایپ کنید..."
+              placeholder={`${ticketEdited.status === 2 ? 'پیام بسته شده!!!' : 'پیام خود را تایپ کنید...'}`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               InputProps={{
@@ -468,7 +520,9 @@ function DetailsTickets({ ticketSelected }) {
                       </IconButton>
                     )}
                     {!message && (
-                      <IconButton onClick={openMenu}>{message ? <MdSend /> : <MdDriveFolderUpload />}</IconButton>
+                      <IconButton disabled={ticketEdited.status === 2} onClick={openMenu}>
+                        {message ? <MdSend /> : <MdDriveFolderUpload />}
+                      </IconButton>
                     )}
                   </InputAdornment>
                 ),

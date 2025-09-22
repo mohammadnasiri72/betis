@@ -120,6 +120,11 @@ const sidebarConfig = [
         icon: <BiSolidConversation />,
       },
       {
+        title: 'مدیریت نظرات',
+        path: '/dashboard/admin-messages',
+        icon: <BiSolidConversation />,
+      },
+      {
         title: 'مدیریت تابلو اعلانات',
         path: '/dashboard/admin-boardNotice',
         icon: <BsMotherboardFill />,

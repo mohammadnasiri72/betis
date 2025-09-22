@@ -6,7 +6,7 @@
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Divider, Pagination, Skeleton } from '@mui/material';
+import { Divider, IconButton, Pagination, Skeleton, Tooltip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -21,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import { Empty } from 'antd';
 import axios from 'axios';
 import React, { useEffect } from 'react';
+import { FaRegDotCircle } from 'react-icons/fa';
 import { MdDateRange, MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
@@ -66,8 +67,6 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
   const [statusTicketSelected, setStatusTicketSelected] = React.useState(-1);
   const [prioritySelected, setPrioritySelected] = React.useState(-1);
   const [subjectSelected, setSubjectSelected] = React.useState(-1);
-
-  console.log(listTickets);
 
   useEffect(() => {
     if (accountResident?.buildingId) {
@@ -153,7 +152,7 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
                 listTickets.map((t) => (
                   <div
                     key={t.id}
-                    className="bg-slate-200 rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
+                    className="bg-white rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
                     onClick={() => {
                       navigate('/resident/feedback/detailsTicket');
                       setTicketSelected(t);
@@ -162,14 +161,14 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
                     <ListItem alignItems="flex-start">
                       <div className="flex justify-between items-center w-full">
                         <div className="flex items-center justify-center">
-                          <Avatar sx={{ mr: 2 }}>
+                          <Avatar sx={{ mr: 1 }}>
                             <RiAdminFill />
                           </Avatar>
                           <div className="flex flex-col items-start justify-center">
                             <Typography
                               variant="subtitle1"
                               fontWeight="bold"
-                              sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+                              sx={{ color: themeMode === 'dark' ? '#fff' : '#000', whiteSpace: 'nowrap' }}
                             >
                               {t.subjectTitle}
                             </Typography>
@@ -179,48 +178,43 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
                           </div>
                         </div>
 
-                        <span
-                          className={`text-xs rounded-full px-2 py-1 ${
-                            t.status === 0
-                              ? 'text-orange-500 bg-orange-100'
-                              : t.status === 1
-                              ? 'text-emerald-500 bg-emerald-100'
-                              : t.priority === 2
-                              ? 'text-slate-800 bg-slate-100'
-                              : ''
-                          }`}
-                        >
-                          {t.statusTitle}
-                        </span>
-                        {/* <div className="flex flex-col items-end text-xs text-[#0008]">
-                          <div className="flex items-center gap-1">
-                            <span>{t.createdAtFa.split(' ')[0]}</span>
-                            <MdDateRange />
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span>{t.createdAtFa.split(' ')[1].slice(0, 5)}</span>
-                            <MdOutlineAccessTimeFilled />
-                          </div>
-                        </div> */}
+                        <div className="flex items-center justify-center gap-1">
+                          <span
+                            className={`text-xs rounded-full px-2 py-1 whitespace-nowrap ${
+                              t.status === 0
+                                ? 'text-orange-500 bg-orange-100'
+                                : t.status === 1
+                                ? 'text-emerald-500 bg-emerald-100'
+                                : t.status === 2
+                                ? 'text-slate-800 bg-slate-100'
+                                : ''
+                            }`}
+                          >
+                            {t.statusTitle}
+                          </span>
+
+                          <Tooltip title={t.priorityTitle}>
+                            <IconButton>
+                              <FaRegDotCircle
+                                className={`text-sm ${
+                                  t.priority === 0
+                                    ? 'text-emerald-500'
+                                    : t.priority === 1
+                                    ? 'text-blue-600'
+                                    : t.priority === 2
+                                    ? 'text-orange-600'
+                                    : t.priority === 3
+                                    ? 'text-red-600'
+                                    : 'text-slate-500'
+                                }`}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
                       </div>
                     </ListItem>
                     <Divider />
-                    {/* <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                      <Chip
-                        label={t.priorityTitle}
-                        color={
-                          t.priority === 0
-                            ? 'success'
-                            : t.priority === 1
-                            ? 'info'
-                            : t.priority === 2
-                            ? 'warning'
-                            : t.priority === 3
-                            ? 'error'
-                            : 'default'
-                        }
-                      />
-                    </Stack> */}
+
                     <div className="flex items-center text-xs text-[#0008] px-3 gap-3 pt-1">
                       <div className="flex items-center gap-1">
                         <MdDateRange />
@@ -235,9 +229,9 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
                 ))}
               {listTickets.length === 0 && loading && (
                 <div className="flex flex-col items-center gap-3">
-                  <Skeleton variant="rounded" width={'100%'} height={130} />
-                  <Skeleton variant="rounded" width={'100%'} height={130} />
-                  <Skeleton variant="rounded" width={'100%'} height={130} />
+                  <Skeleton variant="rounded" width={'100%'} height={120} />
+                  <Skeleton variant="rounded" width={'100%'} height={120} />
+                  <Skeleton variant="rounded" width={'100%'} height={120} />
                 </div>
               )}
               {listTickets.length === 0 && !loading && (

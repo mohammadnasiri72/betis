@@ -96,7 +96,7 @@ export default function MainPageFeedBackResident({ accountResident, flagRefreshP
           <NewTicketsChat subjectOptions={subject} priorityOptions={priority} listService={listService} />
         )}
         {params.feedback === 'detailsTicket' && (
-          <DetailsTickets subjectOptions={subject} priorityOptions={priority} ticketSelected={ticketSelected} />
+          <DetailsTickets ticketSelected={ticketSelected} />
         )}
       </div>
     </>

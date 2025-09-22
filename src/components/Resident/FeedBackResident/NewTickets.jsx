@@ -52,7 +52,6 @@ function NewTickets({ subjectOptions, priorityOptions, listService }) {
   const [isUploading, setIsUploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
 
-  console.log(description);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);

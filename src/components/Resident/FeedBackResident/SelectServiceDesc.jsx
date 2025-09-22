@@ -6,7 +6,6 @@ import { useState } from 'react';
 export default function SelectServiceDesc({ listService }) {
   const [desc, setDesc] = useState('');
 
-  console.log(desc);
   return (
     <Autocomplete
       size="small"

@@ -23,6 +23,7 @@ import ManageDebt from '../pages/ManageDebt';
 import ManageDeposit from '../pages/ManageDeposit';
 import ManageFeedback from '../pages/ManageFeedback';
 import ManageGuest from '../pages/ManageGuest';
+import ManageMessages from '../pages/ManageMessages';
 import ManageOrder from '../pages/ManageOrder';
 import ManageParking from '../pages/ManageParking';
 import ManagePet from '../pages/ManagePet';
@@ -231,6 +232,10 @@ export default function Router() {
     {
       path: 'admin-feedback',
       element: <ManageFeedback />,
+    },
+    {
+      path: 'admin-messages',
+      element: <ManageMessages />,
     },
     {
       path: 'admin-serviceRule',
@@ -667,6 +672,22 @@ export default function Router() {
             ) : (
               <ManageFeedback />
             ),
+        },
+        {
+          path: 'admin-messages',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-messages:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageMessages />
+            ),
+            children: [
+            {
+              path: ':messages',
+              element: <ManageMessages />,
+            },
+          ],
         },
         {
           path: 'admin-serviceRule',
