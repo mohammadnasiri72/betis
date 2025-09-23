@@ -6,12 +6,11 @@ import { useEffect, useState } from 'react';
 import { MdOutlineDescription } from 'react-icons/md';
 import { TbListNumbers } from 'react-icons/tb';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import ActionVehicle from './ActionVehicle';
 import ModalNewVehicle from './ModalNewVehicle';
-import useSettings from '../../hooks/useSettings';
 
 export default function MainPageManageVehicle() {
   const [isLoading, setIsLoading] = useState(true);
@@ -100,7 +99,12 @@ export default function MainPageManageVehicle() {
 
   return (
     <>
-      <h3 style={{color:themeMode==='dark'? '#fff':'#000'}} className="sm:text-2xl text-lg font-semibold whitespace-nowrap">مدیریت وسیله نقلیه</h3>
+      <h3
+        style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+        className="sm:text-2xl text-lg font-semibold whitespace-nowrap"
+      >
+        مدیریت وسیله نقلیه
+      </h3>
       <div className="flex justify-between mb-3 py-2 px-2">
         <div className="flex flex-wrap items-center w-full">
           <div className="sm:w-1/4 w-full flex items-center px-2">
@@ -203,7 +207,11 @@ export default function MainPageManageVehicle() {
                     )}
                     {vehicle.typeId === 0 && (
                       <p
-                        className={themeMode === 'dark' ? 'border-2 p-2 border-[#fff8]' : 'border-2 p-2 border-[#0008]'}
+                        className={
+                          themeMode === 'dark'
+                            ? 'border-2 palet-car px-2 py-1 text-xs border-[#fff8]'
+                            : 'border-2 palet-car px-2 py-1 text-xs border-[#0008]'
+                        }
                       >
                         {`ایران${vehicle.licensePlate.slice(6, 8)}-${vehicle.licensePlate.slice(
                           3,

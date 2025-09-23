@@ -208,10 +208,9 @@ export default function MainPageManageReserve() {
       .then((res) => {
         setListReserve(res.data.items);
         setTotalPages(res.data.totalPages);
+        setTotalCount(res.data.totalCount);
         if (newParams.statusId === 1) {
           setTotalCountTa(res.data.totalCount);
-        } else {
-          setTotalCount(res.data.totalCount);
         }
 
         if (config.params.statusId === 0) {
@@ -422,20 +421,20 @@ export default function MainPageManageReserve() {
           </div>
         </div>
       </div>
-      <div className='flex'>
-       <div className='w-full'>
-         <ToggleButtonFilterStatus
-        totalCount={totalCount}
-        totalCountPending={totalCountPending}
-        value={valueStatus}
-        setValue={setValueStatus}
-        setFlagTimer={setFlagTimer}
-        getListReserve={getListReserve}
-        setPageIndex={setPageIndex}
-        totalCountTa={totalCountTa}
-      />
-       </div>
-      <RateService valService={valService.id} />
+      <div className="flex">
+        <div className="w-full">
+          <ToggleButtonFilterStatus
+            totalCount={totalCount}
+            totalCountPending={totalCountPending}
+            value={valueStatus}
+            setValue={setValueStatus}
+            setFlagTimer={setFlagTimer}
+            getListReserve={getListReserve}
+            setPageIndex={setPageIndex}
+            totalCountTa={totalCountTa}
+          />
+        </div>
+        <RateService valService={valService.id} />
       </div>
       <div className="flex flex-wrap px-2 mt-4">
         {listReserve.length > 0 &&

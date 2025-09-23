@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Skeleton } from '@mui/material';
 import AOS from 'aos';
@@ -11,6 +12,7 @@ import ModalConfirmChargeWallet from '../MyWallet/ModalConfirmChargeWallet';
 import ModalWalletPayMent from '../MyWallet/ModalWalletPayMent';
 import ModalWalletPayMentOnline from '../MyWallet/ModalWalletPayMentOnline';
 import BoxDebt from './BoxDebt';
+import ModalPayAll from './ModalPayAll';
 
 export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
   const [listDebt, setListDebt] = useState([]);
@@ -23,7 +25,7 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
 
   const { themeMode } = useSettings();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init();
@@ -67,22 +69,17 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
-      .then((res) => {        
+      .then((res) => {
         setDeposit(res.data.find((ev) => ev?.id === Number(localStorage.getItem('unitId')))?.depositBalance);
         setDebtBalance(res.data.find((ev) => ev?.id === Number(localStorage.getItem('unitId')))?.debtBalance);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, [flag, flagRefreshPage]);
 
   return (
     <>
       <div className="px-3 flex items-center">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -97,7 +94,9 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
               <span className="text-sm font-semibold">{numberWithCommas(deposit)} </span>
               <span className="text-xs">تومان</span>
             </div>
-            {!openWallet && <ModalConfirmChargeWallet setOpenWallet={setOpenWallet} setOpenOnlineWallet={setOpenOnlineWallet} />}
+            {!openWallet && (
+              <ModalConfirmChargeWallet setOpenWallet={setOpenWallet} setOpenOnlineWallet={setOpenOnlineWallet} />
+            )}
             {openWallet && (
               <ModalWalletPayMent
                 accountResident={accountResident}
@@ -110,7 +109,6 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
               <ModalWalletPayMentOnline
                 accountResident={accountResident}
                 open={openOnlineWallet}
-
                 setOpen={setOpenOnlineWallet}
                 setFlag={setFlag}
               />
@@ -119,15 +117,11 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
           <div className="text-start p-2 relative border-red-500 border rounded-lg text-red-500 mt-4 flex justify-between">
             <div>
               <span className="text-xs">بدهی من : </span>
-              <span className="text-sm font-semibold">{numberWithCommas(debtBalance *-1)} </span>
+              <span className="text-sm font-semibold">{numberWithCommas(debtBalance * -1)} </span>
               <span className="text-xs">تومان</span>
             </div>
             <div>
-              {listDebt.length > 0 && (
-                <div className="rounded-full bg-red-500 text-white w-5 h-5 flex justify-center items-center text-xs">
-                  {listDebt.length}
-                </div>
-              )}
+              <ModalPayAll listDebt={listDebt} accountResident={accountResident}/>
             </div>
           </div>
         </div>

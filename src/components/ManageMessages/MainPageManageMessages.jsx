@@ -183,7 +183,7 @@ function MainPageManageMessages() {
   };
 
   useEffect(() => {
-    if (valBuilding.id && url.pathname === '/dashboard/admin-messages') {
+    if (valBuilding.id && url.pathname === '/dashboard/admin-ticket') {
       getListTickets();
     }
   }, [valBuilding, url]);
@@ -423,7 +423,7 @@ function MainPageManageMessages() {
                   key={t.id}
                   className="bg-white border w-full border-[#0001] rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
                   onClick={() => {
-                    navigate(`/dashboard/admin-messages/${t.id}`);
+                    navigate(`/dashboard/admin-ticket/${t.id}`);
                   }}
                 >
                   <ListItem alignItems="flex-start">

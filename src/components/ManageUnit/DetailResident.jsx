@@ -14,8 +14,6 @@ import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import TabVerticalDetails from './TabVerticalDetails';
 
-
-
 export default function DetailResident({ showDetails, setShowDetails, unit }) {
   const [view, setView] = useState('resident');
   const [isLoading, setIsLoading] = useState(false);
@@ -440,7 +438,7 @@ export default function DetailResident({ showDetails, setShowDetails, unit }) {
                           />
                         )}
                         {vehicle.typeId === 0 && (
-                          <p className="border-2 p-2 border-[#0008]">
+                          <p className="border-2 px-2 py-1 palet-car text-xs border-[#0008]">
                             {`ایران${vehicle.licensePlate.slice(6, 8)}-${vehicle.licensePlate.slice(
                               3,
                               6

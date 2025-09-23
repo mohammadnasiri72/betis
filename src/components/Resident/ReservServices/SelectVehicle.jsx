@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import { Button, Chip, Skeleton } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -126,8 +127,8 @@ function SelectVehicle({
                           <p
                             className={
                               themeMode === 'dark'
-                                ? 'border p-2 border-[#fff8] text-sm'
-                                : 'border p-2 border-[#0008] bg-[#e7ebf0] text-sm'
+                                ? 'border palet-car px-2 py-1 border-[#fff8] text-xs'
+                                : 'border palet-car px-2 py-1 border-[#0008] bg-[#e7ebf0] text-xs'
                             }
                           >
                             {`ایران${vehicle.licensePlate.slice(6, 8)}-${vehicle.licensePlate.slice(

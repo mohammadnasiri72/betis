@@ -113,7 +113,7 @@ const sidebarConfig = [
       { title: 'مدیریت نقش ها', path: '/dashboard/admin-role', icon: <ImUsers /> },
       { title: 'سوالات نظرسنجی', path: '/dashboard/admin-surveyquestion', icon: <RiSurveyFill /> },
       { title: 'پاسخ های نظرسنجی', path: '/dashboard/admin-surveyanswer', icon: <HiClipboardDocumentList /> },
-      { title: 'مدیریت خدمات املاک', path: '/dashboard/admin-servichome', icon: <BsFillHouseGearFill /> },
+      { title: 'مدیریت خدمات املاک', path: '/dashboard/admin-realState', icon: <BsFillHouseGearFill /> },
       {
         title: 'مدیریت انتقاد و پیشنهاد',
         path: '/dashboard/admin-feedback',
@@ -121,7 +121,7 @@ const sidebarConfig = [
       },
       {
         title: 'مدیریت نظرات',
-        path: '/dashboard/admin-messages',
+        path: '/dashboard/admin-ticket',
         icon: <BiSolidConversation />,
       },
       {

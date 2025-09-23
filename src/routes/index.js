@@ -495,9 +495,9 @@ export default function Router() {
             ),
         },
         {
-          path: 'admin-messages',
+          path: 'admin-ticket',
           element:
-            !localStorage.getItem('claims')?.includes('admin-messages:') &&
+            !localStorage.getItem('claims')?.includes('admin-ticket:') &&
             !localStorage.getItem('roles')?.includes('Admin') ? (
               <Navigate to="/404" replace />
             ) : (
@@ -601,9 +601,9 @@ export default function Router() {
             ),
         },
         {
-          path: 'admin-servichome',
+          path: 'admin-realState',
           element:
-            !localStorage.getItem('claims')?.includes('admin-servichome:') &&
+            !localStorage.getItem('claims')?.includes('admin-realState:') &&
             !localStorage.getItem('roles')?.includes('Admin') ? (
               <Navigate to="/404" replace />
             ) : (
