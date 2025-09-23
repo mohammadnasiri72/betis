@@ -88,7 +88,7 @@ function MainPageManageSurveyAnswer() {
       ascending: false,
       pageSize,
       pageIndex,
-      onlyHaveScore: true,
+      onlyHaveScore: 1,
     },
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -110,7 +110,7 @@ function MainPageManageSurveyAnswer() {
       ascending: false,
       pageSize,
       pageIndex,
-      onlyHaveScore: true,
+      onlyHaveScore: 1,
     },
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -22,9 +22,14 @@ import {
 import { Empty } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import persian from 'react-date-object/calendars/persian';
+import persianFa from 'react-date-object/locales/persian_fa';
+import { AiOutlineClose } from 'react-icons/ai';
 import { FaRegDotCircle } from 'react-icons/fa';
 import { MdDateRange, MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
+import DatePicker from 'react-multi-date-picker';
+import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
@@ -56,6 +61,8 @@ function MainPageManageMessages() {
   const [totalCount, setTotalCount] = useState(0);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [date, setDate] = useState('');
+  const [valDate, setValDate] = useState('');
 
   //   get list building
   useEffect(() => {
@@ -181,6 +188,35 @@ function MainPageManageMessages() {
     }
   }, [valBuilding, url]);
 
+  function CustomMultipleInput({ onFocus, value, onChange }) {
+    return (
+      <div className="relative">
+        <TextField
+          onFocus={onFocus}
+          value={value}
+          onChange={onChange}
+          size="small"
+          type="text"
+          className="w-full"
+          id="outlined-multiline-flexible"
+          label="تاریخ ثبت تیکت"
+          name="name"
+        />
+        {value && (
+          <AiOutlineClose
+            onClick={() => {
+              setDate('');
+              setValDate('');
+              getListTickets({ pageIndex: 1, dataFa: '' });
+              setPageIndex(1);
+            }}
+            className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       {!params.messages && (
@@ -193,7 +229,7 @@ function MainPageManageMessages() {
           </h3>
           <div className="flex justify-between mb-3 py-2 items-center px-2">
             <div className="flex flex-wrap items-center w-full">
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2">
                 <FormControl size="small" color="primary" className="w-full">
                   <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                     لیست مجتمع ها
@@ -216,7 +252,7 @@ function MainPageManageMessages() {
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2">
                 <Autocomplete
                   size="small"
                   className="w-full"
@@ -241,7 +277,7 @@ function MainPageManageMessages() {
                   renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
                 />
               </div>
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2 sm:mt-0 mt-3">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2 sm:mt-0 mt-5">
                 <FormControl size="small" color="primary" className="w-full">
                   <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                     وضعیت
@@ -270,7 +306,7 @@ function MainPageManageMessages() {
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2 sm:mt-0 mt-3">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2 sm:mt-0 mt-5">
                 <FormControl size="small" color="primary" className="w-full">
                   <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                     موضوع
@@ -299,7 +335,7 @@ function MainPageManageMessages() {
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2 sm:mt-0 mt-3">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2 mt-5">
                 <FormControl size="small" color="primary" className="w-full">
                   <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                     اولویت
@@ -328,7 +364,7 @@ function MainPageManageMessages() {
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/6 w-1/2 flex items-center px-2 sm:mt-0 mt-3">
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2 mt-5">
                 <FormControl size="small" color="primary" className="w-full">
                   <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                     لیست ارجاع شده خدمات
@@ -343,7 +379,7 @@ function MainPageManageMessages() {
                     color="primary"
                     onChange={(e) => {
                       setValService(e.target.value);
-                      getListTickets({ pageIndex: 1, serviceId: e.target.value });
+                      getListTickets({ pageIndex: 1, serviceId: e.target.value.id });
                     }}
                   >
                     <MenuItem value={-1}>همه</MenuItem>
@@ -355,6 +391,28 @@ function MainPageManageMessages() {
                       ))}
                   </Select>
                 </FormControl>
+              </div>
+              <div className="sm:w-1/4 w-1/2 flex items-center px-2 mt-5">
+                <DatePicker
+                  className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
+                  format="DD MMMM YYYY"
+                  render={<CustomMultipleInput />}
+                  calendarPosition="bottom-right"
+                  containerStyle={{
+                    width: '100%',
+                  }}
+                  inputClass="outline-none border rounded-lg w-full h-10 px-3 mt-3"
+                  locale={persianFa}
+                  calendar={persian}
+                  value={date}
+                  onChange={(event) => {
+                    setDate(event);
+                    setValDate(event.format('YYYY/MM/DD'));
+                    getListTickets({ pageIndex: 1, dataFa: event.format('YYYY/MM/DD') });
+                    setPageIndex(1);
+                  }}
+                  placeholder="تاریخ ثبت تیکت"
+                />
               </div>
             </div>
           </div>
@@ -375,7 +433,7 @@ function MainPageManageMessages() {
                           <RiAdminFill />
                         </Avatar>
                         <div className="flex flex-col items-start justify-center">
-                          <div className="flex items-center gap-1">
+                          <div className="flex flex-wrap items-center gap-1">
                             <Typography
                               variant="subtitle1"
                               fontWeight="bold"
@@ -386,6 +444,11 @@ function MainPageManageMessages() {
                             <span className="bg-indigo-600 rounded-full px-3 py-1 text-xs text-white whitespace-nowrap">
                               {t.unitTitle}
                             </span>
+                            {t.serviceTitle && (
+                              <span className="bg-yellow-800 rounded-full px-3 py-1 text-xs text-white whitespace-nowrap">
+                                ارجاع به {t.serviceTitle}
+                              </span>
+                            )}
                           </div>
                           <Typography variant="body2" color="text.secondary">
                             {t.description}
@@ -393,7 +456,7 @@ function MainPageManageMessages() {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center gap-1">
+                      <div className="flex flex-wrap items-center justify-center gap-1">
                         <span
                           className={`text-xs rounded-full px-2 py-1 whitespace-nowrap ${
                             t.status === 0
@@ -456,7 +519,6 @@ function MainPageManageMessages() {
               <Empty />
             </div>
           )}
-
           {totalCount > 0 && (
             <div className="flex flex-wrap justify-center items-center mt-2">
               <Stack spacing={2}>

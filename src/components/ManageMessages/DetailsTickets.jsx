@@ -1,22 +1,23 @@
 /* eslint-disable no-nested-ternary */
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-    Avatar,
-    Box,
-    Button,
-    CircularProgress,
-    IconButton,
-    InputAdornment,
-    Menu,
-    MenuItem,
-    TextField,
-    Tooltip,
-    Typography,
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { Empty } from 'antd';
 import axios from 'axios';
 import moment from 'moment-jalaali';
 import { useEffect, useRef, useState } from 'react';
-import { FaEye, FaRegDotCircle } from 'react-icons/fa';
+import { FaDownload, FaRegDotCircle } from 'react-icons/fa';
 import { MdDateRange, MdDriveFolderUpload, MdOutlineAccessTimeFilled, MdSend } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
 import { useLocation, useNavigate, useParams } from 'react-router';
@@ -24,8 +25,16 @@ import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
+import ImageLightbox from '../Resident/FeedBackResident/boxImgShow';
 import ModalBackService from './ModalBackService';
 import ModalCloseDiscunect from './ModalCloseDiscunect';
+
+function isImageFile(fileSrc) {
+  if (!fileSrc) return false;
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+  const lower = fileSrc.toLowerCase();
+  return imageExtensions.some((ext) => lower.endsWith(ext));
+}
 
 const groupMessagesByDate = (messages) => {
   const grouped = {};
@@ -82,7 +91,7 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function DetailsTickets({listService}) {
+function DetailsTickets({ listService }) {
   const params = useParams();
   const url = useLocation();
   const ticketId = Number(params.messages);
@@ -338,13 +347,19 @@ function DetailsTickets({listService}) {
                 </IconButton>
               </Tooltip>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center justify-end gap-1">
               {checkClaims(url.pathname, 'post') && ticketEdited.status !== 2 && (
-                <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService}/>
+                <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService} />
               )}
               {checkClaims(url.pathname, 'post') && ticketEdited.status !== 2 && (
                 <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />
               )}
+              {/* <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+                بازگشت
+              </Button> */}
+              <Button variant="contained" color="inherit" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}>
+                بازگشت
+              </Button>
             </div>
           </div>
         </div>
@@ -422,21 +437,32 @@ function DetailsTickets({listService}) {
                         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                       }}
                     >
-                      {msg.isResident && <p className="text-xs text-end">{msg.authorName}</p>}
+                      {msg.isResident && <p className="text-xs text-end text-[#000a]">{msg.authorName}</p>}
                       {msg.fileSrc && (
-                        <div className="flex items-center justify-between gap-2">
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                            📎 فایل پیوست
-                          </Typography>
-                          <Tooltip title="نمایش فایل">
-                            <IconButton
-                              onClick={() => {
-                                console.log(msg.fileSrc);
-                              }}
-                            >
-                              <FaEye className={`text-sm ${!msg.isResident ? 'text-white' : 'text-black'}`} />
-                            </IconButton>
-                          </Tooltip>
+                        <div className="flex items-center justify-between gap-2 relative">
+                          {isImageFile(msg.fileSrc) ? (
+                            <ImageLightbox msg={msg} />
+                          ) : (
+                            <>
+                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                📎 فایل پیوست
+                              </Typography>
+                              <Tooltip title="دانلود فایل">
+                                <a
+                                  href={mainDomain + msg.fileSrc}
+                                  download="file.png"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <IconButton>
+                                    <FaDownload
+                                      className={`text-sm ${!msg.isResident ? 'text-white' : 'text-black'}`}
+                                    />
+                                  </IconButton>
+                                </a>
+                              </Tooltip>
+                            </>
+                          )}
                         </div>
                       )}
                       {msg.message && (

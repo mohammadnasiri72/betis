@@ -155,3 +155,6 @@ body {
   text-shadow: 0 0 2px #d9d9d9 !important; /* حاشیه برای وضوح بیشتر */
 }
 
+.rmdp-calendar-container-mobile{
+  z-index: 56465465456465465 !important;
+}

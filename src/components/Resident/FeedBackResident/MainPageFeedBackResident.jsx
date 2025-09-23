@@ -13,8 +13,6 @@ import NewTicketsChat from './NewTickets';
 import AllTickets from './TicketPage';
 
 export default function MainPageFeedBackResident({ accountResident, flagRefreshPage }) {
-  const [ticketSelected, setTicketSelected] = useState({});
-
   const params = useParams();
   const navigate = useNavigate();
 
@@ -89,15 +87,12 @@ export default function MainPageFeedBackResident({ accountResident, flagRefreshP
             priority={priority}
             subject={subject}
             accountResident={accountResident}
-            setTicketSelected={setTicketSelected}
           />
         )}
         {params.feedback === 'newTicket' && (
           <NewTicketsChat subjectOptions={subject} priorityOptions={priority} listService={listService} />
         )}
-        {params.feedback === 'detailsTicket' && (
-          <DetailsTickets ticketSelected={ticketSelected} />
-        )}
+        {params.feedback && params.feedback !== 'newTicket' && <DetailsTickets />}
       </div>
     </>
   );

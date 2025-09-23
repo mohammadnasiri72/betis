@@ -16,13 +16,22 @@ import { Empty } from 'antd';
 import axios from 'axios';
 import moment from 'moment-jalaali';
 import { useEffect, useRef, useState } from 'react';
-import { FaEye, FaRegDotCircle } from 'react-icons/fa';
+import { FaDownload, FaRegDotCircle } from 'react-icons/fa';
 import { MdDateRange, MdDriveFolderUpload, MdOutlineAccessTimeFilled, MdSend } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
+import ModalCloseDiscunect from '../../ManageMessages/ModalCloseDiscunect';
+import ImageLightbox from './boxImgShow';
+
+function isImageFile(fileSrc) {
+  if (!fileSrc) return false;
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+  const lower = fileSrc.toLowerCase();
+  return imageExtensions.some((ext) => lower.endsWith(ext));
+}
 
 const groupMessagesByDate = (messages) => {
   const grouped = {};
@@ -79,30 +88,41 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function DetailsTickets({ ticketSelected }) {
+function DetailsTickets() {
   const [ticketEdited, setTicketEdited] = useState({});
+  const [flag, setFlag] = useState(false);
   const boxRef = useRef(null);
+  const params = useParams();
+  const ticketId = Number(params.feedback);
 
   useEffect(() => {
-    if (ticketSelected.id) {
+    if (ticketId) {
       setIsloading(true);
       axios
-        .get(`${mainDomain}/api/Ticket/Get/${ticketSelected.id}`, {
+        .get(`${mainDomain}/api/Ticket/Get/${ticketId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
         .then((res) => {
           setTicketEdited(res.data);
+          setTimeout(() => {
+            boxRef.current.scrollTo({
+              top: boxRef.current.scrollHeight,
+              behavior: 'smooth',
+            });
+          }, 100);
         })
-        .catch((err) => {})
+        .catch((err) => {
+          navigate('/resident/feedback/');
+        })
         .finally(() => {
           setIsloading(false);
         });
     } else {
       navigate('/resident/feedback/');
     }
-  }, [ticketSelected]);
+  }, [ticketId, flag]);
 
   const { themeMode } = useSettings();
   const navigate = useNavigate();
@@ -126,7 +146,6 @@ function DetailsTickets({ ticketSelected }) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isloading, setIsloading] = useState(false);
-  const [avatarTemporary, setAvatarTemporary] = useState('');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const fileInputRef = useRef(null);
@@ -146,7 +165,7 @@ function DetailsTickets({ ticketSelected }) {
     if (message || fileUrl) {
       setIsloading(true);
       const data = {
-        ticketId: ticketSelected.id,
+        ticketId: params.feedback,
         message,
         fileUrl,
       };
@@ -157,31 +176,35 @@ function DetailsTickets({ ticketSelected }) {
           },
         })
         .then(() => {
-          setMessages([
-            ...messages,
-            {
-              id: Date.now(),
-              isResident: true,
-              message,
-              fileUrl,
-              fileType,
-              sentAtFa: nowFa,
-              fileSrc: avatarTemporary,
-            },
-          ]);
-
+          // setMessages([
+          //   ...messages,
+          //   {
+          //     id: Date.now(),
+          //     isResident: true,
+          //     message,
+          //     fileUrl,
+          //     fileType,
+          //     sentAtFa: nowFa,
+          //     fileSrc: avatarTemporary,
+          //   },
+          // ]);
+          setFlag((e) => !e);
           setMessage('');
           setCaption('');
           setFile(null);
           setFileUrl('');
           setFileType(null);
           setUploadProgress(0);
-          boxRef.current.scrollTo({
-            top: boxRef.current.scrollHeight,
-            behavior: 'smooth',
+        })
+        .catch((err) => {
+          Toast.fire({
+            icon: 'error',
+            text: err.response ? err.response.data : 'خطای شبکه',
+            customClass: {
+              container: 'toast-modal',
+            },
           });
         })
-        .catch((err) => {})
         .finally(() => {
           setIsloading(false);
         });
@@ -215,8 +238,7 @@ function DetailsTickets({ ticketSelected }) {
       .then((res) => {
         setIsUploading(false);
         setFile(fileData);
-        setFileUrl(res.data); // لینک فایل روی سرور
-        setAvatarTemporary(`${mainDomain}/uploads/temp_up/${res.data}`);
+        setFileUrl(res.data);
       })
       .catch((err) => {
         setIsUploading(false);
@@ -316,6 +338,9 @@ function DetailsTickets({ ticketSelected }) {
                 </IconButton>
               </Tooltip>
             </div>
+            <div className="flex items-center gap-1">
+              {ticketEdited.status !== 2 && <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />}
+            </div>
           </div>
         </div>
 
@@ -362,37 +387,76 @@ function DetailsTickets({ ticketSelected }) {
                     }}
                   >
                     <Box
+                      // sx={{
+                      //   bgcolor: msg.isResident ? '#60a5fa' : '#d1d5db',
+                      //   color: msg.isResident ? '#fff' : '#000',
+                      //   px: 1.5,
+                      //   py: 0.5,
+                      //   borderRadius: 2,
+                      //   maxWidth: '70%',
+                      //   wordBreak: 'break-word',
+                      // }}
                       sx={{
-                        bgcolor: msg.isResident ? '#60a5fa' : '#d1d5db',
-                        color: msg.isResident ? '#fff' : '#000',
-                        px: 1.5,
-                        py: 0.5,
+                        position: 'relative',
+                        bgcolor: msg.isResident
+                          ? themeMode === 'dark'
+                            ? '#2563eb'
+                            : '#3b82f6'
+                          : themeMode === 'dark'
+                          ? '#374151'
+                          : '#e5e7eb',
+                        color: msg.isResident ? '#fff' : themeMode === 'dark' ? '#fff' : '#000',
+                        px: 2,
+                        py: 1,
                         borderRadius: 2,
                         maxWidth: '70%',
                         wordBreak: 'break-word',
+
+                        // استایل حباب برای پیام‌های کاربر (سمت راست)
+                        ...(!msg.isResident && {
+                          borderTopRightRadius: 4, // گوشه کوچک برای اثر حباب
+                        }),
+
+                        // استایل حباب برای پیام‌های طرف مقابل (سمت چپ)
+                        ...(msg.isResident && {
+                          borderTopLeftRadius: 4,
+                        }),
+
+                        // سایه ملایم
+                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                       }}
                     >
-                      {msg.fileUrl && (
-                        <div className="flex items-center justify-between gap-2">
-                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                            📎 فایل پیوست
-                          </Typography>
-                          <Tooltip title="نمایش فایل">
-                            <IconButton
-                              onClick={() => {
-                                console.log(msg.fileSrc);
-                              }}
-                            >
-                              <FaEye className={`text-sm ${msg.isResident ? 'text-white' : 'text-black'}`} />
-                            </IconButton>
-                          </Tooltip>
+                      {!msg.isResident && <p className="text-xs text-end text-[#000a]">{msg.authorName}</p>}
+                      {msg.fileSrc && (
+                        <div className="flex items-center justify-between gap-2 relative">
+                          {isImageFile(msg.fileSrc) ? (
+                            <ImageLightbox msg={msg} />
+                          ) : (
+                            <>
+                              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                📎 فایل پیوست
+                              </Typography>
+                              <Tooltip title="دانلود فایل">
+                                <a
+                                  href={mainDomain + msg.fileSrc}
+                                  download="file.png"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <IconButton>
+                                    <FaDownload className={`text-sm ${msg.isResident ? 'text-white' : 'text-black'}`} />
+                                  </IconButton>
+                                </a>
+                              </Tooltip>
+                            </>
+                          )}
                         </div>
                       )}
                       {msg.message && (
                         <Typography
                           variant="body2"
                           sx={{
-                            mt: msg.fileUrl ? 1 : 0,
+                            mt: msg.fileSrc ? 1 : 0,
                             display: 'flex',
                             justifyContent: 'start',
                             textAlign: 'justify',

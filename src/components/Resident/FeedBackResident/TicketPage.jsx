@@ -49,7 +49,7 @@ const darkPalette = {
   text: { primary: '#f9fafb', secondary: '#d1d5db' },
 };
 
-export default function AllTickets({ accountResident, setTicketSelected, statusTicket, priority, subject }) {
+export default function AllTickets({ accountResident, statusTicket, priority, subject }) {
   const { themeMode } = useSettings();
   const navigate = useNavigate();
   const theme = createTheme({
@@ -154,8 +154,7 @@ export default function AllTickets({ accountResident, setTicketSelected, statusT
                     key={t.id}
                     className="bg-white rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
                     onClick={() => {
-                      navigate('/resident/feedback/detailsTicket');
-                      setTicketSelected(t);
+                      navigate(`/resident/feedback/${t.id}`);
                     }}
                   >
                     <ListItem alignItems="flex-start">
