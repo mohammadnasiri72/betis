@@ -33,8 +33,7 @@ function BoxSurveyAnswer({ order, valTypeService }) {
       .then((res) => {
         setListAnswer(res.data);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
       })
       .finally(() => {
         setLoading(false);

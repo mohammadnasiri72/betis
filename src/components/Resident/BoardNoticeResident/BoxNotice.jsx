@@ -12,7 +12,6 @@ export default function BoxNotice({ notice, accountResident }) {
 
   const { themeMode } = useSettings();
 
-  console.log(notice.createdDateTimeFa);
 
 
   useEffect(() => {

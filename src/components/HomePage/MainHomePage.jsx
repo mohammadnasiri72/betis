@@ -192,7 +192,6 @@ export default function MainHomePage() {
 
   const navigate = useNavigate();
 
-  // console.log(localStorage.getItem('claims'));
 
   return (
     <>

@@ -43,7 +43,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function ModalNewBoardNotice({ setFlag, valBuilding, type }) {
   const [open, setOpen] = React.useState(false);
 
-  // console.log(type);
 
 
   const [isLoading, setIsLoading] = React.useState(false);

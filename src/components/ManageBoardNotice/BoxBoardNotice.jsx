@@ -12,7 +12,6 @@ export default function BoxBoardNotice({ info, setFlag, valBuilding }) {
 
   const url = useLocation();
 
-  console.log(info);
 
 
   return (

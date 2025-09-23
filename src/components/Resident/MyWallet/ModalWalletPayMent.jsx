@@ -236,9 +236,7 @@ export default function ModalWalletPayMent({ accountResident, open, setOpen, set
               onChange={(e) => {
                 if (e.target.value.length < 16) {
                  
-                  // if (typeof Number(e.target.value.replaceAll(',', '')) === 'number') {
-                  //   console.log(Number(e.target.value.replaceAll(',', '')));
-                  // }
+                
                   if ((Number(e.target.value.replaceAll(',', '')))*1 || e.target.value === '') {
                     setAmount(numberWithCommas(e.target.value.replaceAll(',', '')));
                     setErrAmount(false);

@@ -53,7 +53,6 @@ export default function ShowOrderActive({ accountResident }) {
       .catch(() => {});
   }, [accountResident, flag]);
 
-  console.log(listMyMenu);
 
   return (
     <>

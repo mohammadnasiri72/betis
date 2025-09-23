@@ -255,8 +255,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
           setServiceSelected(service);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
       })
       .finally(() => {
         setLoadingTextBlockService(false);

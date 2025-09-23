@@ -57,7 +57,6 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
   const [openModalBlockService, setOpenModalBlockService] = useState(false);
   const [dataa, setDataa] = useState([]);
 
-  // console.log(servic.relatedTypeId === 1 ?);
 
   const { themeMode } = useSettings();
 
@@ -286,8 +285,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setServic(service);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
       })
       .finally(() => {
         setLoadingTextBlockService(false);
