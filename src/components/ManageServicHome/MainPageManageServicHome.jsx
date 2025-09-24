@@ -155,7 +155,7 @@ function MainPageManageServicHome() {
               </Select>
             </FormControl>
           </div>
-          <div className="sm:w-1/4 w-full flex items-center px-2">
+          <div className="sm:w-1/4 w-full flex items-center px-2 sm:mt-0 mt-3">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">نوع </InputLabel>
               <Select
@@ -178,7 +178,7 @@ function MainPageManageServicHome() {
               </Select>
             </FormControl>
           </div>
-          <div className="sm:w-1/4 w-full flex items-center px-2">
+          <div className="sm:w-1/4 w-full flex items-center px-2 sm:mt-0 mt-3">
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">موضوع</InputLabel>
               <Select
@@ -201,7 +201,7 @@ function MainPageManageServicHome() {
               </Select>
             </FormControl>
           </div>
-          <div className="sm:w-1/4 w-full flex items-center px-2">
+          <div className="sm:w-1/4 w-full flex items-center px-2 sm:mt-0 mt-3">
             <Autocomplete
               size="small"
               className="w-full"

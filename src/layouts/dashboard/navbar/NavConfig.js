@@ -49,6 +49,11 @@ const sidebarConfig = [
       { title: 'مدیریت انباری', path: '/dashboard/admin-Warehouse', icon: <FaWarehouse /> },
       { title: 'مدیریت وسیله نقلیه', path: '/dashboard/admin-vehicle', icon: <AiFillCar /> },
       { title: 'مدیریت حیوانات خانگی', path: '/dashboard/admin-pet', icon: <MdPets /> },
+      {
+        title: 'مدیریت درخواست‌ها',
+        path: '/dashboard/admin-ticket',
+        icon: <BiSolidConversation />,
+      },
     ],
   },
   {
@@ -114,16 +119,12 @@ const sidebarConfig = [
       { title: 'سوالات نظرسنجی', path: '/dashboard/admin-surveyquestion', icon: <RiSurveyFill /> },
       { title: 'پاسخ های نظرسنجی', path: '/dashboard/admin-surveyanswer', icon: <HiClipboardDocumentList /> },
       { title: 'مدیریت خدمات املاک', path: '/dashboard/admin-realState', icon: <BsFillHouseGearFill /> },
-      {
-        title: 'مدیریت انتقاد و پیشنهاد',
-        path: '/dashboard/admin-feedback',
-        icon: <BiSolidConversation />,
-      },
-      {
-        title: 'مدیریت نظرات',
-        path: '/dashboard/admin-ticket',
-        icon: <BiSolidConversation />,
-      },
+      // {
+      //   title: 'مدیریت انتقاد و پیشنهاد',
+      //   path: '/dashboard/admin-feedback',
+      //   icon: <BiSolidConversation />,
+      // },
+
       {
         title: 'مدیریت تابلو اعلانات',
         path: '/dashboard/admin-boardNotice',
@@ -208,7 +209,7 @@ export const sidebarResident = [
     icon: <RiArtboardFill className="text-xl" />,
   },
   {
-    title: 'نظرات',
+    title: 'درخواست‌ها',
     path: 'feedback',
     icon: <FaCommentAlt className="text-xl" />,
   },

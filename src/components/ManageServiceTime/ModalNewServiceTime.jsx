@@ -58,6 +58,7 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
   const [needConfirmation, setNeedConfirmation] = React.useState(false);
   const [byVacantOwner, setByVacantOwner] = React.useState(false);
   const [isActive, setIsActive] = React.useState(false);
+  const [sharedUse, setSharedUse] = React.useState(false);
   const [valRole, setValRole] = React.useState([]);
   const [listRole, setListRole] = React.useState([]);
   const [capacity, setCapacity] = React.useState(1);
@@ -133,6 +134,7 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
     setNeedConfirmation(false);
     setByVacantOwner(false);
     setIsActive(false);
+    setSharedUse(false);
     setValRole([]);
     setCapacity(1);
     setStartTime('');
@@ -186,6 +188,7 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
         needConfirmation,
         byVacantOwner,
         isActive,
+        sharedUse,
         messageToRoles,
         minutesInterval,
       };
@@ -256,7 +259,7 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
             sx={{ m: 0, p: 2, textAlign: 'start' }}
             id="customized-dialog-title"
           >
-            زمان‌بندی خدمات
+            زمان‌بندی مشاعات
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -499,7 +502,7 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/3 w-full mt-3">
+              <div className="sm:w-1/3 w-3/4 mt-3">
                 <div className="flex relative w-full px-1 ">
                   <TextField
                     InputProps={{
@@ -531,6 +534,14 @@ export default function ModalNewServiceTime({ setFlag, listService, valServiceMa
                     />
                   </div>
                 </div>
+              </div>
+              <div className="sm:w-1/6 w-1/4 mt-3">
+                <FormControlLabel
+                  style={{ color: sharedUse ? '#54d62c' : '' }}
+                  onChange={() => setSharedUse(!sharedUse)}
+                  control={<Checkbox color="success" checked={sharedUse} />}
+                  label={'اشتراکی'}
+                />
               </div>
               <div className="">
                 <FormControlLabel

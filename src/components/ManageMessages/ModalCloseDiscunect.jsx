@@ -87,7 +87,13 @@ export default function ModalCloseDiscunect({ ticketId, setFlag }) {
 
   return (
     <>
-      <Button variant="contained" color="error" startIcon={<GoDiscussionClosed />} onClick={handleClickOpen}>
+      <Button
+        size="small"
+        variant="contained"
+        color="error"
+        startIcon={<GoDiscussionClosed />}
+        onClick={handleClickOpen}
+      >
         بستن
       </Button>
       <BootstrapDialog

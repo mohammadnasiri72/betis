@@ -74,7 +74,7 @@ function MainPageManageSurveyAnswer() {
 
   const configReserve = {
     method: 'get',
-    url: `${mainDomain}/api/Reservation/GetListPaged`,
+    url: `${mainDomain}/api/SurveyAnswer/Reservation/Result`,
 
     params: {
       buildingId: valBuilding?.id,
@@ -96,7 +96,7 @@ function MainPageManageSurveyAnswer() {
   };
   const configOrder = {
     method: 'get',
-    url: `${mainDomain}/api/Order/GetListPaged`,
+    url: `${mainDomain}/api/SurveyAnswer/Order/Result`,
 
     params: {
       buildingId: valBuilding?.id,

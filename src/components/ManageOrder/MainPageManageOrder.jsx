@@ -18,7 +18,6 @@ import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
 import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
 import { useLocation } from 'react-router';
-import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxOrder from './BoxOrder';
@@ -47,8 +46,8 @@ export default function MainPageManageOrder() {
   const [listService, setListService] = useState([]);
   const [valService, setValService] = useState(-1);
   const [flagTimer, setFlagTimer] = useState(0);
-  const [totalCountPending, setTotalCountPending] = useState(0);
   const [pageSize, setPageSize] = useState(12);
+  const [numStatusOrder, setNumStatusOrder] = useState([]);
   const location = useLocation();
   const { themeMode } = useSettings();
 
@@ -114,7 +113,7 @@ export default function MainPageManageOrder() {
           setValUnit({ title: 'همه', id: -1 });
           setListService(res[1].data);
           setValService(-1);
-          getOrderList({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 1 });
+          getOrderList({ buildingId: valBuilding?.id });
           setValStatusOrder(0);
         })
         .catch(() => {});
@@ -126,47 +125,6 @@ export default function MainPageManageOrder() {
       getOrderList();
     }
   }, [flag]);
-
-  useEffect(() => {
-    if (flagTimer !== 0) {
-      axios
-        .get(`${mainDomain}/api/Order/GetListPaged`, {
-          params: {
-            buildingId: valBuilding?.id,
-            yearId,
-            serviceId: valService,
-            unitId: valUnit?.id,
-            statusId: 1,
-            dateFa: valDate,
-            orderBy: '',
-            ascending: false,
-            pageSize,
-            pageIndex: numPages,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.totalCount > totalCountPending) {
-            if (valStatusOrder === 0) {
-              setListOrder(res.data.items);
-              setTotalPages(res.data.totalPages);
-              setTotalCount(res.data.totalCount);
-            }
-            setTotalCountPending(res.data.totalCount);
-            Swal.fire({
-              customClass: themeMode === 'dark' ? 'bg-slate-700 text-white' : '',
-              title: 'سفارش جدید',
-              text: 'سفارش جدید منتظر تایید می باشد',
-              icon: 'warning',
-              confirmButtonText: 'متوجه شدم',
-            });
-          }
-        })
-        .catch(() => {});
-    }
-  }, [flagTimer]);
 
   const config = {
     method: 'get',
@@ -188,27 +146,46 @@ export default function MainPageManageOrder() {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   };
+  const configNum = {
+    method: 'get',
+    url: `${mainDomain}/api/Order/Statistic`,
+    params: {
+      buildingId: valBuilding?.id,
+      yearId,
+      serviceId: valService,
+      unitId: valUnit?.id,
+      dateFa: valDate,
+      dateDeliveryFa: valDate2,
+      orderBy: '',
+      ascending: false,
+      pageSize,
+      pageIndex: numPages,
+    },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  };
 
   const getOrderList = (newParams) => {
     config.params = { ...config.params, ...newParams };
+    configNum.params = { ...configNum.params, ...newParams, statusId: -1 };
     setListOrder([]);
+    setNumStatusOrder([]);
     setIsLoading(true);
     setTotalCount('');
-    axios(config)
+    Promise.all([axios(config), axios(configNum)])
+
       .then((res) => {
-        setListOrder(res.data.items);
-        setTotalPages(res.data.totalPages);
-        setTotalCount(res.data.totalCount);
-
-        if (config.params.statusId === 1) {
-          setTotalCountPending(res.data.totalCount);
-        }
-        setIsLoading(false);
+        setListOrder(res[0].data.items);
+        setTotalPages(res[0].data.totalPages);
+        setTotalCount(res[0].data.totalCount);
+        setNumStatusOrder(res[1].data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
-
-  
 
   function CustomMultipleInput({ onFocus, value, onChange }) {
     return (
@@ -418,22 +395,21 @@ export default function MainPageManageOrder() {
           />
         </div>
 
-         <div className='flex w-full'>
-           <div className='w-full'>
+        <div className="flex flex-wrap w-full">
+          <div className="w-full">
             <ToggleButtonFilterStatusOrder
-            totalCount={totalCount}
-            totalCountPending={totalCountPending}
-            value={valStatusOrder}
-            setValue={setValStatusOrder}
-            setFlagTimer={setFlagTimer}
-            getOrderList={getOrderList}
-            setNumPages={setNumPages}
-          />
-           </div>
-       
+              value={valStatusOrder}
+              setValue={setValStatusOrder}
+              getOrderList={getOrderList}
+              setNumPages={setNumPages}
+              numStatusOrder={numStatusOrder}
+            />
+          </div>
 
-        <RateService valService={valService} />
-         </div>
+          <div className="w-full flex justify-end p-2">
+            <RateService valService={valService} />
+          </div>
+        </div>
       </div>
       <div className="flex flex-wrap">
         {listOrder.length > 0 &&

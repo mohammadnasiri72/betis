@@ -80,7 +80,7 @@ export default function MainPageFeedBackResident({ accountResident, flagRefreshP
           بازگشت
         </Button>
       </div>
-      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto overflow-hidden">
+      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto overflow-hidden mt-2">
         {!params.feedback && (
           <AllTickets
             statusTicket={statusTicket}

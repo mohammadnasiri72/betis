@@ -22,6 +22,8 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
   const [flag, setFlag] = useState(false);
   const [openWallet, setOpenWallet] = useState(false);
   const [openOnlineWallet, setOpenOnlineWallet] = useState(false);
+  const [isPaymentAll, setIsPaymentAll] = useState(false);
+  const [isdspAll, setIsdspAll] = useState(false);
 
   const { themeMode } = useSettings();
 
@@ -120,15 +122,29 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
               <span className="text-sm font-semibold">{numberWithCommas(debtBalance * -1)} </span>
               <span className="text-xs">تومان</span>
             </div>
-            <div>
-              <ModalPayAll listDebt={listDebt} accountResident={accountResident}/>
-            </div>
+            {listDebt.length > 0 && (
+              <div>
+                <ModalPayAll
+                  listDebt={listDebt}
+                  accountResident={accountResident}
+                  setFlag={setFlag}
+                  setIsPaymentAll={setIsPaymentAll}
+                  setIsdspAll={setIsdspAll}
+                />
+              </div>
+            )}
           </div>
         </div>
         {listDebt.length > 0 &&
           listDebt.map((debt) => (
             <div data-aos="zoom-in-right" key={debt.documentId}>
-              <BoxDebt debt={debt} accountResident={accountResident} setFlag={setFlag} />
+              <BoxDebt
+                debt={debt}
+                accountResident={accountResident}
+                setFlag={setFlag}
+                isPaymentAll={isPaymentAll}
+                isdspAll={isdspAll}
+              />
             </div>
           ))}
         {listDebt.length === 0 && isLoading && (

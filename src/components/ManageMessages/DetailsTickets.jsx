@@ -354,10 +354,14 @@ function DetailsTickets({ listService }) {
               {checkClaims(url.pathname, 'post') && ticketEdited.status !== 2 && (
                 <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />
               )}
-              {/* <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
-                بازگشت
-              </Button> */}
-              <Button variant="contained" color="inherit" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)}>
+
+              <Button
+                size="small"
+                variant="contained"
+                color="inherit"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
+              >
                 بازگشت
               </Button>
             </div>
@@ -370,7 +374,7 @@ function DetailsTickets({ listService }) {
           sx={{
             overflowY: 'auto',
             p: 2,
-            bgcolor: themeMode === 'dark' ? '#1f2937' : '#f5f6fa',
+            bgcolor: '#eee',
             borderRadius: 2,
             flexGrow: 1,
             maxHeight: '40vh',
@@ -385,7 +389,7 @@ function DetailsTickets({ listService }) {
                   sx={{
                     textAlign: 'center',
                     color: 'text.secondary',
-                    bgcolor: themeMode === 'dark' ? '#374151' : '#e5e7eb',
+                    bgcolor: '#fff',
                     py: 0.5,
                     borderRadius: 2,
                     mb: 2,
@@ -409,13 +413,7 @@ function DetailsTickets({ listService }) {
                     <Box
                       sx={{
                         position: 'relative',
-                        bgcolor: !msg.isResident
-                          ? themeMode === 'dark'
-                            ? '#2563eb'
-                            : '#3b82f6'
-                          : themeMode === 'dark'
-                          ? '#374151'
-                          : '#e5e7eb',
+                        bgcolor: !msg.isResident ? '#00005e' : '#fff',
                         color: !msg.isResident ? '#fff' : themeMode === 'dark' ? '#fff' : '#000',
                         px: 2,
                         py: 1,
@@ -423,21 +421,19 @@ function DetailsTickets({ listService }) {
                         maxWidth: '70%',
                         wordBreak: 'break-word',
 
-                        // استایل حباب برای پیام‌های کاربر (سمت راست)
                         ...(msg.isResident && {
-                          borderTopRightRadius: 4, // گوشه کوچک برای اثر حباب
+                          borderTopRightRadius: 4,
                         }),
 
-                        // استایل حباب برای پیام‌های طرف مقابل (سمت چپ)
                         ...(!msg.isResident && {
                           borderTopLeftRadius: 4,
                         }),
 
-                        // سایه ملایم
                         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                       }}
                     >
-                      {msg.isResident && <p className="text-xs text-end text-[#000a]">{msg.authorName}</p>}
+                      {msg.isResident && <p className="text-xs text-end pb-1 text-[#000a]">{msg.authorName}</p>}
+                      {!msg.isResident && <p className="text-xs text-start pb-1 text-[#fffa]">{msg.authorName}</p>}
                       {msg.fileSrc && (
                         <div className="flex items-center justify-between gap-2 relative">
                           {isImageFile(msg.fileSrc) ? (
@@ -501,7 +497,6 @@ function DetailsTickets({ listService }) {
           )}
         </Box>
 
-        {/* پیش‌نمایش و پروگرس آپلود */}
         {isUploading && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <CircularProgress variant="determinate" value={uploadProgress} />

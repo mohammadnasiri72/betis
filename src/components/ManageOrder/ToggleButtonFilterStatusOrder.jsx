@@ -34,19 +34,18 @@ function a11yProps(index) {
 }
 
 export default function ToggleButtonFilterStatusOrder({
-  totalCount,
-  totalCountPending,
   value,
   setValue,
-  setFlagTimer,
   getOrderList,
   setNumPages,
+  numStatusOrder,
 }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     getOrderList({ statusId: newValue !== 4 ? newValue + 1 : -1, pageIndex: 1 });
     setNumPages(1);
   };
+
 
   return (
     <Box sx={{ width: '100%', zIndex: '2' }}>
@@ -73,14 +72,7 @@ export default function ToggleButtonFilterStatusOrder({
                 getOrderList();
               }
             }}
-            label={
-              <TimerPendingOrder
-                setFlagTimer={setFlagTimer}
-                value={value}
-                totalCount={totalCount}
-                totalCountPending={totalCountPending}
-              />
-            }
+            label={<TimerPendingOrder getOrderList={getOrderList} numStatusOrder={numStatusOrder} />}
             {...a11yProps(0)}
           />
           <Tab
@@ -89,7 +81,9 @@ export default function ToggleButtonFilterStatusOrder({
                 getOrderList();
               }
             }}
-            label={`درحال انجام ${value === 1 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`درحال انجام ${
+              numStatusOrder.length > 0 ? `(${numStatusOrder.find((e) => e.statusId === 2)?.number})` : ''
+            }`}
             {...a11yProps(1)}
           />
           <Tab
@@ -98,7 +92,9 @@ export default function ToggleButtonFilterStatusOrder({
                 getOrderList();
               }
             }}
-            label={`انجام شده ${value === 2 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`انجام شده ${
+              numStatusOrder.length > 0 ? `(${numStatusOrder.find((e) => e.statusId === 3)?.number})` : ''
+            }`}
             {...a11yProps(1)}
           />
           <Tab
@@ -107,7 +103,9 @@ export default function ToggleButtonFilterStatusOrder({
                 getOrderList();
               }
             }}
-            label={`لغو شده ${value === 3 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`لغو شده ${
+              numStatusOrder.length > 0 ? `(${numStatusOrder.find((e) => e.statusId === 4)?.number})` : ''
+            }`}
             {...a11yProps(2)}
           />
           <Tab
@@ -116,7 +114,9 @@ export default function ToggleButtonFilterStatusOrder({
                 getOrderList();
               }
             }}
-            label={`همه ${value === 4 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`همه ${
+              numStatusOrder.length > 0 ? `(${numStatusOrder.reduce((sum, item) => sum + item.number, 0)})` : ''
+            }`}
             {...a11yProps(3)}
           />
         </Tabs>

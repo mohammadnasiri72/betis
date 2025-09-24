@@ -8,12 +8,11 @@ import { BiMaleFemale } from 'react-icons/bi';
 import { FaCheckCircle, FaFemale, FaMale } from 'react-icons/fa';
 import { MdAccessTime, MdCancel } from 'react-icons/md';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import ActionServiceTime from './ActionServiceTime';
 import ModalNewServiceTime from './ModalNewServiceTime';
-import useSettings from '../../hooks/useSettings';
 
 export default function MainPageManageServiceTime() {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,8 +56,6 @@ export default function MainPageManageServiceTime() {
   //   get list service
   useEffect(() => {
     if (valBuilding?.id) {
-     
-      
       setListServiceTime([]);
       setIsLoading(true);
       axios
@@ -72,7 +69,6 @@ export default function MainPageManageServiceTime() {
         })
         .then((res) => {
           if (res.data.length > 0 && res.data.filter((e) => e.typeId === 0 || e.typeId === 1)?.length > 0) {
-           
             setListService(res.data.filter((e) => e.typeId === 0 || e.typeId === 1));
             setValService(res.data.filter((e) => e.typeId === 0 || e.typeId === 1)[0]);
             setIsDisable(false);
@@ -112,9 +108,15 @@ export default function MainPageManageServiceTime() {
     }
   }, [valService, flag]);
 
+
   return (
     <>
-      <h3 style={{color:themeMode==='dark'? '#fff':'#000'}} className="sm:text-2xl text-lg font-semibold whitespace-nowrap">مدیریت زمان‌بندی خدمات</h3>
+      <h3
+        style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+        className="sm:text-2xl text-lg font-semibold whitespace-nowrap"
+      >
+        مدیریت زمان‌بندی مشاعات
+      </h3>
       <div className="flex justify-between mb-3 py-2 items-start px-2">
         <div className="flex flex-wrap items-center w-full">
           <div className="sm:w-1/4 w-full flex items-center px-2">
@@ -276,11 +278,6 @@ export default function MainPageManageServiceTime() {
                 </div>
                 <div className="flex justify-between mt-2">
                   <span className="px-1">
-                    {/* <Chip
-                      label={`${service.capacity} نفر`}
-                      color="info"
-                      icon={<MdOutlineReduceCapacity className="text-xl" />}
-                    /> */}
                     <Chip
                       size="small"
                       color="primary"
@@ -302,13 +299,11 @@ export default function MainPageManageServiceTime() {
                       }
                     />
                   </span>
-                  {/* <span className="px-1">
-                    <Chip
-                      label={service.typeId === 1 ? 'شناور' : 'سانس'}
-                      color="info"
-                      icon={<IoMdTime className="text-xl" />}
-                    />
-                  </span> */}
+                  {service.sharedUse && (
+                    <span className="px-1">
+                      <Chip size="small" color="info" label="اشتراکی" />
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,18 +1,15 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button } from '@mui/material';
 import { Divider, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
-import { useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
-import RatingSurvey from './RatingSurvey';
+import RatingSurvey from '../MyMenu/RatingSurvey';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -24,7 +21,7 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function SurveyPage() {
+function SurveyMenuPrimary({ id, setId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,11 +31,6 @@ function SurveyPage() {
   const [listServiceMenu, setListServiceMenu] = useState([]);
 
   const { themeMode } = useSettings();
-
-  const navigate = useNavigate();
-  const params = useParams();
-
-  const id = Number(params.number);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -71,7 +63,7 @@ function SurveyPage() {
                   container: 'toast-modal',
                 },
               });
-              navigate('/resident/my-menu');
+              setId(null);
             }
           })
           .catch((err) => {
@@ -82,7 +74,7 @@ function SurveyPage() {
                 container: 'toast-modal',
               },
             });
-            navigate('/resident/my-menu');
+            setId(null);
           })
           .finally(() => {
             setIsLoading(false);
@@ -97,7 +89,7 @@ function SurveyPage() {
             container: 'toast-modal',
           },
         });
-        navigate('/resident/my-menu');
+        setId(null);
       });
   }, []);
 
@@ -119,7 +111,7 @@ function SurveyPage() {
               container: 'toast-modal',
             },
           });
-          navigate('/resident/my-menu');
+          setId(null);
         })
         .catch((err) => {
           Toast.fire({
@@ -172,13 +164,10 @@ function SurveyPage() {
     );
   }
 
+  
+
   return (
     <>
-      <div className="px-3 flex items-center">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
-          بازگشت
-        </Button>
-      </div>
       {order.id && (
         <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
           <span className="font-bold text-lg">امتیاز به سفارش</span>
@@ -190,7 +179,7 @@ function SurveyPage() {
                 className="sm:w-14 w-10 sm:h-14 h-10 rounded-full object-cover"
               />
               <h1
-                className={`text-sm font-medium flex flex-col gap-1 items-start justify-center ${
+                className={`text-sm font-medium flex flex-col items-start justify-center gap-1 ${
                   themeMode === 'dark' ? 'text-[#fff9]' : 'text-[#0009]'
                 }`}
               >
@@ -310,4 +299,4 @@ function SurveyPage() {
   );
 }
 
-export default SurveyPage;
+export default SurveyMenuPrimary;

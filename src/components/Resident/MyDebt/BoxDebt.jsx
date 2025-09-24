@@ -4,11 +4,11 @@ import { Card, Stack } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { MdAttachFile, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
+import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import ModalPayment from './ModalPayment';
-import useSettings from '../../../hooks/useSettings';
 
-export default function BoxDebt({ debt, accountResident , setFlag }) {
+export default function BoxDebt({ debt, accountResident, setFlag, isPaymentAll, isdspAll }) {
   const [showDetails, setShowDetails] = useState(false);
   const [attachment, setAttachment] = useState([]);
   const [isPayment, setIsPayment] = useState(false);
@@ -48,8 +48,8 @@ export default function BoxDebt({ debt, accountResident , setFlag }) {
     <>
       <Card
         style={{
-          transform: isPayment ? 'translateX(150%)' : 'translateX(0%)',
-          display: isdsp ? 'none' : 'block',
+          transform: isPayment || isPaymentAll ? 'translateX(150%)' : 'translateX(0%)',
+          display: isdsp || isdspAll ? 'none' : 'block',
           transition: '1s',
         }}
         className="border duration-1000 mt-3 rounded-lg"
@@ -114,7 +114,6 @@ export default function BoxDebt({ debt, accountResident , setFlag }) {
             accountResident={accountResident}
             isPayment={isPayment}
             setIsPayment={setIsPayment}
-            
             setFlag={setFlag}
           />
         </div>

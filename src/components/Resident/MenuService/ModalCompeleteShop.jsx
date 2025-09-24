@@ -53,7 +53,6 @@ export default function ModalCompeleteShop({
   serviceSelected,
 }) {
   const [open, setOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [date, setDate] = useState(new Date());
   const [totalPrice, setTotalPrice] = useState('');
 
@@ -228,7 +227,7 @@ export default function ModalCompeleteShop({
                 />
               </div>
             </div>
-            {isLoading && <SimpleBackdrop />}
+            {isLoadingOrder && <SimpleBackdrop />}
           </DialogContent>
           <DialogActions>
             <ModalSetOrder setOrderHandler={setOrderHandler} isLoadingOrder={isLoadingOrder} />

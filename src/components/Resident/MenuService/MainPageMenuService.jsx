@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { FaCheckCircle } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
-import { IoHandRight } from 'react-icons/io5';
+import { IoCloseSharp, IoHandRight } from 'react-icons/io5';
 import { MdCancel, MdMoreTime } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
@@ -24,8 +24,45 @@ import { mainDomain } from '../../../utils/mainDomain';
 import Description from '../../ManageService/Description';
 import BoxServiceMenu from './BoxServiceMenu';
 import ModalCompeleteShop from './ModalCompeleteShop';
+import SurveyMenuPrimary from './SurveyMenuPrimary';
 
 export default function MainPageMenuService({ accountResident, flagRefreshPage }) {
+  const [idSurvey, setIdSurvey] = useState(null);
+
+  useEffect(() => {
+    if (idSurvey) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [idSurvey]);
+
+  useEffect(() => {
+    if (accountResident.buildingId) {
+      axios
+        .get(`${mainDomain}/api/Order/GetListPaged`, {
+          params: {
+            buildingId: accountResident.buildingId,
+            serviceId: -1,
+            unitId: -1,
+            statusId: 3,
+            onlyHaveScore: -1,
+            pageSize: 1,
+            pageIndex: 1,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.items.length > 0 && res.data.items[0].surveyScore === 0) {
+            setIdSurvey(res.data.items[0].id);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [accountResident]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMenu, setIsLoadingMenu] = useState(true);
   const [isLoadingOrder, setIsLoadingOrder] = useState(false);
@@ -255,8 +292,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
           setServiceSelected(service);
         }
       })
-      .catch(() => {
-      })
+      .catch(() => {})
       .finally(() => {
         setLoadingTextBlockService(false);
       });
@@ -520,6 +556,22 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
         )}
         <Divider style={{ margin: 0, padding: 0 }} />
       </Modal>
+
+      <div
+        className={`fixed bottom-14 bg-white lg:left-1/3 sm:left-1/4 left-0 lg:right-1/3 sm:right-1/4 right-0 overflow-auto duration-300 ${
+          idSurvey ? 'top-14' : 'top-full'
+        }`}
+      >
+        <div className="flex justify-end px-3">
+          <IoCloseSharp
+            onClick={() => {
+              setIdSurvey(null);
+            }}
+            className="mt-3 cursor-pointer bg-slate-300 rounded-full p-1 text-2xl duration-300 hover:bg-slate-500"
+          />
+        </div>
+        {idSurvey && <SurveyMenuPrimary id={idSurvey} setId={setIdSurvey} />}
+      </div>
     </>
   );
 }

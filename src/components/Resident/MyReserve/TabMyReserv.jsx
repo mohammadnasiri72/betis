@@ -46,7 +46,7 @@ function TabMyReserv({ accountResident, valueTab, setValueTab }) {
           >
             <Tab sx={{ color: valueTab === -1 ? '#10b981   !important' : '' }} label="همه" value={-1} />
             {listService
-              .filter((e) => e.typeId === 0)
+              .filter((e) => e.typeId !== 2)
               .map((service) => (
                 <Tab
                   sx={{ color: valueTab === service.id ? '#10b981   !important' : '' }}

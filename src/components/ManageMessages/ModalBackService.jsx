@@ -203,7 +203,7 @@ export default function ModalBackService({ ticketId, setFlag, listService }) {
 
   return (
     <>
-      <Button variant="contained" color="info" startIcon={<GiReturnArrow />} onClick={handleClickOpen}>
+      <Button size="small" variant="contained" color="info" startIcon={<GiReturnArrow />} onClick={handleClickOpen}>
         ارجاع
       </Button>
       <BootstrapDialog

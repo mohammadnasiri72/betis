@@ -8,6 +8,7 @@ import Tabs from '@mui/material/Tabs';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useSettings from '../../../hooks/useSettings';
+import CounterNumReserve from './CounterNumReserve';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,8 +54,9 @@ export default function TabsServiceTime({
   setValStart,
   valEnd,
   setValEnd,
+  count,
+  setCount,
 }) {
-  
   const [value, setValue] = React.useState(0);
 
   const [timeStart, setTimeStart] = React.useState('');
@@ -105,8 +107,6 @@ export default function TabsServiceTime({
     setValEnd('');
   }, [valStart]);
 
-  
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -129,7 +129,7 @@ export default function TabsServiceTime({
                   backgroundColor: 'rgb(148 163 184)',
                 },
                 '&.Mui-selected , &.Mui-selected:hover': {
-                  backgroundColor: '#495677', 
+                  backgroundColor: '#495677',
                   color: 'white',
                 },
               }}
@@ -145,12 +145,12 @@ export default function TabsServiceTime({
           ))}
         </Tabs>
       </Box>
-     
+
       <div className="flex flex-wrap">
         {listDateTime[value].bookableTimes.length > 0 && (
           <div className="w-full flex flex-wrap">
             <ToggleButtonGroup
-            sx={{width:'100%'}}
+              sx={{ width: '100%' }}
               className="flex flex-wrap "
               value={hourse}
               exclusive
@@ -159,32 +159,37 @@ export default function TabsServiceTime({
             >
               {servic.typeId === 0 &&
                 listDateTime[value].bookableTimes.map((e, i) => (
-                 
-                  <ToggleButton
-                    key={i}
-                    disabled={!e.canBeSelected}
-                    sx={{
-                      width: '30%',
-                      backgroundColor: 'rgb(241 245 249)',
-                      color: '#495677',
-                      '&:hover': {
-                        backgroundColor: 'rgb(148 163 184)',
-                      },
-                      '&.Mui-selected , &.Mui-selected:hover': {
-                        backgroundColor: '#495677',
-                        color: 'white',
-                      },
-                    }}
-                    className={
-                      e.canBeSelected
-                        ? 'border border-[#495677] p-3 rounded-lg cursor-pointer bg-teal-500 text-white hover:bg-teal-500 duration-300 whitespace-nowrap text-sm text-center'
-                        : 'border border-[#495677] p-3 rounded-lg cursor-not-allowed bg-slate-100 text-slate-300  whitespace-nowrap text-sm text-center'
-                    }
-                    value={e}
-                    aria-label="text alignment"
-                  >
-                    {e.endTime.slice(0, 5)} - {e.startTime.slice(0, 5)}
-                  </ToggleButton>
+                  <div key={i} className="w-1/3 px-1">
+                    <ToggleButton
+                      disabled={!e.canBeSelected}
+                      sx={{
+                        width: '100%',
+                        backgroundColor: 'rgb(241 245 249)',
+                        color: '#495677',
+                        '&:hover': {
+                          backgroundColor: 'rgb(148 163 184)',
+                        },
+                        '&.Mui-selected , &.Mui-selected:hover': {
+                          backgroundColor: '#495677',
+                          color: 'white',
+                        },
+                      }}
+                      className={
+                        e.canBeSelected
+                          ? 'border border-[#495677] p-3 rounded-lg cursor-pointer bg-teal-500 text-white hover:bg-teal-500 duration-300 whitespace-nowrap text-sm text-center'
+                          : 'border border-[#495677] p-3 rounded-lg cursor-not-allowed bg-slate-100 text-slate-300  whitespace-nowrap text-sm text-center'
+                      }
+                      value={e}
+                      aria-label="text alignment"
+                    >
+                      {e.endTime.slice(0, 5)} - {e.startTime.slice(0, 5)}
+                    </ToggleButton>
+                    {hourse.sharedUse && (
+                      <div className={`duration-300 overflow-hidden ${hourse === e ? 'max-h-32' : 'max-h-0'}`}>
+                        <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
+                      </div>
+                    )}
+                  </div>
                 ))}
             </ToggleButtonGroup>
             {servic.typeId === 1 && (
@@ -258,7 +263,11 @@ export default function TabsServiceTime({
                       </FormControl>
                     </div>
                   </div>
-                  
+                  {valStart.sharedUse && (
+                    <div className={`duration-300 overflow-hidden`}>
+                      <CounterNumReserve hourse={valStart} count={count} setCount={setCount} />
+                    </div>
+                  )}
                 </div>
               </div>
             )}

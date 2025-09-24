@@ -115,7 +115,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                       variant="h6"
                       sx={{ color: themeMode === 'dark' ? '#fff' : '#000', whiteSpace: 'nowrap' }}
                     >
-                      لیست تیکت‌ها
+                      لیست درخواست‌ها
                     </Typography>
                   </div>
                   <Button

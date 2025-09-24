@@ -267,19 +267,6 @@ function DetailsTickets() {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
         <div className="flex justify-between items-start px-3">
-          {/* <div className="flex flex-col items-start gap-1 ">
-            <span className="text-lg font-semibold">{ticketEdited.subjectTitle}</span>
-            <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
-              <div className="flex items-center gap-1">
-                <MdDateRange />
-                <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <MdOutlineAccessTimeFilled />
-                <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
-              </div>
-            </div>
-          </div> */}
           <div className="flex items-start justify-center">
             <Avatar sx={{ mr: 1 }}>
               <RiAdminFill />
@@ -350,7 +337,7 @@ function DetailsTickets() {
           sx={{
             overflowY: 'auto',
             p: 2,
-            bgcolor: themeMode === 'dark' ? '#1f2937' : '#f5f6fa',
+            bgcolor: '#eee',
             borderRadius: 2,
             flexGrow: 1,
             maxHeight: '40vh',
@@ -365,7 +352,7 @@ function DetailsTickets() {
                   sx={{
                     textAlign: 'center',
                     color: 'text.secondary',
-                    bgcolor: themeMode === 'dark' ? '#374151' : '#e5e7eb',
+                    bgcolor: '#fff',
                     py: 0.5,
                     borderRadius: 2,
                     mb: 2,
@@ -387,24 +374,9 @@ function DetailsTickets() {
                     }}
                   >
                     <Box
-                      // sx={{
-                      //   bgcolor: msg.isResident ? '#60a5fa' : '#d1d5db',
-                      //   color: msg.isResident ? '#fff' : '#000',
-                      //   px: 1.5,
-                      //   py: 0.5,
-                      //   borderRadius: 2,
-                      //   maxWidth: '70%',
-                      //   wordBreak: 'break-word',
-                      // }}
                       sx={{
                         position: 'relative',
-                        bgcolor: msg.isResident
-                          ? themeMode === 'dark'
-                            ? '#2563eb'
-                            : '#3b82f6'
-                          : themeMode === 'dark'
-                          ? '#374151'
-                          : '#e5e7eb',
+                        bgcolor: msg.isResident ? '#00005e' : '#fff',
                         color: msg.isResident ? '#fff' : themeMode === 'dark' ? '#fff' : '#000',
                         px: 2,
                         py: 1,
@@ -426,7 +398,8 @@ function DetailsTickets() {
                         boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
                       }}
                     >
-                      {!msg.isResident && <p className="text-xs text-end text-[#000a]">{msg.authorName}</p>}
+                      {!msg.isResident && <p className="text-xs text-end pb-1 text-[#000a]">{msg.authorName}</p>}
+                      {msg.isResident && <p className="text-xs text-start pb-1 text-[#fffa]">{msg.authorName}</p>}
                       {msg.fileSrc && (
                         <div className="flex items-center justify-between gap-2 relative">
                           {isImageFile(msg.fileSrc) ? (

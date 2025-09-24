@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 
-export default function TimerPendingOrder({ totalCountPending, setFlagTimer }) {
+export default function TimerPendingOrder({ numStatusOrder, getOrderList }) {
   const [progress, setProgress] = useState(1);
   const maxValue = 60;
 
@@ -17,12 +17,12 @@ export default function TimerPendingOrder({ totalCountPending, setFlagTimer }) {
   }, []);
   useEffect(() => {
     if (progress >= 60) {
-      setFlagTimer((e) => !e);
+      getOrderList();
     }
   }, [progress]);
   return (
     <div className="flex items-center">
-      <Badge badgeContent={totalCountPending} color="error">
+      <Badge badgeContent={numStatusOrder.find((e) => e.statusId === 0)?.number} color="error">
         <span>منتظر تایید</span>
       </Badge>
       <Box position="relative" display="inline-flex" sx={{ transform: 'scale(0.8)' }}>

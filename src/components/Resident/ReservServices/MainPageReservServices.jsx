@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { FaCheckCircle } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
-import { IoHandRight } from 'react-icons/io5';
+import { IoCloseSharp, IoHandRight } from 'react-icons/io5';
 import { MdCancel, MdMoreTime } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
@@ -25,12 +25,48 @@ import ModalUnsucc from './ModalUnsucc';
 import ModalUnsucc2 from './ModalUnsucc2';
 import SelectVehicle from './SelectVehicle';
 import StepperReserve from './StepperReserve';
+import SurveyReservPrimary from './SurveyReservPrimary';
 import TabsServiceTime from './TabsServiceTime';
 import TimeLineReserve from './TimeLineReserve';
 
 export default function MainPageReservServices({ accountResident, flagRefreshPage }) {
+  const [idSurvey, setIdSurvey] = useState(null);
+
+  useEffect(() => {
+    if (idSurvey) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [idSurvey]);
+
+  useEffect(() => {
+    if (accountResident.buildingId) {
+      axios
+        .get(`${mainDomain}/api/Reservation/GetListPaged`, {
+          params: {
+            buildingId: accountResident.buildingId,
+            serviceId: -1,
+            unitId: -1,
+            statusId: 3,
+            onlyHaveScore: 0,
+            pageSize: 1,
+            pageIndex: 1,
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.items.length > 0 && res.data.items[0].surveyScore === 0) {
+            setIdSurvey(res.data.items[0].id);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [accountResident]);
+
   const [isLoading, setIsLoading] = useState(true);
-  const [flag, setFlag] = useState(false);
   const [listService, setListService] = useState([]);
   const [levelStepper, setLevelStepper] = useState(0);
   const [levelVehicle, setLevelVehicle] = useState(1);
@@ -56,7 +92,12 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
   const [loadingTextBlockService, setLoadingTextBlockService] = useState(false);
   const [openModalBlockService, setOpenModalBlockService] = useState(false);
   const [dataa, setDataa] = useState([]);
+  const [count, setCount] = useState(1);
 
+  useEffect(() => {
+    setHourse('');
+    setValStart('');
+  }, [levelVehicle, levelStepper]);
 
   const { themeMode } = useSettings();
 
@@ -123,7 +164,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setIsLoading(false);
         });
     }
-  }, [flag, accountResident, flagRefreshPage]);
+  }, [accountResident, flagRefreshPage]);
 
   //   get list serviceTime
   useEffect(() => {
@@ -146,17 +187,17 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setIsLoading(false);
         });
     }
-  }, [servic, flag]);
+  }, [servic]);
 
   const reservHandler = () => {
-    // setIsLoadingRes(1);
+    setIsLoadingRes(1);
     const data = {
       serviceTimeId,
       dateFa: selectedDateFa,
       startTime,
       endTime,
       unitId: accountResident?.id,
-      number: 1,
+      number: count,
       relatedTypeId: servic.relatedTypeId,
       relatedId: String(selectedVehicle.id),
     };
@@ -180,26 +221,12 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setAmountFine(res.data?.amountFine);
           setOpen3(true);
         }
-
-        // setIsLoadingRes(2);
-        // Toast.fire({
-        //   icon: 'success',
-        //   text: 'رزرو با موفقیت ثبت شد',
-        //   customClass: {
-        //     container: 'toast-modal',
-        //   },
-        // });
       })
       .catch((err) => {
-        // setIsLoadingRes(3);
-        // Toast.fire({
-        //   icon: 'error',
-        //   text: err.response ? err.response.data : 'خطای شبکه',
-        //   customClass: {
-        //     container: 'toast-modal',
-        //   },
-        // });
         setTextReject(err.response ? err.response.data : 'خطای شبکه');
+      })
+      .finally(() => {
+        setIsLoadingRes(0);
       });
   };
 
@@ -211,7 +238,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
       startTime,
       endTime,
       unitId: accountResident?.id,
-      number: 1,
+      number: count,
       relatedTypeId: servic.relatedTypeId,
       relatedId: String(selectedVehicle.id),
     };
@@ -285,8 +312,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           setServic(service);
         }
       })
-      .catch(() => {
-      })
+      .catch(() => {})
       .finally(() => {
         setLoadingTextBlockService(false);
       });
@@ -529,6 +555,8 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
                             setValStart={setValStart}
                             valEnd={valEnd}
                             setValEnd={setValEnd}
+                            count={count}
+                            setCount={setCount}
                           />
                         </div>
                         <div className="flex">
@@ -718,6 +746,22 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
         )}
         <Divider style={{ margin: 0, padding: 0 }} />
       </Modal>
+
+      <div
+        className={`fixed bottom-14 bg-white lg:left-1/3 sm:left-1/4 left-0 lg:right-1/3 sm:right-1/4 right-0 overflow-auto duration-300 z-10 ${
+          idSurvey ? 'top-14' : 'top-full'
+        }`}
+      >
+        <div className="flex justify-end px-3">
+          <IoCloseSharp
+            onClick={() => {
+              setIdSurvey(null);
+            }}
+            className="mt-3 cursor-pointer bg-slate-300 rounded-full p-1 text-2xl duration-300 hover:bg-slate-500"
+          />
+        </div>
+        {idSurvey && <SurveyReservPrimary id={idSurvey} setId={setIdSurvey} />}
+      </div>
     </>
   );
 }

@@ -87,6 +87,11 @@ export default function Router() {
   const [flagLoby, setFagLoby] = useState(false);
 
   const navigate = useNavigate();
+  const url = useLocation();
+
+  useEffect(() => {
+    document.body.style.overflow = 'auto';
+  }, [url]);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -484,16 +489,16 @@ export default function Router() {
               <ManageDeposit />
             ),
         },
-        {
-          path: 'admin-feedback',
-          element:
-            !localStorage.getItem('claims')?.includes('admin-feedback:') &&
-            !localStorage.getItem('roles')?.includes('Admin') ? (
-              <Navigate to="/404" replace />
-            ) : (
-              <ManageFeedback />
-            ),
-        },
+        // {
+        //   path: 'admin-feedback',
+        //   element:
+        //     !localStorage.getItem('claims')?.includes('admin-feedback:') &&
+        //     !localStorage.getItem('roles')?.includes('Admin') ? (
+        //       <Navigate to="/404" replace />
+        //     ) : (
+        //       <ManageFeedback />
+        //     ),
+        // },
         {
           path: 'admin-ticket',
           element:
@@ -593,7 +598,7 @@ export default function Router() {
         {
           path: 'admin-surveyanswer',
           element:
-            !localStorage.getItem('claims')?.includes('admin-surveyAnswer:') &&
+            !localStorage.getItem('claims')?.includes('admin-surveyanswer:') &&
             !localStorage.getItem('roles')?.includes('Admin') ? (
               <Navigate to="/404" replace />
             ) : (
@@ -603,7 +608,7 @@ export default function Router() {
         {
           path: 'admin-realState',
           element:
-            !localStorage.getItem('claims')?.includes('admin-realState:') &&
+            !localStorage.getItem('claims')?.includes('admin-realstate:') &&
             !localStorage.getItem('roles')?.includes('Admin') ? (
               <Navigate to="/404" replace />
             ) : (

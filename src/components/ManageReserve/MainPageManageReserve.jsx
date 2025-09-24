@@ -17,7 +17,6 @@ import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
-import Swal from 'sweetalert2';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReservation from './BoxReservation';
@@ -39,13 +38,11 @@ export default function MainPageManageReserve() {
   const [pageIndex, setPageIndex] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [totalCountTa, setTotalCountTa] = useState(0);
-  const [totalCountPending, setTotalCountPending] = useState(0);
+  const [numStatusReserv, setNumStatusReserv] = useState([]);
   const [date, setDate] = useState('');
   const [date2, setDate2] = useState('');
   const [startDateFa, setStartDateFa] = useState('');
   const [endDateFa, setEndDateFa] = useState('');
-  const [flagTimer, setFlagTimer] = useState(0);
   const [pageSize, setPageSize] = useState(12);
 
   const { themeMode } = useSettings();
@@ -95,8 +92,7 @@ export default function MainPageManageReserve() {
           setValUnit({ title: 'همه', id: -1 });
           setListService(res[1].data.filter((e) => e.typeId !== 2));
           setValService(-1);
-          getListReserve({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 1 });
-          getListReserve({ buildingId: valBuilding?.id, unitId: -1, serviceId: -1, statusId: 0 });
+          getListReserve({ buildingId: valBuilding?.id });
           setValueStatus(0);
         })
         .catch(() => {});
@@ -108,77 +104,6 @@ export default function MainPageManageReserve() {
       getListReserve();
     }
   }, [flag]);
-
-  useEffect(() => {
-    if (flagTimer !== 0) {
-      axios
-        .get(`${mainDomain}/api/Reservation/GetListPaged`, {
-          params: {
-            buildingId: valBuilding?.id,
-            yearId,
-            serviceId: valService === -1 ? -1 : valService?.id,
-            statusId: 0,
-            unitId: valUnit?.id,
-            startDateFa,
-            endDateFa,
-            pageSize,
-            pageIndex,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.totalCount > totalCountPending) {
-            if (valueStatus === 0) {
-              setListReserve(res.data.items);
-              setTotalPages(res.data.totalPages);
-              setTotalCount(res.data.totalCount);
-            }
-            setTotalCountPending(res.data.totalCount);
-            Swal.fire({
-              customClass: themeMode === 'dark' ? 'bg-slate-700 text-white' : '',
-              title: 'رزرو جدید',
-              text: 'رزرو جدید منتظر تایید می باشد',
-              icon: 'warning',
-              confirmButtonText: 'متوجه شدم',
-            });
-          }
-        })
-        .catch(() => {});
-
-      axios
-        .get(`${mainDomain}/api/Reservation/GetListPaged`, {
-          params: {
-            buildingId: valBuilding?.id,
-            yearId,
-            serviceId: valService === -1 ? -1 : valService?.id,
-            statusId: 1,
-            unitId: valUnit?.id,
-            startDateFa,
-            endDateFa,
-            pageSize,
-            pageIndex,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.totalCount !== totalCountTa) {
-            setTotalCountTa(res.data.totalCount);
-            // Swal.fire({
-            //   customClass: themeMode === 'dark' ? 'bg-slate-700 text-white' : '',
-            //   title: 'رزرو جدید',
-            //   text: 'رزرو تایید شده جدید ثبت شد',
-            //   icon: 'warning',
-            //   confirmButtonText: 'متوجه شدم',
-            // });
-          }
-        })
-        .catch(() => {});
-    }
-  }, [flagTimer]);
 
   const config = {
     method: 'get',
@@ -198,27 +123,43 @@ export default function MainPageManageReserve() {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   };
+  const configNum = {
+    method: 'get',
+    url: `${mainDomain}/api/Reservation/Statistic`,
+    params: {
+      buildingId: valBuilding?.id,
+      yearId,
+      serviceId: valService === -1 ? -1 : valService?.id,
+      unitId: valUnit?.id,
+      startDateFa,
+      endDateFa,
+      pageSize,
+      pageIndex,
+    },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  };
 
   const getListReserve = (newParams) => {
     config.params = { ...config.params, ...newParams };
+    configNum.params = { ...configNum.params, ...newParams, statusId: -1 };
     setListReserve([]);
     setIsLoading(true);
     setTotalCount('');
-    axios(config)
-      .then((res) => {
-        setListReserve(res.data.items);
-        setTotalPages(res.data.totalPages);
-        setTotalCount(res.data.totalCount);
-        if (newParams.statusId === 1) {
-          setTotalCountTa(res.data.totalCount);
-        }
+    setNumStatusReserv([]);
+    Promise.all([axios(config), axios(configNum)])
 
-        if (config.params.statusId === 0) {
-          setTotalCountPending(res.data.totalCount);
-        }
-        setIsLoading(false);
+      .then((res) => {
+        setNumStatusReserv(res[1].data);
+        setListReserve(res[0].data.items);
+        setTotalPages(res[0].data.totalPages);
+        setTotalCount(res[0].data.totalCount);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   function CustomMultipleInput({ onFocus, value, onChange }) {
@@ -289,7 +230,7 @@ export default function MainPageManageReserve() {
       </h3>
       <div className="flex justify-between mb-3 py-2 items-center px-2">
         <div className="flex flex-wrap items-center w-full">
-          <div className="sm:w-1/5 w-1/2 flex items-center px-2">
+          <div className="sm:w-1/5 w-full flex items-center px-2">
             <FormControl size="small" color="primary" className="w-full">
               <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                 لیست مجتمع ها
@@ -312,7 +253,7 @@ export default function MainPageManageReserve() {
               </Select>
             </FormControl>
           </div>
-          <div className="sm:w-1/5 w-1/2 flex items-center px-2">
+          <div className="sm:w-1/5 w-full flex items-center px-2 sm:mt-0 mt-3">
             <Autocomplete
               size="small"
               className="w-full"
@@ -342,7 +283,7 @@ export default function MainPageManageReserve() {
               renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
             />
           </div>
-          <div className="sm:w-1/5 w-1/2 flex items-center px-2 sm:mt-0 mt-3">
+          <div className="sm:w-1/5 w-full flex items-center px-2 sm:mt-0 mt-3">
             <FormControl size="small" color="primary" className="w-full">
               <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
                 لیست خدمات
@@ -421,20 +362,19 @@ export default function MainPageManageReserve() {
           </div>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex flex-wrap">
         <div className="w-full">
           <ToggleButtonFilterStatus
-            totalCount={totalCount}
-            totalCountPending={totalCountPending}
             value={valueStatus}
             setValue={setValueStatus}
-            setFlagTimer={setFlagTimer}
             getListReserve={getListReserve}
             setPageIndex={setPageIndex}
-            totalCountTa={totalCountTa}
+            numStatusReserv={numStatusReserv}
           />
         </div>
-        <RateService valService={valService.id} />
+        <div className="flex justify-end w-full">
+          <RateService valService={valService.id} />
+        </div>
       </div>
       <div className="flex flex-wrap px-2 mt-4">
         {listReserve.length > 0 &&

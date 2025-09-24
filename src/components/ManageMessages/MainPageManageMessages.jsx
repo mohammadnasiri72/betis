@@ -225,7 +225,7 @@ function MainPageManageMessages() {
             style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
             className="sm:text-2xl text-lg font-semibold whitespace-nowrap pb-2"
           >
-            مدیریت نظرات
+            مدیریت درخواست‌ها
           </h3>
           <div className="flex justify-between mb-3 py-2 items-center px-2">
             <div className="flex flex-wrap items-center w-full">

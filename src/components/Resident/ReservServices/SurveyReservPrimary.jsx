@@ -1,18 +1,21 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import { Button, Card, Chip } from '@mui/material';
 import { Divider, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
-import { IoCloseOutline } from 'react-icons/io5';
-import { useNavigate, useParams } from 'react-router';
+import { MdAccessTime } from 'react-icons/md';
+import { TbListNumbers } from 'react-icons/tb';
+import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
-import RatingSurvey from './RatingSurvey';
+import RatingSurvey from '../MyReserve/RatingSurvey';
 
 // import sweet alert 2
 const Toast = Swal.mixin({
@@ -24,46 +27,46 @@ const Toast = Swal.mixin({
   customClass: 'toast-modal',
 });
 
-function SurveyPage() {
+function SurveyReservPrimary({ id, setId }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [order, setOrder] = useState({});
+  const [reserve, setReserve] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [listSurvey, setListSurvey] = useState([]);
   const [data, setData] = useState([]);
-  const [listServiceMenu, setListServiceMenu] = useState([]);
+  const [dataService, setDataService] = useState({});
 
   const { themeMode } = useSettings();
 
   const navigate = useNavigate();
-  const params = useParams();
 
-  const id = Number(params.number);
-
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  // get order && listSurvey
+  // get reserve && listSurvey
   useEffect(() => {
     axios
-      .get(`${mainDomain}/api/Order/Get/${id}`, {
+      .get(`${mainDomain}/api/Reservation/Get/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .then((res) => {
-        setOrder(res.data);
+        setReserve(res.data);
 
-        axios
-          .get(`${mainDomain}/api/SurveyAnswer/Questions/${res?.data?.serviceId}`, {
+        Promise.all([
+          axios.get(`${mainDomain}/api/SurveyAnswer/Questions/${res?.data?.serviceTime?.serviceId}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-          })
+          }),
+          axios.get(`${mainDomain}/api/Service/Get/${res?.data?.serviceTime?.serviceId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+        ])
           .then((res) => {
-            setListSurvey(res.data);
-            if (res.data.length === 0) {
+            setListSurvey(res[0].data);
+            setDataService(res[1].data);
+            if (res[0].data.length === 0) {
               Toast.fire({
                 icon: 'error',
                 text: 'نظرسنجی در حال حاضر غیرفعال می‌باشد. لطفاً در زمان دیگری مراجعه فرمایید',
@@ -71,7 +74,7 @@ function SurveyPage() {
                   container: 'toast-modal',
                 },
               });
-              navigate('/resident/my-menu');
+              setId(null);
             }
           })
           .catch((err) => {
@@ -82,7 +85,7 @@ function SurveyPage() {
                 container: 'toast-modal',
               },
             });
-            navigate('/resident/my-menu');
+            setId(null);
           })
           .finally(() => {
             setIsLoading(false);
@@ -97,7 +100,7 @@ function SurveyPage() {
             container: 'toast-modal',
           },
         });
-        navigate('/resident/my-menu');
+        setId(null);
       });
   }, []);
 
@@ -106,7 +109,7 @@ function SurveyPage() {
 
     try {
       await axios
-        .post(`${mainDomain}/api/SurveyAnswer/Order`, data, {
+        .post(`${mainDomain}/api/SurveyAnswer/Reservation`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -119,7 +122,7 @@ function SurveyPage() {
               container: 'toast-modal',
             },
           });
-          navigate('/resident/my-menu');
+          setId(null);
         })
         .catch((err) => {
           Toast.fire({
@@ -144,24 +147,6 @@ function SurveyPage() {
     setOpenModal(true);
   };
 
-  useEffect(() => {
-    if (order.serviceId) {
-      axios
-        .get(`${mainDomain}/api/ServiceMenu/GetList`, {
-          params: {
-            serviceId: order.serviceId,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        })
-        .then((res) => {
-          setListServiceMenu(res.data);
-        })
-        .catch((err) => {});
-    }
-  }, [order]);
-
   if (isLoading) {
     return (
       <>
@@ -172,6 +157,7 @@ function SurveyPage() {
     );
   }
 
+
   return (
     <>
       <div className="px-3 flex items-center">
@@ -179,14 +165,14 @@ function SurveyPage() {
           بازگشت
         </Button>
       </div>
-      {order.id && (
+      {reserve.id && (
         <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
-          <span className="font-bold text-lg">امتیاز به سفارش</span>
+          <span className="font-bold text-lg">امتیاز به خدمات </span>
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <img
-                src={`${mainDomain}${order.serviceImageSrc}`}
-                alt={order.serviceTitle}
+                src={`${mainDomain}${dataService?.imageSrc}`}
+                alt={reserve?.serviceTime?.serviceTitle}
                 className="sm:w-14 w-10 sm:h-14 h-10 rounded-full object-cover"
               />
               <h1
@@ -194,8 +180,8 @@ function SurveyPage() {
                   themeMode === 'dark' ? 'text-[#fff9]' : 'text-[#0009]'
                 }`}
               >
-                <span className="font-bold !text-[#000]">{order.serviceTitle}</span>
-                <span className=" !text-[#0008] text-xs">{order.dateDeliveryFa.split(' ')[0]}</span>
+                <span className="font-bold !text-[#000]">{dataService?.title}</span>
+                <span className=" !text-[#0008] text-xs">{reserve.dateFa}</span>
               </h1>
             </div>
             <button
@@ -203,7 +189,7 @@ function SurveyPage() {
               onClick={handleOpenModal}
               className="flex text-xs items-center gap-2 text-teal-500 duration-300 hover:text-teal-600"
             >
-              <span>جزئیات سفارش</span>
+              <span>جزئیات رزرو</span>
               <FaAngleLeft />
             </button>
           </div>
@@ -213,61 +199,86 @@ function SurveyPage() {
               openModal ? 'top-[30%]' : 'top-[100%]'
             }`}
           >
-            <div className="flex items-center justify-between text-sm pb-3">
-              <span className="font-semibold">اطلاعات سفارش</span>
-              <IoCloseOutline
-                className="text-2xl cursor-pointer"
-                onClick={() => {
-                  setOpenModal(false);
-                }}
-              />
-            </div>
+            <div className="">
+              <div>
+                {reserve?.reservationRelatedInfo && reserve?.reservationRelatedInfo?.typeId === 1 && (
+                  <div className="px-1 w-full mt-2">
+                    <Card className=" rounded-lg p-2 h-full">
+                      <div className="flex">
+                        <img
+                          className="w-20 h-20 rounded-full object-cover border"
+                          src={mainDomain + reserve?.reservationRelatedInfo?.image}
+                          alt={reserve?.reservationRelatedInfo?.title}
+                        />
+                        <div className="flex flex-col items-start px-2">
+                          <div className="flex justify-center items-center px-1 mt-2">
+                            <p className="text-sm px-1 font-semibold flex justify-center">
+                              {reserve?.reservationRelatedInfo?.desc}
+                            </p>
+                          </div>
 
-            <div>
-              <div className="flex justify-between items-center text-xs py-1">
-                <div className="w-2/5 text-start pr-3">عنوان سفارش</div>
-                <div className="w-1/5 text-start">مبلغ واحد</div>
-                <div className="w-1/5">تعداد</div>
-                <div className="w-1/5 text-start">مجموع </div>
+                          <div className="flex mt-2 justify-around">
+                            <div className="px-1">
+                              {reserve?.reservationRelatedInfo?.value?.length === 7 && (
+                                <Chip
+                                  label={`${reserve?.reservationRelatedInfo?.value}`}
+                                  icon={<TbListNumbers className="text-xl" />}
+                                />
+                              )}
+                              {reserve?.reservationRelatedInfo?.value?.length === 8 && (
+                                <p
+                                  className={
+                                    themeMode === 'dark'
+                                      ? 'border palet-car px-2 py-1 border-[#fff8] text-xs'
+                                      : 'border palet-car px-2 py-1 border-[#0008] bg-[#e7ebf0] text-xs'
+                                  }
+                                >
+                                  {`ایران${reserve?.reservationRelatedInfo?.value.slice(
+                                    6,
+                                    8
+                                  )}-${reserve?.reservationRelatedInfo?.value.slice(
+                                    3,
+                                    6
+                                  )}${reserve?.reservationRelatedInfo?.value.slice(
+                                    2,
+                                    3
+                                  )}${reserve?.reservationRelatedInfo?.value.slice(0, 2)}`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                )}
               </div>
-              {order.orderItems.map((e) => (
-                <div key={e.id} className="flex justify-between items-center text-xs py-1">
-                  <div className=" w-2/5 flex justify-start items-center">
-                    <img
-                      className="w-10 h-10 rounded-full object-cover"
-                      // src={`${mainDomain}${order.serviceImageSrc}`}
-                      src={mainDomain + listServiceMenu.find((ev) => ev.id === e.itemId)?.imageSrc}
-                      alt=""
-                    />
-
-                    <div className="px-2">{e.itemTitle}</div>
-                  </div>
-
-                  <div className=" w-1/5 text-start ">
-                    <span className="font-semibold">{numberWithCommas(e.unitPrice)}</span>
-                    {/* <span className="px-1">تومان</span> */}
-                  </div>
-                  <div className=" w-1/5">{e.quantity}</div>
-                  <div className=" w-1/5 text-start">
-                    <span className="font-semibold">{numberWithCommas(e.totalPrice)}</span>
-                    {/* <span className="px-1">تومان</span> */}
-                  </div>
+              <div className="flex justify-around items-center mt-2 ">
+                <div className="font-semibold">
+                  {reserve.serviceTime.dayOfWeek === 0
+                    ? 'یکشنبه'
+                    : reserve.serviceTime.dayOfWeek === 1
+                    ? 'دوشنبه'
+                    : reserve.serviceTime.dayOfWeek === 2
+                    ? 'سه‌شنبه'
+                    : reserve.serviceTime.dayOfWeek === 3
+                    ? 'چهارشنبه'
+                    : reserve.serviceTime.dayOfWeek === 4
+                    ? 'پنجشنبه'
+                    : reserve.serviceTime.dayOfWeek === 5
+                    ? 'جمعه'
+                    : 'شنبه'}
                 </div>
-              ))}
-              <hr />
-              <div className="flex justify-between py-2">
-                <div className="text-start px-3 py-1 whitespace-nowrap">
-                  <span className="text-xs">مجموع تعداد : </span>
-                  <span className="font-semibold text-xs">{order.totalQuantity}</span>
-                </div>
-                <div className="text-start px-3 py-1 whitespace-nowrap">
-                  <span className="text-xs"> قیمت کل : </span>
-                  <span className="font-semibold text-sm">{numberWithCommas(order.totalPrice)}</span>
-                  <span className="text-xs px-1">تومان</span>
-                </div>
+                <Chip size="small" label={`${reserve.dateFa}`} icon={<EventIcon />} />
+                <Chip
+                  size="small"
+                  label={`${reserve.startTime.slice(0, 5)} تا ${reserve.endTime.slice(0, 5)}`}
+                  icon={<MdAccessTime />}
+                />
               </div>
             </div>
           </div>
+
           <div
             onClick={() => {
               setOpenModal(false);
@@ -277,7 +288,9 @@ function SurveyPage() {
           <Divider />
           {/* سیستم امتیازدهی */}
           {listSurvey.length > 0 &&
-            listSurvey.map((e) => <RatingSurvey key={e.id} data={data} setData={setData} order={order} survey={e} />)}
+            listSurvey.map((e) => (
+              <RatingSurvey key={e.id} data={data} setData={setData} reserve={reserve} survey={e} />
+            ))}
 
           {/* نظر کاربر */}
           {/* <div className="mb-6">
@@ -310,4 +323,4 @@ function SurveyPage() {
   );
 }
 
-export default SurveyPage;
+export default SurveyReservPrimary;

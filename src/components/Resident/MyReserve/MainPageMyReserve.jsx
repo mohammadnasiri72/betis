@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, IconButton, Skeleton, Tab, Tabs, TextField, Tooltip } from '@mui/material';
+import { Box, Button, IconButton, Pagination, Skeleton, Stack, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
@@ -25,6 +25,9 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
   const [flag, setFlag] = useState(true);
   const [valueTab, setValueTab] = useState(-1);
   const [stepPage, setStepPage] = useState(0);
+  const [numPages, setNumPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   const location = useLocation();
 
@@ -45,12 +48,12 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
 
   // وضعیت‌ها بر اساس statusId
   const statusTabs = [
+    { label: 'همه', statusId: -1 },
     { label: 'منتظر تایید', statusId: 0 },
     { label: 'تایید شده', statusId: 1 },
     { label: 'رد شده', statusId: 2 },
     { label: 'انجام شده', statusId: 3 },
     { label: 'لغو شده', statusId: 4 },
-    { label: 'همه', statusId: -1 },
   ];
 
   const navigate = useNavigate();
@@ -64,12 +67,15 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
     setIsLoading(true);
     setListMyReserve([]);
     axios
-      .get(`${mainDomain}/api/Reservation/GetList`, {
+      .get(`${mainDomain}/api/Reservation/GetListPaged`, {
         params: {
           buildingId: accountResident.buildingId,
           serviceId: -1,
           unitId: accountResident?.id,
           statusId: -1,
+          ascending: false,
+          pageSize: 50,
+          pageIndex: numPages,
         },
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -77,12 +83,14 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
       })
       .then((res) => {
         setIsLoading(false);
-        setListMyReserve(res.data);
+        setListMyReserve(res.data.items);
+        setTotalPages(res.data.totalPages);
+        setTotalCount(res.data.totalCount);
       })
       .catch((err) => {
         setIsLoading(false);
       });
-  }, [flag, accountResident, flagRefreshPage]);
+  }, [flag, accountResident, flagRefreshPage, numPages, location.pathname]);
 
   //   get list service
   useEffect(() => {
@@ -287,6 +295,20 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
               <div className="w-full px-2">
                 <Skeleton height={150} animation="wave" className="" />
               </div>
+            </div>
+          )}
+          {totalCount > 50 && (
+            <div className="flex justify-center items-center mt-2">
+              <Stack spacing={2}>
+                <Pagination
+                  page={numPages}
+                  onChange={(e, value) => {
+                    setNumPages(value);
+                  }}
+                  count={totalPages}
+                />
+              </Stack>
+              <span>{totalCount} رکورد</span>
             </div>
           )}
         </div>

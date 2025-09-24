@@ -36,20 +36,18 @@ function a11yProps(index) {
 }
 
 export default function ToggleButtonFilterStatus({
-  totalCount,
-  totalCountPending,
   value,
   setValue,
-  setFlagTimer,
   getListReserve,
   setPageIndex,
-  totalCountTa,
+  numStatusReserv,
 }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     getListReserve({ statusId: newValue === 5 ? -1 : newValue, pageIndex: 1 });
     setPageIndex(1);
   };
+
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -76,14 +74,7 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={
-              <TimerPendingReserve
-                setFlagTimer={setFlagTimer}
-                value={value}
-                totalCount={totalCount}
-                totalCountPending={totalCountPending}
-              />
-            }
+            label={<TimerPendingReserve numStatusReserv={numStatusReserv} getListReserve={getListReserve} />}
             {...a11yProps(0)}
           />
 
@@ -93,7 +84,9 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={`تایید شده ${`(${totalCountTa})`}`}
+            label={`تایید شده ${
+              numStatusReserv.length > 0 ? `(${numStatusReserv.find((e) => e.statusId === 1)?.number})` : ''
+            }`}
             {...a11yProps(1)}
           />
 
@@ -103,7 +96,9 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={`رد شده ${value === 2 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`رد شده ${
+              numStatusReserv.length > 0 ? `(${numStatusReserv.find((e) => e.statusId === 2)?.number})` : ''
+            }`}
             {...a11yProps(2)}
           />
 
@@ -113,7 +108,9 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={`انجام شده ${value === 3 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`انجام شده ${
+              numStatusReserv.length > 0 ? `(${numStatusReserv.find((e) => e.statusId === 3)?.number})` : ''
+            }`}
             {...a11yProps(3)}
           />
 
@@ -123,7 +120,9 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={`لغو شده ${value === 4 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`لغو شده ${
+              numStatusReserv.length > 0 ? `(${numStatusReserv.find((e) => e.statusId === 4)?.number})` : ''
+            }`}
             {...a11yProps(4)}
           />
 
@@ -133,7 +132,9 @@ export default function ToggleButtonFilterStatus({
                 getListReserve();
               }
             }}
-            label={`همه ${value === 5 && totalCount !== '' ? `(${totalCount})` : ''}`}
+            label={`همه ${
+              numStatusReserv.length > 0 ? `(${numStatusReserv.reduce((sum, item) => sum + item.number, 0)})` : ''
+            }`}
             {...a11yProps(5)}
           />
         </Tabs>

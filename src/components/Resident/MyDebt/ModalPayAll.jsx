@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
 import CloseIcon from '@mui/icons-material/Close';
-import { Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -24,14 +24,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function ModalPayAll({ listDebt, accountResident }) {
+export default function ModalPayAll({ listDebt, accountResident, setFlag, setIsPaymentAll, setIsdspAll }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const { themeMode } = useSettings();
-
-  console.log(accountResident.depositBalance);
-  console.log(accountResident.debtBalance);
 
   // import sweet alert 2
   const Toast = Swal.mixin({
@@ -60,28 +57,38 @@ export default function ModalPayAll({ listDebt, accountResident }) {
     setOpen(false);
   };
 
-  const sendInfoResidentHandler = (e) => {
+  const payAllHandler = () => {
     setIsLoading(true);
-    const data = new FormData();
-    data.append('mobileNumber', e.userPhoneNumber);
-    axios
-      .post(`${mainDomain}/api/Authenticate/ResetPassword`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
+
+    const requests = listDebt.map((debt) =>
+      axios.post(
+        `${mainDomain}/api/Debt/Payment/${debt.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+    );
+
+    Promise.all(requests)
       .then(() => {
-        setIsLoading(false);
+        setIsPaymentAll(true);
+        handleClose();
+        setTimeout(() => {
+          setFlag((e) => !e);
+          setIsdspAll(true);
+        }, 1000);
         Toast.fire({
           icon: 'success',
-          text: 'رمز عبور ارسال شد',
+          text: 'تمام بدهی ها موفقیت پرداخت شد',
           customClass: {
             container: 'toast-modal',
           },
         });
       })
       .catch((err) => {
-        setIsLoading(false);
         Toast.fire({
           icon: 'error',
           text: err.response ? err.response.data : 'خطای شبکه',
@@ -89,6 +96,9 @@ export default function ModalPayAll({ listDebt, accountResident }) {
             container: 'toast-modal',
           },
         });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -146,10 +156,8 @@ export default function ModalPayAll({ listDebt, accountResident }) {
               </span>
             </Stack>
             <div className="text-start px-3">
-              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>ارسال اطلاعات ورود</h4>
-              <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>
-                آیا از ارسال اطلاعات مطمئن هستید؟
-              </p>
+              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>پرداخت همه بدهی ها</h4>
+              <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>آیا از پرداخت مطمئن هستید؟</p>
             </div>
           </div>
         </DialogContent>
@@ -167,13 +175,15 @@ export default function ModalPayAll({ listDebt, accountResident }) {
             </button>
             <div className="px-2">
               <button
-                // onClick={() => {
-                //   sendInfoResidentHandler(resident);
-                //   handleClose();
-                // }}
+                onClick={() => {
+                  payAllHandler();
+                }}
                 className="border bg-blue-400 text-white px-3 py-1 rounded-lg border-[#0002] duration-300 hover:bg-blue-500"
               >
-                تایید
+                <div className="flex items-center gap-1">
+                  <span>تایید</span>
+                  {isLoading && <CircularProgress size="15px" color="inherit" />}
+                </div>
               </button>
             </div>
           </div>

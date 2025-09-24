@@ -197,20 +197,22 @@ function SurveyPageReserv({ setFlag }) {
       </div>
       {reserve.id && (
         <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md relative overflow-hidden">
+          <span className="font-bold text-lg">امتیاز به خدمات </span>
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <img
                 src={`${mainDomain}${dataService?.imageSrc}`}
                 alt={reserve?.serviceTime?.serviceTitle}
-                className="sm:w-16 w-12 sm:h-16 h-12 rounded-full object-cover"
+                className="sm:w-14 w-10 sm:h-14 h-10 rounded-full object-cover"
               />
               <h1
-                className={`text-sm font-medium flex flex-col items-start justify-center ${
+                className={`text-sm font-medium flex flex-col gap-1 items-start justify-center ${
                   themeMode === 'dark' ? 'text-[#fff9]' : 'text-[#0009]'
                 }`}
               >
-                <span>امتیاز به خدمات </span>
+                
                 <span className="font-bold !text-[#000]">{dataService?.title}</span>
+                <span className=" !text-[#0008] text-xs">{reserve.dateFa}</span>
               </h1>
             </div>
             <button

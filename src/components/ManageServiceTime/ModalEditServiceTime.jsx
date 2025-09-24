@@ -10,7 +10,6 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  Stack,
   TextField,
 } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -23,7 +22,6 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { CiEdit } from 'react-icons/ci';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import DatePicker from 'react-multi-date-picker';
 import TimePicker from 'react-multi-date-picker/plugins/time_picker';
@@ -63,6 +61,7 @@ export default function ModalEditServiceTime({
   const [needConfirmation, setNeedConfirmation] = React.useState(service.needConfirmation);
   const [byVacantOwner, setByVacantOwner] = React.useState(service.byVacantOwner);
   const [isActive, setIsActive] = React.useState(service.isActive);
+  const [sharedUse, setSharedUse] = React.useState(service.sharedUse);
   const [valRole, setValRole] = React.useState([]);
   const [listRole, setListRole] = React.useState([]);
   const [capacity, setCapacity] = React.useState(service.capacity);
@@ -73,7 +72,6 @@ export default function ModalEditServiceTime({
   const [messageToRoles, setMessageToRoles] = React.useState(service.messageToRoles);
   const [minutesInterval, setMinutesInterval] = React.useState(service.minutesInterval);
 
-  
 
   const { themeMode } = useSettings();
 
@@ -155,6 +153,7 @@ export default function ModalEditServiceTime({
     setNeedConfirmation(false);
     setByVacantOwner(false);
     setIsActive(false);
+    setSharedUse(false);
     setValRole([]);
     setCapacity(1);
     setStartTime('');
@@ -208,6 +207,7 @@ export default function ModalEditServiceTime({
         needConfirmation,
         byVacantOwner,
         isActive,
+        sharedUse,
         messageToRoles,
         id: service.id,
         minutesInterval,
@@ -246,7 +246,6 @@ export default function ModalEditServiceTime({
 
   return (
     <>
-      
       <BootstrapDialog
         fullWidth
         sx={{ minHeight: '600px' }}
@@ -260,7 +259,7 @@ export default function ModalEditServiceTime({
             sx={{ m: 0, p: 2, textAlign: 'start' }}
             id="customized-dialog-title"
           >
-            ویرایش زمان‌بندی خدمات
+            ویرایش زمان‌بندی مشاعات
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -502,7 +501,7 @@ export default function ModalEditServiceTime({
                   </Select>
                 </FormControl>
               </div>
-              <div className="sm:w-1/3 w-full mt-3">
+              <div className="sm:w-1/3 w-3/4 mt-3">
                 <div className="flex relative w-full px-1 ">
                   <TextField
                     InputProps={{
@@ -534,6 +533,14 @@ export default function ModalEditServiceTime({
                     />
                   </div>
                 </div>
+              </div>
+              <div className="sm:w-1/6 w-1/4 mt-3">
+                <FormControlLabel
+                  style={{ color: sharedUse ? '#54d62c' : '' }}
+                  onChange={() => setSharedUse(!sharedUse)}
+                  control={<Checkbox color="success" checked={sharedUse} />}
+                  label={'اشتراکی'}
+                />
               </div>
               <div className="">
                 <FormControlLabel
