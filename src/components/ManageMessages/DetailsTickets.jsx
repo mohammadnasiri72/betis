@@ -286,6 +286,25 @@ function DetailsTickets({ listService }) {
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
+        <div className="flex flex-wrap items-center justify-end gap-1 px-3">
+          {checkClaims('/dashboard/admin-ticket', 'put') && ticketEdited.status !== 2 && (
+            <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService} />
+          )}
+          {checkClaims('/dashboard/admin-ticket', 'post') && ticketEdited.status !== 2 && (
+            <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />
+          )}
+          {/* :admin-staff:get,:admin-staff:post,:admin-staff:put,:admin-staff:delete,:admin-servicerule:get,:admin-servicerule:post,:admin-servicerule:put,:admin-servicerule:delete,:admin-serviceblocking:get,:admin-serviceblocking:post,:admin-serviceblocking:put,:admin-serviceblocking:delete,:admin-servicetime:get,:admin-servicetime:post,:admin-servicetime:put,:admin-servicetime:delete,:admin-service:get,:admin-service:post,:admin-service:put,:admin-service:delete,:admin-vehicle:get,:admin-vehicle:post,:admin-vehicle:put,:admin-vehicle:delete,:admin-pet:get,:admin-pet:post,:admin-pet:put,:admin-pet:delete,:admin-deposit:get,:admin-deposit:post,:admin-deposit:put,:admin-deposit:delete,:admin-report-debt:get,:admin-report-debt:post,:admin-report-debt:put,:admin-report-debt:delete,:admin-applay-debt:get,:admin-applay-debt:post,:admin-applay-debt:put,:admin-applay-debt:delete,:admin-applay-charge:get,:admin-applay-charge:post,:admin-applay-charge:put,:admin-applay-charge:delete,:admin-debt:get,:admin-debt:post,:admin-debt:put,:admin-debt:delete,:admin-charge:get,:admin-charge:post,:admin-charge:put,:admin-charge:delete,:admin-warehouse:get,:admin-warehouse:post,:admin-warehouse:put,:admin-warehouse:delete,:admin-resident:get,:admin-resident:post,:admin-resident:put,:admin-resident:delete,:admin-unit:get,:admin-unit:post,:admin-unit:put,:admin-unit:delete,:admin-building:get:-1,:admin-parking:get,:admin-parking:post,:admin-parking:put,:admin-parking:delete,:admin-building:get,:admin-role:get,:admin-role:post,:admin-role:put,:admin-role:delete,:attachment:get,:attachment:post,:attachment:put,:attachment:delete,:admin-roleclaim:get,:admin-roleclaim:post,:admin-roleclaim:put,:admin-roleclaim:delete,:admin-basicinfo:get,:admin-basicinfo:post,:admin-basicinfo:put,:admin-basicinfo:delete,:admin-boardnotice:get,:admin-boardnotice:post,:admin-boardnotice:put,:admin-boardnotice:delete,:admin-message:get,:admin-message:post,:admin-message:put,:admin-feedback:get,:admin-feedback:post,:admin-feedback:put,:admin-authenticate:get,:admin-document:get,:admin-document:post,:admin-document:put,:admin-document:delete,:admin-surveyquestion:get,:admin-surveyquestion:post,:admin-surveyquestion:put,:admin-realstate:get,:admin-realstate:post,:admin-realstate:put,:admin-order:get,:admin-reservation:get,:admin-surveyanswer:get,:admin-surveyanswer:post,:admin-surveyanswer:put,:admin-guest:get,:admin-ticket:get,:admin-ticket:post,:admin-ticket:put */}
+
+          <Button
+            size="small"
+            variant="contained"
+            color="inherit"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+          >
+            بازگشت
+          </Button>
+        </div>
         <div className="flex justify-between items-start px-3">
           <div className="flex items-start justify-center">
             <Avatar sx={{ mr: 1 }}>
@@ -300,20 +319,6 @@ function DetailsTickets({ listService }) {
                 {ticketEdited.subjectTitle}
               </Typography>
               <span className="text-start text-[#0008] text-xs">{ticketEdited.description}</span>
-              <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
-                <div>
-                  <span>کد درخواست : </span>
-                  <span className=" font-semibold">{ticketEdited.id}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdDateRange />
-                  <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdOutlineAccessTimeFilled />
-                  <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
-                </div>
-              </div>
             </div>
           </div>
           <div className="flex flex-col items-end justify-center gap-1">
@@ -349,28 +354,24 @@ function DetailsTickets({ listService }) {
                 </IconButton>
               </Tooltip>
             </div>
-            <div className="flex flex-wrap items-center justify-end gap-1">
-              {checkClaims('/dashboard/admin-ticket', 'put') && ticketEdited.status !== 2 && (
-                <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService} />
-              )}
-              {checkClaims('/dashboard/admin-ticket', 'post') && ticketEdited.status !== 2 && (
-                <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />
-              )}
-              {/* :admin-staff:get,:admin-staff:post,:admin-staff:put,:admin-staff:delete,:admin-servicerule:get,:admin-servicerule:post,:admin-servicerule:put,:admin-servicerule:delete,:admin-serviceblocking:get,:admin-serviceblocking:post,:admin-serviceblocking:put,:admin-serviceblocking:delete,:admin-servicetime:get,:admin-servicetime:post,:admin-servicetime:put,:admin-servicetime:delete,:admin-service:get,:admin-service:post,:admin-service:put,:admin-service:delete,:admin-vehicle:get,:admin-vehicle:post,:admin-vehicle:put,:admin-vehicle:delete,:admin-pet:get,:admin-pet:post,:admin-pet:put,:admin-pet:delete,:admin-deposit:get,:admin-deposit:post,:admin-deposit:put,:admin-deposit:delete,:admin-report-debt:get,:admin-report-debt:post,:admin-report-debt:put,:admin-report-debt:delete,:admin-applay-debt:get,:admin-applay-debt:post,:admin-applay-debt:put,:admin-applay-debt:delete,:admin-applay-charge:get,:admin-applay-charge:post,:admin-applay-charge:put,:admin-applay-charge:delete,:admin-debt:get,:admin-debt:post,:admin-debt:put,:admin-debt:delete,:admin-charge:get,:admin-charge:post,:admin-charge:put,:admin-charge:delete,:admin-warehouse:get,:admin-warehouse:post,:admin-warehouse:put,:admin-warehouse:delete,:admin-resident:get,:admin-resident:post,:admin-resident:put,:admin-resident:delete,:admin-unit:get,:admin-unit:post,:admin-unit:put,:admin-unit:delete,:admin-building:get:-1,:admin-parking:get,:admin-parking:post,:admin-parking:put,:admin-parking:delete,:admin-building:get,:admin-role:get,:admin-role:post,:admin-role:put,:admin-role:delete,:attachment:get,:attachment:post,:attachment:put,:attachment:delete,:admin-roleclaim:get,:admin-roleclaim:post,:admin-roleclaim:put,:admin-roleclaim:delete,:admin-basicinfo:get,:admin-basicinfo:post,:admin-basicinfo:put,:admin-basicinfo:delete,:admin-boardnotice:get,:admin-boardnotice:post,:admin-boardnotice:put,:admin-boardnotice:delete,:admin-message:get,:admin-message:post,:admin-message:put,:admin-feedback:get,:admin-feedback:post,:admin-feedback:put,:admin-authenticate:get,:admin-document:get,:admin-document:post,:admin-document:put,:admin-document:delete,:admin-surveyquestion:get,:admin-surveyquestion:post,:admin-surveyquestion:put,:admin-realstate:get,:admin-realstate:post,:admin-realstate:put,:admin-order:get,:admin-reservation:get,:admin-surveyanswer:get,:admin-surveyanswer:post,:admin-surveyanswer:put,:admin-guest:get,:admin-ticket:get,:admin-ticket:post,:admin-ticket:put */}
-
-              <Button
-                size="small"
-                variant="contained"
-                color="inherit"
-                startIcon={<ArrowBackIcon />}
-                onClick={() => navigate(-1)}
-              >
-                بازگشت
-              </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center text-xs text-[#0008] gap-3 px-5">
+          <div className="whitespace-nowrap">
+            <span>کد درخواست : </span>
+            <span className=" font-semibold">{ticketEdited.id}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <MdDateRange />
+              <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MdOutlineAccessTimeFilled />
+              <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
             </div>
           </div>
         </div>
-
         {/* نمایش پیام‌ها */}
         <Box
           ref={boxRef}

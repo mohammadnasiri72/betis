@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Avatar,
   Box,
@@ -266,6 +267,13 @@ function DetailsTickets() {
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
+        <div className="flex flex-wrap items-center justify-between gap-1 px-3">
+          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+            بازگشت
+          </Button>
+          {ticketEdited.status !== 2 && <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />}
+        </div>
+
         <div className="flex justify-between items-start px-3">
           <div className="flex items-start justify-center">
             <Avatar sx={{ mr: 1 }}>
@@ -280,20 +288,6 @@ function DetailsTickets() {
                 {ticketEdited.subjectTitle}
               </Typography>
               <span className="text-start text-[#0008] text-xs">{ticketEdited.description}</span>
-              <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
-                <div>
-                  <span>کد درخواست : </span>
-                  <span className="font-semibold">{ticketEdited.id}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdDateRange />
-                  <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdOutlineAccessTimeFilled />
-                  <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
-                </div>
-              </div>
             </div>
           </div>
           <div className="flex flex-col items-end justify-center gap-1">
@@ -329,12 +323,24 @@ function DetailsTickets() {
                 </IconButton>
               </Tooltip>
             </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center text-xs text-[#0008] gap-3 px-5">
+          <div className="whitespace-nowrap">
+            <span>کد درخواست : </span>
+            <span className="font-semibold">{ticketEdited.id}</span>
+          </div>
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
-              {ticketEdited.status !== 2 && <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />}
+              <MdDateRange />
+              <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MdOutlineAccessTimeFilled />
+              <span>{ticketEdited?.createdAtFa?.split(' ')[1].slice(0, 5)}</span>
             </div>
           </div>
         </div>
-
         {/* نمایش پیام‌ها */}
         <Box
           ref={boxRef}
@@ -496,8 +502,9 @@ function DetailsTickets() {
         {!file && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TextField
+              disabled={ticketEdited.status === 2}
               fullWidth
-              placeholder="پیام خود را تایپ کنید..."
+              placeholder={`${ticketEdited.status === 2 ? 'درخواست بسته شده!!!' : 'پیام خود را تایپ کنید...'}`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               InputProps={{
@@ -509,7 +516,9 @@ function DetailsTickets() {
                       </IconButton>
                     )}
                     {!message && (
-                      <IconButton onClick={openMenu}>{message ? <MdSend /> : <MdDriveFolderUpload />}</IconButton>
+                      <IconButton disabled={ticketEdited.status === 2} onClick={openMenu}>
+                        {message ? <MdSend /> : <MdDriveFolderUpload />}
+                      </IconButton>
                     )}
                   </InputAdornment>
                 ),

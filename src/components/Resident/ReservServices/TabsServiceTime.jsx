@@ -11,6 +11,7 @@ import * as React from 'react';
 import { FaUserFriends } from 'react-icons/fa';
 import useSettings from '../../../hooks/useSettings';
 import CounterNumReserve from './CounterNumReserve';
+import CounterNumReserve2 from './CounterNumReserve2';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -218,6 +219,7 @@ export default function TabsServiceTime({
                           marginTop: '0px',
                           padding: '0px',
                           borderRadius: '8px',
+                          transform: 'translateX(-4px)',
                         }}
                       >
                         <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
@@ -233,7 +235,7 @@ export default function TabsServiceTime({
                   {/* select from time */}
                   <div className=" mt-5 px-1 w-full ">
                     <div className="flex items-start w-full ">
-                      <p className="px-2 whitespace-nowrap mt-2">از ساعت:</p>
+                      <p className="px-2 whitespace-nowrap mt-2">از ساعت :</p>
                       <div className=" w-full px-1 " dir="rtl">
                         <FormControl color="primary" className="w-full text-start">
                           <InputLabel color="primary" size="small" className="px-2" id="demo-simple-select-label">
@@ -265,7 +267,7 @@ export default function TabsServiceTime({
                   </div>
                   {/* select end time */}
                   <div className=" mt-5 flex items-start px-1 w-full">
-                    <p className="px-2 whitespace-nowrap mt-2">تا ساعت:</p>
+                    <p className="px-2 whitespace-nowrap mt-2">تا ساعت :</p>
                     <div className="w-full">
                       <FormControl color="primary" className="w-full text-start">
                         <InputLabel color="primary" size="small" className="px-2" id="demo-simple-select-label">
@@ -298,8 +300,11 @@ export default function TabsServiceTime({
                     </div>
                   </div>
                   {valStart.sharedUse && (
-                    <div className={`duration-300 overflow-hidden`}>
-                      <CounterNumReserve hourse={valStart} count={count} setCount={setCount} />
+                    <div className=" mt-5 flex items-center px-1 w-full">
+                      <p className="px-2 whitespace-nowrap mt-2">تعداد نفرات :</p>
+                      <div className="w-full">
+                        <CounterNumReserve2 hourse={valStart} count={count} setCount={setCount} />
+                      </div>
                     </div>
                   )}
                 </div>

@@ -111,12 +111,19 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
               <Toolbar>
                 <div className="flex justify-between items-center w-full">
                   <div className="flex items-center">
-                    <Typography
+                    {/* <Typography
                       variant="h6"
                       sx={{ color: themeMode === 'dark' ? '#fff' : '#000', whiteSpace: 'nowrap' }}
                     >
                       لیست درخواست‌ها
-                    </Typography>
+                    </Typography> */}
+                    <span
+                      className={`sm:text-lg text-sm font-semibold whitespace-nowrap ${
+                        themeMode === 'dark' ? 'text-[#fff]' : 'text-[#000]'
+                      }`}
+                    >
+                      لیست درخواست‌ها
+                    </span>
                   </div>
                   <Button
                     variant="contained"
@@ -127,7 +134,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                       navigate('/resident/feedback/newTicket');
                     }}
                   >
-                    درخواست جدید
+                    جدید
                   </Button>
                 </div>
               </Toolbar>
