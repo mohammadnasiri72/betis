@@ -494,6 +494,10 @@ function MainPageManageMessages() {
                   <Divider />
 
                   <div className="flex items-center text-xs text-[#0008] px-3 gap-3 pt-1">
+                    <div>
+                      <span>کد درخواست : </span>
+                      <span className=" font-semibold">{t.id}</span>
+                    </div>
                     <div className="flex items-center gap-1">
                       <MdDateRange />
                       <span>{t.createdAtFa.split(' ')[0]}</span>

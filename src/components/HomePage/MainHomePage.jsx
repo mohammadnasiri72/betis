@@ -42,12 +42,15 @@ export default function MainHomePage() {
         setYearId(res[0].data?.id);
         setValBuilding(res[1].data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
     if (yearId && valBuilding?.id) {
-      if (localStorage.getItem('claims').includes('admin-reservation:get') || localStorage.getItem('roles') === 'Admin') {
+      if (
+        localStorage.getItem('claims').includes('admin-reservation:get') ||
+        localStorage.getItem('roles') === 'Admin'
+      ) {
         axios
           .get(`${mainDomain}/api/Reservation/GetListPaged`, {
             params: {
@@ -66,7 +69,7 @@ export default function MainHomePage() {
           .then((res) => {
             setTotalCount(res.data.totalCount);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
       if (localStorage.getItem('claims').includes('admin-order:get') || localStorage.getItem('roles') === 'Admin') {
         axios
@@ -90,11 +93,10 @@ export default function MainHomePage() {
           .then((res) => {
             setTotalCount2(res.data.totalCount);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (localStorage.getItem('claims').includes('admin-summon:get') || localStorage.getItem('roles') === 'Admin') {
-
         axios
           .get(`${mainDomain}/api/Summon/GetListPaged`, {
             params: {
@@ -112,11 +114,10 @@ export default function MainHomePage() {
           .then((res) => {
             setTotalCount3(res.data.totalCount);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (localStorage.getItem('claims').includes('admin-deposit:get') || localStorage.getItem('roles') === 'Admin') {
-
         axios
           .get(`${mainDomain}/api/Deposit/GetListPaged`, {
             params: {
@@ -134,12 +135,10 @@ export default function MainHomePage() {
           .then((res) => {
             setTotalCount4(res.data.totalCount);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
-
       if (localStorage.getItem('claims').includes('admin-guest:get') || localStorage.getItem('roles') === 'Admin') {
-
         axios
           .get(`${mainDomain}/api/Guest/GetListPaged`, {
             params: {
@@ -156,31 +155,35 @@ export default function MainHomePage() {
           })
           .then((res) => {
             setTotalCount5(res.data.totalCount);
-
           })
-          .catch(() => { });
+          .catch(() => {});
       }
-
     }
   }, [yearId, valBuilding]);
 
   useEffect(() => {
-    if (yearId && valBuilding?.id) {
-      if (localStorage.getItem('claims').includes('admin-feedback:get') || localStorage.getItem('roles') === 'Admin') {
-
+    if (valBuilding?.id) {
+      if (localStorage.getItem('claims').includes('admin-ticket:get') || localStorage.getItem('roles') === 'Admin') {
         setIsLoadingFeedback(true);
         axios
-          .get(`${mainDomain}/api/Feedback/GetList`, {
+          .get(`${mainDomain}/api/Ticket/GetListPaged`, {
             params: {
               buildingId: valBuilding?.id,
+              dataFa: '',
               unitId: -1,
+              serviceId: -1,
+              subjectId: -1,
+              statusId: 0,
+              priorityId: -1,
+              pageIndex: 1,
+              pageSize: 3,
             },
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           })
           .then((res) => {
-            setListFeedback(res.data);
+            setListFeedback(res.data.items);
             setIsLoadingFeedback(false);
           })
           .catch(() => {
@@ -188,16 +191,15 @@ export default function MainHomePage() {
           });
       }
     }
-  }, [yearId, valBuilding, flag]);
+  }, [valBuilding]);
 
   const navigate = useNavigate();
-
 
   return (
     <>
       <div className="flex flex-wrap w-full">
-        {
-          (localStorage.getItem('claims').includes('admin-reservation:get') || localStorage.getItem('roles') === 'Admin') &&
+        {(localStorage.getItem('claims').includes('admin-reservation:get') ||
+          localStorage.getItem('roles') === 'Admin') && (
           <div className="sm:w-1/2 w-full px-1 mt-3">
             <div className="border rounded-lg p-2">
               <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
@@ -229,10 +231,9 @@ export default function MainHomePage() {
               </div>
             </div>
           </div>
-        }
+        )}
 
-        {
-          (localStorage.getItem('claims').includes('admin-order:get') || localStorage.getItem('roles') === 'Admin') &&
+        {(localStorage.getItem('claims').includes('admin-order:get') || localStorage.getItem('roles') === 'Admin') && (
           <div className="sm:w-1/2 w-full px-1 mt-3">
             <div className="border rounded-lg p-2">
               <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
@@ -266,11 +267,9 @@ export default function MainHomePage() {
               </div>
             </div>
           </div>
-        }
+        )}
 
-        {
-          (localStorage.getItem('claims').includes('admin-summon:get') || localStorage.getItem('roles') === 'Admin') &&
-
+        {(localStorage.getItem('claims').includes('admin-summon:get') || localStorage.getItem('roles') === 'Admin') && (
           <div className="sm:w-1/2 w-full px-1 mt-3">
             <div className="border rounded-lg p-2">
               <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
@@ -280,7 +279,11 @@ export default function MainHomePage() {
                 </div>
               </div>
               <div className="flex justify-center items-center">
-                <img className="h-36" src="/images/businessman-with-suitcase-coming-business-center-reception-job-occupation-flat-illustration-b.png" alt="" />
+                <img
+                  className="h-36"
+                  src="/images/businessman-with-suitcase-coming-business-center-reception-job-occupation-flat-illustration-b.png"
+                  alt=""
+                />
               </div>
               <div className="flex justify-center items-center">
                 <div className="border-dashed border border-[#495677] rounded-lg p-2 w-full">
@@ -304,11 +307,10 @@ export default function MainHomePage() {
               </div>
             </div>
           </div>
-        }
+        )}
 
-        {
-          (localStorage.getItem('claims').includes('admin-deposit:get') || localStorage.getItem('roles') === 'Admin') &&
-
+        {(localStorage.getItem('claims').includes('admin-deposit:get') ||
+          localStorage.getItem('roles') === 'Admin') && (
           <div className="sm:w-1/2 w-full px-1 mt-3">
             <div className="border rounded-lg p-2">
               <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
@@ -342,9 +344,8 @@ export default function MainHomePage() {
               </div>
             </div>
           </div>
-        }
-        {
-          (localStorage.getItem('claims').includes('admin-guest:get') || localStorage.getItem('roles') === 'Admin') &&
+        )}
+        {(localStorage.getItem('claims').includes('admin-guest:get') || localStorage.getItem('roles') === 'Admin') && (
           <div className="sm:w-1/2 w-full px-1 mt-3">
             <div className="border rounded-lg p-2">
               <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
@@ -378,56 +379,54 @@ export default function MainHomePage() {
               </div>
             </div>
           </div>
-        }
-        {
-          (localStorage.getItem('claims').includes('admin-feedback:get') || localStorage.getItem('roles') === 'Admin') &&
-          <div className="sm:w-1/2 w-full px-1 mt-3">
-            <div className="border rounded-lg p-2">
-              <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
-                <div className="flex items-center">
-                  <BiSolidConversation />
-                  <span className="px-1">انتقادات و پیشنهادات</span>
-                </div>
-              </div>
-              {listFeedback.length > 0 &&
-                listFeedback.slice(0, 3).map((e) => <BoxDetailsFeedback key={e?.id} item={e} setFlag={setFlag} />)}
-              {listFeedback.length === 0 && isLoadingFeedback && (
-                <div>
-                  <div className="w-full mt-2">
-                    <Skeleton height={50} variant="rounded" animation="wave" className="" />
-                  </div>
-                  <div className="w-full mt-2">
-                    <Skeleton height={50} variant="rounded" animation="wave" className="" />
-                  </div>
-                  <div className="w-full mt-2">
-                    <Skeleton height={50} variant="rounded" animation="wave" className="" />
+        )}
+        {(localStorage.getItem('claims').includes('admin-ticket:get') || localStorage.getItem('roles') === 'Admin') &&
+          listFeedback.length > 0 && (
+            <div className="sm:w-1/2 w-full px-1 mt-3">
+              <div className="border rounded-lg p-2">
+                <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
+                  <div className="flex items-center">
+                    <BiSolidConversation />
+                    <span className="px-1">درخواست های منتظر پاسخ</span>
                   </div>
                 </div>
-              )}
-              {listFeedback.length === 0 && !isLoadingFeedback && (
-                <div className="flex flex-col justify-center items-center">
-                  <img
-                    className="h-36"
-                    src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'}
-                    alt=""
-                  />
-                  <span className="text-xs py-1">موردی موجود نیست</span>
+                {listFeedback.length > 0 && listFeedback.map((e) => <BoxDetailsFeedback key={e?.id} item={e} />)}
+                {listFeedback.length === 0 && isLoadingFeedback && (
+                  <div>
+                    <div className="w-full mt-2">
+                      <Skeleton height={50} variant="rounded" animation="wave" className="" />
+                    </div>
+                    <div className="w-full mt-2">
+                      <Skeleton height={50} variant="rounded" animation="wave" className="" />
+                    </div>
+                    <div className="w-full mt-2">
+                      <Skeleton height={50} variant="rounded" animation="wave" className="" />
+                    </div>
+                  </div>
+                )}
+                {listFeedback.length === 0 && !isLoadingFeedback && (
+                  <div className="flex flex-col justify-center items-center">
+                    <img
+                      className="h-36"
+                      src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'}
+                      alt=""
+                    />
+                    <span className="text-xs py-1">موردی موجود نیست</span>
+                  </div>
+                )}
+                <div className="mt-3">
+                  <button
+                    onClick={() => {
+                      navigate('/dashboard/admin-ticket');
+                    }}
+                    className="text-white bg-[#495677] rounded-lg p-2 text-sm whitespace-nowrap"
+                  >
+                    بررسی لیست
+                  </button>
                 </div>
-              )}
-              <div className="mt-3">
-                <button
-                  onClick={() => {
-                    navigate('/dashboard/admin-feedback');
-                  }}
-                  className="text-white bg-[#495677] rounded-lg p-2 text-sm whitespace-nowrap"
-                >
-                  بررسی لیست
-                </button>
               </div>
             </div>
-          </div>
-        }
-
+          )}
       </div>
     </>
   );

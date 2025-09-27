@@ -5,8 +5,10 @@ import { FormControl, InputLabel, MenuItem, Select, Skeleton, ToggleButton, Togg
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { FaUserFriends } from 'react-icons/fa';
 import useSettings from '../../../hooks/useSettings';
 import CounterNumReserve from './CounterNumReserve';
 
@@ -182,12 +184,44 @@ export default function TabsServiceTime({
                       value={e}
                       aria-label="text alignment"
                     >
-                      {e.endTime.slice(0, 5)} - {e.startTime.slice(0, 5)}
-                    </ToggleButton>
-                    {hourse.sharedUse && (
-                      <div className={`duration-300 overflow-hidden ${hourse === e ? 'max-h-32' : 'max-h-0'}`}>
-                        <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
+                      <div className="flex flex-col w-full">
+                        {e.endTime.slice(0, 5)} - {e.startTime.slice(0, 5)}
+                        {e.sharedUse && (
+                          <div className="w-full flex justify-end items-center text-xs gap-1">
+                            <span>{e.remainCapacity}</span>
+                            <FaUserFriends />
+                          </div>
+                        )}
                       </div>
+                    </ToggleButton>
+                    {hourse.sharedUse && hourse === e && (
+                      // <div className="-translate-x-1">
+                      //   <Collapse in={hourse === e}>
+                      //     <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
+                      //   </Collapse>
+                      // </div>
+                      // <div
+                      //   className={`duration-300 overflow-hidden shadow-2xl border bg-red-700 w-full ${
+                      //     hourse === e ? 'max-h-32' : 'max-h-0'
+                      //   }`}
+                      // >
+                      //   <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
+                      // </div>
+
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.4, ease: 'easeInOut' }}
+                        style={{
+                          overflow: 'hidden',
+                          marginTop: '0px',
+                          padding: '0px',
+                          borderRadius: '8px',
+                        }}
+                      >
+                        <CounterNumReserve hourse={hourse} count={count} setCount={setCount} />
+                      </motion.div>
                     )}
                   </div>
                 ))}

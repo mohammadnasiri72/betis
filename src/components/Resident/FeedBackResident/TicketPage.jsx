@@ -127,7 +127,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                       navigate('/resident/feedback/newTicket');
                     }}
                   >
-                    تیکت جدید
+                    درخواست جدید
                   </Button>
                 </div>
               </Toolbar>
@@ -147,17 +147,17 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
               />
             </div>
 
-            <List sx={{ mt: 5 }}>
+            <List sx={{ mt: 7, padding: 0 }}>
               {listTickets.length > 0 &&
                 listTickets.map((t) => (
                   <div
                     key={t.id}
-                    className="bg-white rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer px-2 pb-2"
+                    className="bg-white rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer p-[5px]"
                     onClick={() => {
                       navigate(`/resident/feedback/${t.id}`);
                     }}
                   >
-                    <ListItem alignItems="flex-start">
+                    <ListItem sx={{ padding: 0, margin: 0 }} alignItems="flex-start">
                       <div className="flex justify-between items-center w-full">
                         <div className="flex items-center justify-center">
                           <Avatar sx={{ mr: 1 }}>
@@ -215,6 +215,10 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                     <Divider />
 
                     <div className="flex items-center text-xs text-[#0008] px-3 gap-3 pt-1">
+                      <div>
+                        <span>کد درخواست : </span>
+                        <span className="font-semibold">{t.id}</span>
+                      </div>
                       <div className="flex items-center gap-1">
                         <MdDateRange />
                         <span>{t.createdAtFa.split(' ')[0]}</span>

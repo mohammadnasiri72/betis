@@ -301,6 +301,10 @@ function DetailsTickets({ listService }) {
               </Typography>
               <span className="text-start text-[#0008] text-xs">{ticketEdited.description}</span>
               <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
+                <div>
+                  <span>کد درخواست : </span>
+                  <span className=" font-semibold">{ticketEdited.id}</span>
+                </div>
                 <div className="flex items-center gap-1">
                   <MdDateRange />
                   <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>
@@ -346,7 +350,7 @@ function DetailsTickets({ listService }) {
               </Tooltip>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-1">
-              {checkClaims('/dashboard/admin-ticket', 'post') && ticketEdited.status !== 2 && (
+              {checkClaims('/dashboard/admin-ticket', 'put') && ticketEdited.status !== 2 && (
                 <ModalBackService ticketId={ticketId} setFlag={setFlag} listService={listService} />
               )}
               {checkClaims('/dashboard/admin-ticket', 'post') && ticketEdited.status !== 2 && (
@@ -528,9 +532,15 @@ function DetailsTickets({ listService }) {
             <TextField
               disabled={ticketEdited.status === 2}
               fullWidth
-              placeholder={`${ticketEdited.status === 2 ? 'پیام بسته شده!!!' : 'پیام خود را تایپ کنید...'}`}
+              placeholder={`${ticketEdited.status === 2 ? 'درخواست بسته شده!!!' : 'پیام خود را تایپ کنید...'}`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault(); // نذاره خط جدید ساخته بشه
+                  handleSend();
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

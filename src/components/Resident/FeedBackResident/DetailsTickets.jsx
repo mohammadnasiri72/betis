@@ -281,6 +281,10 @@ function DetailsTickets() {
               </Typography>
               <span className="text-start text-[#0008] text-xs">{ticketEdited.description}</span>
               <div className="flex items-center text-xs text-[#0008] gap-3 pt-1">
+                <div>
+                  <span>کد درخواست : </span>
+                  <span className="font-semibold">{ticketEdited.id}</span>
+                </div>
                 <div className="flex items-center gap-1">
                   <MdDateRange />
                   <span>{ticketEdited?.createdAtFa?.split(' ')[0]}</span>

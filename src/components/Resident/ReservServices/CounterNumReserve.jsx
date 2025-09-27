@@ -1,5 +1,5 @@
 import { Add, Remove } from '@mui/icons-material';
-import { Box, IconButton, Paper, Typography } from '@mui/material';
+import { Box, IconButton, Paper } from '@mui/material';
 import { useEffect } from 'react';
 
 export default function CounterNumReserve({ hourse, count, setCount }) {
@@ -13,7 +13,8 @@ export default function CounterNumReserve({ hourse, count, setCount }) {
     <Paper
       elevation={2}
       sx={{
-        p: 1,
+        px: 0,
+        py: 0.5,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -22,20 +23,18 @@ export default function CounterNumReserve({ hourse, count, setCount }) {
         bgcolor: '#fafafa',
       }}
     >
-      <Typography variant="subtitle1" sx={{ mb: 0, fontWeight: '500', color: '#555' }}>
-        تعداد نفرات
-      </Typography>
-
+      <span className="text-xs">تعداد نفرات</span>
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1,
-          px: 0,
-          py: 0,
+          gap: 0.5,
+          px: 0.5,
+          py: 0.5,
           border: '1px solid #ddd',
           borderRadius: '12px',
           backgroundColor: '#fff',
+          mt: 1,
         }}
       >
         <IconButton
@@ -47,15 +46,16 @@ export default function CounterNumReserve({ hourse, count, setCount }) {
             '&:hover': { backgroundColor: 'rgba(76, 175, 80, 0.1)' },
           }}
         >
-          <Add />
+          <Add sx={{ fontSize: '14px' }} />
         </IconButton>
 
-        <Typography
+        {/* <Typography
           variant="h6"
           sx={{ minWidth: '15px', textAlign: 'center', fontWeight: 'bold', color: '#000', userSelect: 'none' }}
         >
           {count}
-        </Typography>
+        </Typography> */}
+        <span className="text-xs select-none">{count}</span>
 
         <IconButton
           disabled={count <= 1}
@@ -66,7 +66,7 @@ export default function CounterNumReserve({ hourse, count, setCount }) {
             '&:hover': { backgroundColor: 'rgba(244, 67, 54, 0.1)' },
           }}
         >
-          <Remove />
+          <Remove sx={{ fontSize: '14px' }} />
         </IconButton>
       </Box>
     </Paper>
