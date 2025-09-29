@@ -228,4 +228,9 @@ export const sidebarResident = [
     path: 'service-home',
     icon: <BsFillHouseGearFill className="text-xl" />,
   },
+  {
+    title: 'گزارش بدهی',
+    path: 'my-report-debt',
+    icon: <BiSolidReport className="text-xl" />,
+  },
 ];

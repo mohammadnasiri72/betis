@@ -109,7 +109,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
     {
       group: 'مالی',
       icon: <AccountBalanceWalletIcon sx={{ ml: 1, fontSize: 22 }} />,
-      items: [sidebarResident[5], sidebarResident[6]],
+      items: [sidebarResident[5], sidebarResident[6], sidebarResident[16]],
     },
     {
       group: 'اطلاعات من',

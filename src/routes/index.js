@@ -21,7 +21,6 @@ import ManageCharge from '../pages/ManageCharge';
 import ManageCostIncome from '../pages/ManageCostIncome';
 import ManageDebt from '../pages/ManageDebt';
 import ManageDeposit from '../pages/ManageDeposit';
-import ManageFeedback from '../pages/ManageFeedback';
 import ManageGuest from '../pages/ManageGuest';
 import ManageMessages from '../pages/ManageMessages';
 import ManageOrder from '../pages/ManageOrder';
@@ -52,6 +51,7 @@ import MyInfoUnit from '../pages/MyInfoUnit';
 import MyMenu from '../pages/MyMenu';
 import MyPet from '../pages/MyPet';
 import MyRealEstate from '../pages/MyRealEstate';
+import MyReportDebt from '../pages/MyReportDebt';
 import MyReserve from '../pages/MyReserve';
 import MyVehicle from '../pages/MyVehicle';
 import MyWallet from '../pages/MyWallet';
@@ -228,6 +228,10 @@ export default function Router() {
         {
           path: 'service-home',
           element: <ServiceHome accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
+        },
+        {
+          path: 'my-report-debt',
+          element: <MyReportDebt accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
         },
         {
           path: 'manageResidents',
