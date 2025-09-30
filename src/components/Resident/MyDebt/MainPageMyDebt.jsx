@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/button-has-type */
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Skeleton } from '@mui/material';
@@ -5,6 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { MdInsertChartOutlined } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -85,9 +88,20 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
           بازگشت
         </Button>
       </div>
-      <span className="text-[1.1rem] font-semibold" style={{ color: themeMode === 'dark' ? '#fff' : '' }}>
-        بدهی من
-      </span>
+      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto flex justify-between items-center px-2">
+        <span className="text-[1.1rem] font-semibold" style={{ color: themeMode === 'dark' ? '#fff' : '' }}>
+          بدهی من
+        </span>
+        <div
+          onClick={() => {
+            navigate('/resident/my-report-debt');
+          }}
+          className="flex items-center gap-1 text-sm cursor-pointer text-teal-500 hover:text-teal-600 duration-300"
+        >
+          <span>گزارش بدهی</span>
+          <MdInsertChartOutlined className="text-lg" />
+        </div>
+      </div>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto p-2 overflow-hidden duration-500">
         <div className="p-2">
           <div className="text-start p-2 border-green-600 border rounded-lg text-green-600 flex justify-between items-center">
