@@ -131,7 +131,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                     startIcon={<AddCircleOutlineIcon />}
                     sx={{ ml: 2, whiteSpace: 'nowrap' }}
                     onClick={() => {
-                      navigate('/resident/feedback/newTicket');
+                      navigate('/resident/ticket/newTicket');
                     }}
                   >
                     جدید
@@ -161,7 +161,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                     key={t.id}
                     className="bg-white rounded-lg hover:shadow-lg hover:-translate-y-1 duration-300 my-2 cursor-pointer p-[5px]"
                     onClick={() => {
-                      navigate(`/resident/feedback/${t.id}`);
+                      navigate(`/resident/ticket/${t.id}`);
                     }}
                   >
                     <ListItem sx={{ padding: 0, margin: 0 }} alignItems="flex-start">

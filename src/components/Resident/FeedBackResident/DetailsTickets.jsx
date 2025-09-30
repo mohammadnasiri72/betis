@@ -115,13 +115,13 @@ function DetailsTickets() {
           }, 100);
         })
         .catch((err) => {
-          navigate('/resident/feedback/');
+          navigate('/resident/ticket/');
         })
         .finally(() => {
           setIsloading(false);
         });
     } else {
-      navigate('/resident/feedback/');
+      navigate('/resident/ticket/');
     }
   }, [ticketId, flag]);
 

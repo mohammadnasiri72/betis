@@ -110,7 +110,7 @@ function NewTickets({ subjectOptions, priorityOptions, listService }) {
               container: 'toast-modal',
             },
           });
-          navigate('/resident/feedback/');
+          navigate('/resident/ticket/');
         })
         .catch((err) => {
           Toast.fire({
