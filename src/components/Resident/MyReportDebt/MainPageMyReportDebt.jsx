@@ -155,9 +155,12 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-9">
         <Divider />
       </div>
+      {
+        totalCount>0 &&
       <div className="flex justify-between items-center px-2 lg:w-1/3 sm:w-1/2 w-full mx-auto">
         <span className='text-sm'>{totalCount} مورد</span>
       </div>
+      }
 
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto p-2 overflow-hidden duration-500">
         {listReportDebt.length > 0 &&
@@ -182,12 +185,8 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
 
         {listReportDebt.length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center">
-            <img
-              className="w-36"
-              src={themeMode === 'dark' ? '/images/welcome-dark.png' : '/images/welcome.png'}
-              alt=""
-            />
-            <span className="mt-3">بدهی معوقه‌ای ندارین...</span>
+             <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
+          <p>موردی یافت نشد...</p>
           </div>
         )}
       </div>
