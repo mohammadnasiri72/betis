@@ -279,20 +279,6 @@ function FilterMyReport({
                 onClick={() => {
                   setSorting((prev) => ({
                     ...prev,
-                    orderBy: 'amount',
-                  }));
-                }}
-                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm ${
-                  sorting.orderBy === 'amount' ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
-                }`}
-              >
-                مبلغ
-              </div>
-
-              <div
-                onClick={() => {
-                  setSorting((prev) => ({
-                    ...prev,
                     orderBy: '',
                   }));
                 }}
@@ -315,6 +301,20 @@ function FilterMyReport({
                 }`}
               >
                 تاریخ سررسید
+              </div>
+
+              <div
+                onClick={() => {
+                  setSorting((prev) => ({
+                    ...prev,
+                    orderBy: 'amount',
+                  }));
+                }}
+                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm ${
+                  sorting.orderBy === 'amount' ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
+                }`}
+              >
+                مبلغ
               </div>
             </div>
             <div className="px-5">
