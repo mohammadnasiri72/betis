@@ -105,7 +105,7 @@ function NewTickets({ subjectOptions, priorityOptions, listService }) {
           setUploadProgress(0);
           Toast.fire({
             icon: 'success',
-            text: 'تیکت با موفقیت ثبت شد',
+            text: 'درخواست با موفقیت ثبت شد',
             customClass: {
               container: 'toast-modal',
             },
@@ -194,7 +194,7 @@ function NewTickets({ subjectOptions, priorityOptions, listService }) {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
         <Typography sx={{ color: themeMode === 'dark' ? '#fff' : '#000' }} variant="h6">
-          ایجاد تیکت جدید
+          ایجاد درخواست جدید
         </Typography>
 
         {/* انتخاب موضوع و اولویت */}
@@ -229,7 +229,7 @@ function NewTickets({ subjectOptions, priorityOptions, listService }) {
               size="small"
               select
               fullWidth
-              label="موضوع تیکت"
+              label="موضوع درخواست"
               value={subject}
               onChange={(e) => {
                 setSubject(e.target.value);

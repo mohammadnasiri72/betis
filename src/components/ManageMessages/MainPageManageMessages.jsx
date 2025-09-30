@@ -199,7 +199,7 @@ function MainPageManageMessages() {
           type="text"
           className="w-full"
           id="outlined-multiline-flexible"
-          label="تاریخ ثبت تیکت"
+          label="تاریخ ثبت درخواست"
           name="name"
         />
         {value && (
@@ -411,7 +411,7 @@ function MainPageManageMessages() {
                     getListTickets({ pageIndex: 1, dataFa: event.format('YYYY/MM/DD') });
                     setPageIndex(1);
                   }}
-                  placeholder="تاریخ ثبت تیکت"
+                  placeholder="تاریخ ثبت درخواست"
                 />
               </div>
             </div>

@@ -219,7 +219,7 @@ export default function AllTickets({ accountResident, statusTicket, priority, su
                         </div>
                       </div>
                     </ListItem>
-                    <Divider />
+                    <Divider className="!mt-1" />
 
                     <div className="flex items-center text-xs text-[#0008] px-3 gap-3 pt-1">
                       <div>
