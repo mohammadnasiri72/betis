@@ -210,7 +210,7 @@ export const sidebarResident = [
   },
   {
     title: 'درخواست‌ها',
-    path: 'feedback',
+    path: 'ticket',
     icon: <FaCommentAlt className="text-xl" />,
   },
   {

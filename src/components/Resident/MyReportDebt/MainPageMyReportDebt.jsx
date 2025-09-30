@@ -9,7 +9,6 @@ import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import BoxDebtReport from './BoxDebtReport';
 import FilterMyReport from './FilterMyReport';
-import ResaultFilter from './ResaultFilter';
 
 function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
   const { themeMode } = useSettings();
@@ -132,13 +131,15 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
           valPaid={valPaid}
           setValPaid={setValPaid}
           listTerm={listTerm}
+          fromPersianDate={fromPersianDate}
+          toPersianDate={toPersianDate}
           setFromPersianDate={setFromPersianDate}
           setToPersianDate={setToPersianDate}
           sorting={sorting}
           setSorting={setSorting}
         />
       </div>
-      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-10">
+      {/* <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-10">
         <Divider />
       </div>
       <ResaultFilter
@@ -150,16 +151,19 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
         valyear={valyear}
         sorting={sorting}
         setSorting={setSorting}
-      />
+      /> */}
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-9">
         <Divider />
+      </div>
+      <div className="flex justify-between items-center px-2 lg:w-1/3 sm:w-1/2 w-full mx-auto">
+        <span className='text-sm'>{totalCount} مورد</span>
       </div>
 
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto p-2 overflow-hidden duration-500">
         {listReportDebt.length > 0 &&
-          listReportDebt.map((debt) => (
+          listReportDebt.map((debt, index) => (
             <div data-aos="zoom-in-right" key={debt.documentId}>
-              <BoxDebtReport debt={debt} />
+              <BoxDebtReport debt={debt} index={index} />
             </div>
           ))}
         {listReportDebt.length === 0 && isLoading && (

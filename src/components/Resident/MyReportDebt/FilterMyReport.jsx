@@ -1,8 +1,9 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/button-has-type */
 import { Divider, IconButton, Tooltip } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaAngleDown, FaArrowUp } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -16,6 +17,8 @@ function FilterMyReport({
   valPaid,
   setValPaid,
   listTerm,
+  fromPersianDate,
+  toPersianDate,
   setFromPersianDate,
   setToPersianDate,
   sorting,
@@ -26,6 +29,35 @@ function FilterMyReport({
   const [openPaid, setOpenPaid] = useState(false);
   const [openMounth, setOpenMounth] = useState(false);
   const [openSorting, setOpenSorting] = useState(false);
+  const [titleM1, setTitleM1] = useState('');
+  const [titleM2, setTitleM2] = useState('');
+  const [titleSort, setTitleSort] = useState('');
+
+  useEffect(() => {
+    if (sorting?.ascending && sorting?.orderBy === 'amount') {
+      setTitleSort('مبلغ ↑');
+    }
+    if (!sorting?.ascending && sorting?.orderBy === 'amount') {
+      setTitleSort('مبلغ ↓');
+    }
+    if (sorting?.ascending && sorting?.orderBy === 'dueDate') {
+      setTitleSort('تاریخ سررسید ↑');
+    }
+    if (!sorting?.ascending && sorting?.orderBy === 'dueDate') {
+      setTitleSort('تاریخ سررسید ↓');
+    }
+    if (sorting?.ascending && sorting?.orderBy === '') {
+      setTitleSort('تاریخ ثبت ↑');
+    }
+    if (!sorting?.ascending && sorting?.orderBy === '') {
+      setTitleSort('تاریخ ثبت ↓');
+    }
+  }, [sorting]);
+
+  useEffect(() => {
+    setTitleM1(listTerm.find((e) => e.id === fromPersianDate)?.title);
+    setTitleM2(listTerm.find((e) => e.id === toPersianDate)?.title);
+  }, [fromPersianDate, toPersianDate]);
 
   return (
     <>
@@ -35,12 +67,12 @@ function FilterMyReport({
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
-                  className={`rounded-full text-sm bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                  className={`rounded-full text-white text-sm bg-[#00005e] px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
                   onClick={() => {
                     setOpenYearFilter(true);
                   }}
                 >
-                  <span>سال</span>
+                  <span>{valyear}</span>
                   <FaAngleDown />
                 </button>
               </div>
@@ -48,12 +80,20 @@ function FilterMyReport({
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
-                  className={`rounded-full text-sm bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                  className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
                   onClick={() => {
                     setOpenPaid(true);
                   }}
                 >
-                  <span>پرداخت‌ها</span>
+                  <span>
+                    {valPaid === -1
+                      ? 'همه پرداخت‌ها'
+                      : valPaid === 0
+                      ? 'پرداخت نشده'
+                      : valPaid === 1
+                      ? 'پرداخت شده'
+                      : ''}
+                  </span>
                   <FaAngleDown />
                 </button>
               </div>
@@ -61,12 +101,12 @@ function FilterMyReport({
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
-                  className={`rounded-full text-sm bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                  className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
                   onClick={() => {
                     setOpenMounth(true);
                   }}
                 >
-                  <span>ماه</span>
+                  <span>{`${titleM1} - ${titleM2}`}</span>
                   <FaAngleDown />
                 </button>
               </div>
@@ -74,12 +114,12 @@ function FilterMyReport({
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
-                  className={`rounded-full text-sm bg-slate-100 px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                  className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
                   onClick={() => {
                     setOpenSorting(true);
                   }}
                 >
-                  <span>مرتب سازی</span>
+                  <span>{titleSort}</span>
                   <FaAngleDown />
                 </button>
               </div>
@@ -117,7 +157,7 @@ function FilterMyReport({
                     setValyear(year.id);
                     setOpenYearFilter(false);
                   }}
-                  className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs  ${
+                  className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm  ${
                     valyear === year.id ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
                   }`}
                 >
@@ -152,7 +192,7 @@ function FilterMyReport({
                 setValPaid(-1);
                 setOpenPaid(false);
               }}
-              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs  ${
+              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm  ${
                 valPaid === -1 ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
               }`}
             >
@@ -163,7 +203,7 @@ function FilterMyReport({
                 setValPaid(0);
                 setOpenPaid(false);
               }}
-              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs  ${
+              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm  ${
                 valPaid === 0 ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
               }`}
             >
@@ -174,7 +214,7 @@ function FilterMyReport({
                 setValPaid(1);
                 setOpenPaid(false);
               }}
-              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs  ${
+              className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm  ${
                 valPaid === 1 ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
               }`}
             >
@@ -242,7 +282,7 @@ function FilterMyReport({
                     orderBy: 'amount',
                   }));
                 }}
-                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs ${
+                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm ${
                   sorting.orderBy === 'amount' ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
                 }`}
               >
@@ -256,7 +296,7 @@ function FilterMyReport({
                     orderBy: '',
                   }));
                 }}
-                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs ${
+                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm ${
                   sorting.orderBy === '' ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
                 }`}
               >
@@ -270,7 +310,7 @@ function FilterMyReport({
                     orderBy: 'dueDate',
                   }));
                 }}
-                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-xs ${
+                className={`border border-[#0002] rounded-full px-3 py-1 cursor-pointer duration-300 text-sm ${
                   sorting.orderBy === 'dueDate' ? 'bg-[#00005e] text-white' : 'bg-slate-50 text-slate-700'
                 }`}
               >

@@ -1,20 +1,19 @@
 /* eslint-disable no-nested-ternary */
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { Card, Chip, Stack } from '@mui/material';
+import { Card, Stack } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { MdAttachFile, MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 
-export default function BoxDebtReport({ debt }) {
+export default function BoxDebtReport({ debt, index }) {
   const [showDetails, setShowDetails] = useState(false);
   const [attachment, setAttachment] = useState([]);
   const [listDesc, setListDesc] = useState([]);
 
   const { themeMode } = useSettings();
 
-  console.log(debt);
 
   useEffect(() => {
     if (debt.recordDescription) {
@@ -45,7 +44,7 @@ export default function BoxDebtReport({ debt }) {
   }
   return (
     <>
-      <Card className="border duration-1000 mt-3 rounded-lg">
+      <Card className={`border duration-1000 rounded-lg ${index === 0 ? '' : 'mt-3'}`}>
         <div className="flex justify-between items-center p-3 ">
           <div className="flex items-center">
             {debt.lagged && <WarningAmberIcon sx={{ color: 'rgb(220 38 38)', fontSize: '20px' }} />}
@@ -111,14 +110,21 @@ export default function BoxDebtReport({ debt }) {
               )}
             </Stack>
           </div>
-          <Chip
+          {/* <Chip
             size="small"
             sx={{
               background: debt.paid ? '#10b981 ' : '#64748b  ',
               color: '#fff',
             }}
             label={debt.paid ? 'پرداخت شده' : 'پرداخت نشده'}
-          />
+          /> */}
+          <span
+            className={`text-xs px-3 py-1 rounded-lg font-semibold ${
+              debt.paid ? 'bg-emerald-50 text-emerald-600' : 'text-[#000a] bg-[#edeff2]'
+            }`}
+          >
+            {debt.paid ? 'پرداخت شده' : 'پرداخت نشده'}
+          </span>
         </div>
         <div style={{ maxHeight: showDetails ? '300px' : '0' }} className="px-3 text-sm overflow-hidden duration-300">
           <div className="pb-2">

@@ -257,7 +257,7 @@ export default function Router() {
           element: <MyGuest accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
         },
         {
-          path: 'feedback',
+          path: 'ticket',
           element: <FeedBackResident accountResident={accountResident} flagRefreshPage={flagRefreshPage} />,
           children: [
             {
