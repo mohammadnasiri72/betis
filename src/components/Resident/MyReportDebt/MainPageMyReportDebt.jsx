@@ -88,7 +88,7 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
         pageSize: 20,
         pageIndex: numPages,
         orderBy: sorting.orderBy,
-        ascending: !sorting.ascending,
+        ascending: sorting.ascending,
       };
       axios
         .get(`${mainDomain}/api/Debt/Report`, {
@@ -139,19 +139,6 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
           setSorting={setSorting}
         />
       </div>
-      {/* <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-10">
-        <Divider />
-      </div>
-      <ResaultFilter
-        valPaid={valPaid}
-        setValPaid={setValPaid}
-        fromPersianDate={fromPersianDate}
-        toPersianDate={toPersianDate}
-        listTerm={listTerm}
-        valyear={valyear}
-        sorting={sorting}
-        setSorting={setSorting}
-      /> */}
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-9">
         <Divider />
       </div>

@@ -79,6 +79,21 @@ function FilterMyReport({
                 </div>
               </SwiperSlide>
             )}
+            {titleM1 && titleM2 && (
+              <SwiperSlide className="!w-auto">
+                <div className="flex justify-center px-1 w-auto">
+                  <button
+                    className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                    onClick={() => {
+                      setOpenMounth(true);
+                    }}
+                  >
+                    <span>{`${titleM1} - ${titleM2}`}</span>
+                    <FaAngleDown />
+                  </button>
+                </div>
+              </SwiperSlide>
+            )}
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
@@ -100,21 +115,6 @@ function FilterMyReport({
                 </button>
               </div>
             </SwiperSlide>
-            {titleM1 && titleM2 && (
-              <SwiperSlide className="!w-auto">
-                <div className="flex justify-center px-1 w-auto">
-                  <button
-                    className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
-                    onClick={() => {
-                      setOpenMounth(true);
-                    }}
-                  >
-                    <span>{`${titleM1} - ${titleM2}`}</span>
-                    <FaAngleDown />
-                  </button>
-                </div>
-              </SwiperSlide>
-            )}
             {titleSort && (
               <SwiperSlide className="!w-auto">
                 <div className="flex justify-center px-1 w-auto">

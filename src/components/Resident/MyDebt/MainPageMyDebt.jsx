@@ -136,7 +136,7 @@ export default function MainPageMyDebt({ accountResident, flagRefreshPage }) {
               <span className="text-sm font-semibold">{numberWithCommas(debtBalance * -1)} </span>
               <span className="text-xs">تومان</span>
             </div>
-            {listDebt.length > 0 && (
+            {listDebt.length > 1 && (
               <div>
                 <ModalPayAll
                   listDebt={listDebt}

@@ -14,7 +14,6 @@ export default function BoxDebtReport({ debt, index }) {
 
   const { themeMode } = useSettings();
 
-
   useEffect(() => {
     if (debt.recordDescription) {
       setListDesc(debt.recordDescription);
@@ -86,29 +85,11 @@ export default function BoxDebtReport({ debt, index }) {
       <Completionist />
     </Countdown> */}
         </div>
-        <div className="flex justify-between items-center p-3">
-          <div className="flex items-center">
+        <div className="flex flex-wrap justify-between items-center px-3 pt-3">
+          <div className="flex items-center whitespace-nowrap">
             <span className="text-sm px-1">
               مبلغ : <span className="font-semibold">{numberWithCommas(debt.amount)}</span> تومان{' '}
             </span>
-            <Stack
-              onClick={() => {
-                setShowDetails(!showDetails);
-              }}
-              className="text-sm cursor-pointer text-emerald-500 duration-300 hover:text-emerald-600"
-            >
-              {showDetails ? (
-                <div style={{ fontSize: '12px' }} className="flex items-center px-1 text-yellow-500">
-                  <span>بستن</span>
-                  <MdKeyboardArrowUp className="text-xl" />
-                </div>
-              ) : (
-                <div style={{ fontSize: '12px' }} className="flex items-center px-1 text-yellow-500">
-                  <span>جزئیات</span>
-                  <MdKeyboardArrowDown className="text-xl" />
-                </div>
-              )}
-            </Stack>
           </div>
           {/* <Chip
             size="small"
@@ -119,13 +100,33 @@ export default function BoxDebtReport({ debt, index }) {
             label={debt.paid ? 'پرداخت شده' : 'پرداخت نشده'}
           /> */}
           <span
-            className={`text-xs px-3 py-1 rounded-lg font-semibold ${
+            className={`text-xs px-3 py-1 rounded-lg font-semibold whitespace-nowrap ${
               debt.paid ? 'bg-emerald-50 text-emerald-600' : 'text-[#000a] bg-[#edeff2]'
             }`}
           >
             {debt.paid ? 'پرداخت شده' : 'پرداخت نشده'}
           </span>
         </div>
+       <div className='px-4 pb-2'>
+         <Stack
+          onClick={() => {
+            setShowDetails(!showDetails);
+          }}
+          className="text-sm cursor-pointer text-emerald-500 duration-300 hover:text-emerald-600"
+        >
+          {showDetails ? (
+            <div style={{ fontSize: '12px' }} className="flex items-center px-1 text-yellow-500">
+              <span>بستن</span>
+              <MdKeyboardArrowUp className="text-xl" />
+            </div>
+          ) : (
+            <div style={{ fontSize: '12px' }} className="flex items-center px-1 text-yellow-500">
+              <span>جزئیات</span>
+              <MdKeyboardArrowDown className="text-xl" />
+            </div>
+          )}
+        </Stack>
+       </div>
         <div style={{ maxHeight: showDetails ? '300px' : '0' }} className="px-3 text-sm overflow-hidden duration-300">
           <div className="pb-2">
             <div className="flex justify-between">
@@ -163,30 +164,30 @@ export default function BoxDebtReport({ debt, index }) {
           {listDesc.length > 1 && (
             <div
               className={
-                themeMode === 'dark' ? 'flex items-center mt-2 bg-slate-700 ' : 'flex items-center mt-2 bg-slate-100 '
+                themeMode === 'dark' ? 'flex items-center mt-2 bg-slate-700 text-xs' : 'flex items-center mt-2 bg-slate-100 text-xs'
               }
             >
-              <div className="w-1/3 overflow-auto h-10 flex justify-center items-center">
+              <div className="w-1/3 overflow-auto h-8 flex justify-center items-center ">
                 <span>بابت </span>
               </div>
-              <div className="w-1/3 border-l border-r overflow-auto h-10 flex justify-center items-center">
+              <div className="w-1/3 border-l border-r overflow-auto h-8 flex justify-center items-center">
                 <span>نحوه محاسبه </span>
               </div>
-              <div className="w-1/3 overflow-auto h-10 flex justify-center items-center">
+              <div className="w-1/3 overflow-auto h-8 flex justify-center items-center">
                 <span>مقدار </span>
               </div>
             </div>
           )}
           {listDesc.length > 1 &&
             listDesc.map((e) => (
-              <div key={e} className="flex items-center mt-1">
-                <div className="w-1/3 overflow-auto h-10 flex justify-center items-center">
+              <div key={e} className="flex items-center text-[10px]">
+                <div className="w-1/3 overflow-auto h-5 flex justify-center items-center">
                   <span>{e.title}</span>
                 </div>
-                <div className="w-1/3 border-l border-r overflow-auto h-10 flex justify-center items-center">
+                <div className="w-1/3 border-l border-r overflow-auto h-5 flex justify-center items-center">
                   <span>{e.calcType}</span>
                 </div>
-                <div className="w-1/3 overflow-auto h-10 flex justify-center items-center">
+                <div className="w-1/3 overflow-auto h-5 flex justify-center items-center">
                   <span>{numberWithCommas(e.amount)}</span>
                 </div>
               </div>
