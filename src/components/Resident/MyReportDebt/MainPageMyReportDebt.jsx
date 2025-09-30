@@ -1,10 +1,13 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button, Divider } from '@mui/material';
+import { Button, Divider, Pagination, Skeleton, Stack } from '@mui/material';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
+import BoxDebtReport from './BoxDebtReport';
 import FilterMyReport from './FilterMyReport';
 import ResaultFilter from './ResaultFilter';
 
@@ -14,22 +17,20 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
   const [valyear, setValyear] = useState('');
   const [listYear, setListYear] = useState([]);
   const [yearId, setYearId] = useState('');
-  const [numPages, setNumPages] = useState(1);
-  const [listCharge, setListCharge] = useState([{ id: -1, title: 'همه' }]);
-  const [valCharge, setValCharge] = useState({ title: 'همه', id: -1 });
   const [valPaid, setValPaid] = useState(-1);
   const [listTerm, setListTerm] = useState([]);
   const [fromPersianDate, setFromPersianDate] = useState('');
   const [toPersianDate, setToPersianDate] = useState('');
   const [listReportDebt, setListReportDebt] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [ascending, setAscending] = useState(true);
-  const [orderBy, setOrderBy] = useState('');
+  const [sorting, setSorting] = useState({ ascending: true, orderBy: '' });
+  const [numPages, setNumPages] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
 
   useEffect(() => {
     if (listTerm.length > 0) {
@@ -74,7 +75,7 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
 
   //   get list reportDebt
   useEffect(() => {
-    if (accountResident?.buildingId && yearId && fromPersianDate && toPersianDate && valCharge?.id) {
+    if (accountResident?.buildingId && yearId && fromPersianDate && toPersianDate) {
       setListReportDebt([]);
       setIsLoading(true);
       const data = {
@@ -82,13 +83,13 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
         yearId,
         startTermId: fromPersianDate,
         endTermId: toPersianDate,
-        chargeId: valCharge?.id,
+        chargeId: -1,
         unitId: accountResident?.id,
         paidStatus: valPaid,
         pageSize: 20,
         pageIndex: numPages,
-        orderBy,
-        ascending,
+        orderBy: sorting.orderBy,
+        ascending: !sorting.ascending,
       };
       axios
         .get(`${mainDomain}/api/Debt/Report`, {
@@ -101,15 +102,13 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
           setListReportDebt(res.data.items);
           setTotalPages(res.data.totalPages);
           setTotalCount(res.data.totalCount);
-          setCurrentPage(res.data.currentPage);
-          setPageSize(res.data.pageSize);
           setIsLoading(false);
         })
         .catch(() => {
           setIsLoading(false);
         });
     }
-  }, [accountResident, yearId, fromPersianDate, toPersianDate, valCharge, ascending, numPages, orderBy, valPaid]);
+  }, [accountResident, yearId, fromPersianDate, toPersianDate, numPages, sorting, valPaid, flagRefreshPage]);
 
   return (
     <>
@@ -125,90 +124,6 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
         >
           گزارش بدهی
         </p>
-        {/* <div className="flex flex-wrap items-center sm:px-0 px-2">
-          <div className="sm:w-1/3 w-1/3 px-1 mt-5">
-            <FormControl size="small" color="primary" className="w-full">
-              <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-                سال
-              </InputLabel>
-              <Select
-                size="small"
-                className="w-full"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={valyear}
-                label="سال"
-                color="primary"
-                onChange={(e) => {
-                  setValyear(e.target.value);
-                  setNumPages(1);
-                }}
-              >
-                {listYear.map((e) => (
-                  <MenuItem key={e?.id} value={e?.id}>
-                    {e?.id}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <div className="sm:w-1/3 w-1/3 flex items-center mt-5 px-1">
-            <Autocomplete
-              size="small"
-              className="w-full"
-              value={valCharge}
-              options={listCharge}
-              getOptionLabel={(option) => (option.title ? option.title : '')}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setValCharge(newValue);
-                  setNumPages(1);
-                }
-                if (!newValue) {
-                  setValCharge({ title: 'همه', id: -1 });
-                  setNumPages(1);
-                }
-              }}
-              freeSolo
-              renderOption={(props, option) => (
-                <Box sx={{ fontSize: 14 }} component="li" {...props}>
-                  {option.title ? option.title : ''}
-                </Box>
-              )}
-              renderInput={(params) => <TextField {...params} label={'لیست شارژ ها'} />}
-            />
-          </div>
-          <div className="sm:w-1/3 w-1/3 flex items-center mt-5 px-1">
-            <FormControl size="small" color="primary" className="w-full">
-              <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
-                پرداخت
-              </InputLabel>
-              <Select
-                size="small"
-                className="w-full"
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={valPaid}
-                label="پرداخت"
-                color="primary"
-                onChange={(e) => {
-                  setValPaid(e.target.value);
-                  setNumPages(1);
-                }}
-              >
-                <MenuItem value={-1}>همه</MenuItem>
-                <MenuItem value={0}>پرداخت نشده</MenuItem>
-                <MenuItem value={1}>پرداخت شده</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        </div>
-        <SelectTermReport
-          listTerm={listTerm}
-          setFromPersianDate={setFromPersianDate}
-          setToPersianDate={setToPersianDate}
-          setNumPages={setNumPages}
-        /> */}
 
         <FilterMyReport
           listYear={listYear}
@@ -219,6 +134,8 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
           listTerm={listTerm}
           setFromPersianDate={setFromPersianDate}
           setToPersianDate={setToPersianDate}
+          sorting={sorting}
+          setSorting={setSorting}
         />
       </div>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-10">
@@ -231,7 +148,59 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
         toPersianDate={toPersianDate}
         listTerm={listTerm}
         valyear={valyear}
+        sorting={sorting}
+        setSorting={setSorting}
       />
+      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-9">
+        <Divider />
+      </div>
+
+      <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto p-2 overflow-hidden duration-500">
+        {listReportDebt.length > 0 &&
+          listReportDebt.map((debt) => (
+            <div data-aos="zoom-in-right" key={debt.documentId}>
+              <BoxDebtReport debt={debt} />
+            </div>
+          ))}
+        {listReportDebt.length === 0 && isLoading && (
+          <div>
+            <div className="w-full">
+              <Skeleton height={150} animation="wave" />
+            </div>
+            <div className="w-full -mt-10">
+              <Skeleton height={150} animation="wave" />
+            </div>
+            <div className="w-full -mt-10">
+              <Skeleton height={150} animation="wave" />
+            </div>
+          </div>
+        )}
+
+        {listReportDebt.length === 0 && !isLoading && (
+          <div className="w-full flex flex-col items-center">
+            <img
+              className="w-36"
+              src={themeMode === 'dark' ? '/images/welcome-dark.png' : '/images/welcome.png'}
+              alt=""
+            />
+            <span className="mt-3">بدهی معوقه‌ای ندارین...</span>
+          </div>
+        )}
+      </div>
+      {totalCount > 20 && (
+        <div className="flex justify-center items-center mt-2">
+          <Stack spacing={2}>
+            <Pagination
+              page={numPages}
+              onChange={(e, value) => {
+                setNumPages(value);
+              }}
+              count={totalPages}
+            />
+          </Stack>
+          <span>{totalCount} رکورد</span>
+        </div>
+      )}
     </>
   );
 }

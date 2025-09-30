@@ -364,14 +364,15 @@ function DetailsTickets() {
                     color: 'text.secondary',
                     bgcolor: '#fff',
                     py: 0.5,
+                    px: 1,
                     borderRadius: 2,
-                    mb: 2,
                     mx: 'auto',
-                    maxWidth: '200px',
+                    display: 'inline',
                   }}
                 >
                   {formatDate(date)}
                 </Typography>
+                <div className='mt-3'/>
 
                 {/* نمایش پیام‌های مربوط به این تاریخ */}
                 {msgs.map((msg) => (
