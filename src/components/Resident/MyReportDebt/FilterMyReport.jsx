@@ -64,19 +64,21 @@ function FilterMyReport({
       <div className="w-full absolute left-0 right-0 lg:w-1/3 sm:w-1/2 mx-auto">
         <div className="w-full">
           <Swiper slidesPerView="auto" className="w-full">
-            <SwiperSlide className="!w-auto">
-              <div className="flex justify-center px-1 w-auto">
-                <button
-                  className={`rounded-full text-white text-sm bg-[#00005e] px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
-                  onClick={() => {
-                    setOpenYearFilter(true);
-                  }}
-                >
-                  <span>{valyear}</span>
-                  <FaAngleDown />
-                </button>
-              </div>
-            </SwiperSlide>
+            {valyear && (
+              <SwiperSlide className="!w-auto">
+                <div className="flex justify-center px-1 w-auto">
+                  <button
+                    className={`rounded-full text-white text-sm bg-[#00005e] px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                    onClick={() => {
+                      setOpenYearFilter(true);
+                    }}
+                  >
+                    <span>{valyear}</span>
+                    <FaAngleDown />
+                  </button>
+                </div>
+              </SwiperSlide>
+            )}
             <SwiperSlide className="!w-auto">
               <div className="flex justify-center px-1 w-auto">
                 <button
@@ -98,32 +100,36 @@ function FilterMyReport({
                 </button>
               </div>
             </SwiperSlide>
-            <SwiperSlide className="!w-auto">
-              <div className="flex justify-center px-1 w-auto">
-                <button
-                  className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
-                  onClick={() => {
-                    setOpenMounth(true);
-                  }}
-                >
-                  <span>{`${titleM1} - ${titleM2}`}</span>
-                  <FaAngleDown />
-                </button>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide className="!w-auto">
-              <div className="flex justify-center px-1 w-auto">
-                <button
-                  className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
-                  onClick={() => {
-                    setOpenSorting(true);
-                  }}
-                >
-                  <span>{titleSort}</span>
-                  <FaAngleDown />
-                </button>
-              </div>
-            </SwiperSlide>
+            {titleM1 && titleM2 && (
+              <SwiperSlide className="!w-auto">
+                <div className="flex justify-center px-1 w-auto">
+                  <button
+                    className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                    onClick={() => {
+                      setOpenMounth(true);
+                    }}
+                  >
+                    <span>{`${titleM1} - ${titleM2}`}</span>
+                    <FaAngleDown />
+                  </button>
+                </div>
+              </SwiperSlide>
+            )}
+            {titleSort && (
+              <SwiperSlide className="!w-auto">
+                <div className="flex justify-center px-1 w-auto">
+                  <button
+                    className={`rounded-full text-sm bg-[#00005e] text-white px-2 py-1 border flex items-center justify-between gap-1 border-[#0002]`}
+                    onClick={() => {
+                      setOpenSorting(true);
+                    }}
+                  >
+                    <span>{titleSort}</span>
+                    <FaAngleDown />
+                  </button>
+                </div>
+              </SwiperSlide>
+            )}
           </Swiper>
         </div>
       </div>
