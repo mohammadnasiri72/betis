@@ -101,7 +101,7 @@ export default function MainLoginPage({ setClaims, logoImg }) {
           setIsLoading(false);
           Toast.fire({
             icon: 'error',
-            text: err?.response?.data ? err.response.data : 'خطای شبکه',
+            text: err?.response?.data ? err.response.data : 'خطا در برقراری ارتباط با سرور. لطفاً بعداً دوباره امتحان کنید',
             customClass: {
               container: 'toast-modal',
             },
