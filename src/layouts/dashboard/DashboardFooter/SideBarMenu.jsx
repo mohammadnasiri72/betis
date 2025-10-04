@@ -6,7 +6,6 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { CircularProgress, IconButton, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -15,8 +14,10 @@ import Drawer from '@mui/material/Drawer';
 import ListItemButton from '@mui/material/ListItemButton';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { FaCommentAlt } from 'react-icons/fa';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoCloseSharp } from 'react-icons/io5';
+import { RiArtboardFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
 import { useSwipeable } from 'react-swipeable';
 import useSettings from '../../../hooks/useSettings';
@@ -94,6 +95,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
       icon: <HomeIcon sx={{ ml: 1, fontSize: 22 }} />,
       items: [sidebarResident[0]],
     },
+
     {
       group: 'سرویس‌ها',
       icon: <MiscellaneousServicesIcon sx={{ ml: 1, fontSize: 22 }} />,
@@ -116,10 +118,20 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
       icon: <InfoIcon sx={{ ml: 1, fontSize: 22 }} />,
       items: [sidebarResident[7], sidebarResident[8], sidebarResident[9], sidebarResident[10], sidebarResident[13]],
     },
+    // {
+    //   group: 'سایر',
+    //   icon: <MoreHorizIcon sx={{ ml: 1, fontSize: 22 }} />,
+    //   items: [sidebarResident[11], sidebarResident[12]],
+    // },
     {
-      group: 'سایر',
-      icon: <MoreHorizIcon sx={{ ml: 1, fontSize: 22 }} />,
-      items: [sidebarResident[11], sidebarResident[12]],
+      group: 'درخواست‌ها',
+      icon: <FaCommentAlt sx={{ ml: 1, fontSize: 22 }} />,
+      items: [sidebarResident[12]],
+    },
+    {
+      group: 'تابلو اعلانات',
+      icon: <RiArtboardFill sx={{ ml: 1, fontSize: 22 }} />,
+      items: [sidebarResident[11]],
     },
   ];
 
