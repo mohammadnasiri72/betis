@@ -69,7 +69,7 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
   if (stepPage === 0) {
     return (
       <>
-        <div className="px-3 flex items-center">
+        <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
           <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
             بازگشت
           </Button>

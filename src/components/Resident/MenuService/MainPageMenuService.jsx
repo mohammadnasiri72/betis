@@ -300,7 +300,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
 
   return (
     <>
-      <div className="px-3 flex items-center">
+      <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
         <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
@@ -315,7 +315,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
               listService
                 .filter((e) => e.typeId === 2)
                 .map((service) => (
-                  <div key={service?.id} className=" sm:w-1/2 w-full px-1 mt-2">
+                  <div key={service?.id} className="w-full px-1 mt-2">
                     <Card className="w-full h-full flex flex-col justify-between">
                       <div>
                         <CardMedia sx={{ height: 150 }} image={mainDomain + service.imageSrc} title="green iguana" />
