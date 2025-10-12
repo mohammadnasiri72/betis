@@ -342,7 +342,7 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           رزرو خدمات
         </p>
 
-        <StepperReserve levelStepper={levelStepper} setLevelStepper={setLevelStepper}/>
+        <StepperReserve levelStepper={levelStepper} setLevelStepper={setLevelStepper} />
         {levelStepper === 0 && (
           <div className="flex flex-wrap">
             {listService.length > 0 &&
@@ -431,28 +431,21 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
                           </div>
                         )}
                       </div>
-
                       <CardActions
+                        onClick={() => {
+                          handleClickService(service);
+                        }}
                         className={
                           service.isActive
                             ? 'bg-[#495677] w-full px-5 py-1 flex justify-center cursor-pointer duration-300 hover:bg-yellow-500 text-white'
                             : 'bg-red-500 w-full px-5 py-1 flex justify-center cursor-not-allowed text-white'
                         }
                       >
-                        {service.isActive && (
-                          <button
-                            onClick={() => {
-                              handleClickService(service);
-                            }}
-                            className="py-3"
-                          >
-                            مشاهده جزئیات و رزرو
-                          </button>
-                        )}
+                        {service.isActive && <span className="py-3">مشاهده جزئیات و رزرو</span>}
                         {!service.isActive && (
-                          <button disabled className="cursor-not-allowed py-3">
+                          <span disabled className="cursor-not-allowed py-3">
                             موقتا غیر فعال
-                          </button>
+                          </span>
                         )}
                       </CardActions>
                     </Card>
