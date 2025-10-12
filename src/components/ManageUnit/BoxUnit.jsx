@@ -1,6 +1,7 @@
 import { Chip, Collapse, IconButton, Tooltip } from '@mui/material';
 import { useState } from 'react';
-import { FaBlenderPhone, FaCheckCircle, FaEye, FaLaptopHouse, FaPhone } from 'react-icons/fa';
+import { CgDanger } from 'react-icons/cg';
+import { FaBlenderPhone, FaCheckCircle, FaEye, FaLaptopHouse, FaPhone, FaRegCheckCircle } from 'react-icons/fa';
 import { HiCurrencyDollar } from 'react-icons/hi';
 import { ImCancelCircle } from 'react-icons/im';
 import { IoWallet } from 'react-icons/io5';
@@ -29,13 +30,13 @@ function BoxUnit({ unit, setFlag, valBuilding, setShowDetails, setUnitSelected }
           <p className="font-semibold text-sm">{unit.title}</p>
           <div className="flex justify-between px-2">
             <div className="px-1">
+              <Chip size="small" label={`طبقه ${unit.floorNumber}`} />
+            </div>
+            <div className="px-1">
               <Chip size="small" label={`${unit.numResidents} نفر`} />
             </div>
             <div className="px-1">
               <Chip size="small" label={`${unit.area} متر`} />
-            </div>
-            <div className="px-1">
-              <Chip size="small" label={`طبقه ${unit.floorNumber}`} />
             </div>
           </div>
           {(checkClaims(url.pathname, 'delete') || checkClaims(url.pathname, 'put')) && (
@@ -149,7 +150,6 @@ function BoxUnit({ unit, setFlag, valBuilding, setShowDetails, setUnitSelected }
           </div>
         </Collapse>
 
-      
         <div className="mt-2">
           <div
             className={` text-white rounded-b-lg p-2 flex justify-between items-center !text-sm ${
@@ -162,7 +162,12 @@ function BoxUnit({ unit, setFlag, valBuilding, setShowDetails, setUnitSelected }
               <span>تومان</span>
             </div>
             {Number(unit.depositBalance) > 0 && Number(unit.debtBalance * -1) > 0 && (
-              <div>
+              <div className="flex items-center gap-2">
+                {Number(unit.depositBalance) < Number(unit.debtBalance * -1) ? (
+                  <CgDanger className="text-white text-xl" />
+                ) : (
+                  <FaRegCheckCircle className="text-white text-[18px]" />
+                )}
                 <Tooltip title={`موجودی کیف پول : ${numberWithCommas(unit.depositBalance)} تومان`}>
                   <IconButton sx={{ p: 0, m: 0 }}>
                     <MdOutlineAccountBalanceWallet className="text-white text-[18px]" />
