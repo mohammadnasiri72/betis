@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import CloseIcon from '@mui/icons-material/Close';
-import { Stack } from '@mui/material';
+import { MenuItem, Stack } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,9 +10,10 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import * as React from 'react';
 import { HiOutlineExclamation } from 'react-icons/hi';
+import { MdOutlineDelete } from 'react-icons/md';
 import Swal from 'sweetalert2';
-import { mainDomain } from '../../utils/mainDomain';
 import useSettings from '../../hooks/useSettings';
+import { mainDomain } from '../../utils/mainDomain';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -79,9 +80,13 @@ export default function ModalDeleteUnit({ handleCloseMenu, unit, setFlag, setIsL
 
   return (
     <>
-      <Stack onClick={handleClickOpen} className="px-1 text-red-500">
+      {/* <Stack onClick={handleClickOpen} className="px-1 text-red-500">
         حذف
-      </Stack>
+      </Stack> */}
+      <MenuItem onClick={handleClickOpen}>
+        <MdOutlineDelete className="text-red-500" />
+        <Stack className="px-1 text-red-500">حذف</Stack>
+      </MenuItem>
       <BootstrapDialog
         sx={{ minHeight: 600, top: 70 }}
         onClose={handleClose}
@@ -121,16 +126,20 @@ export default function ModalDeleteUnit({ handleCloseMenu, unit, setFlag, setIsL
               </span>
             </Stack>
             <div className="text-start px-3">
-              <h4 style={{color: themeMode==='dark'? '#fff' : '#000'}}>حذف واحد</h4>
-              <p className={themeMode==='dark'? "text-[#fff8]" : "text-[#0008]"}>آیا از حذف مطمئن هستید؟</p>
+              <h4 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>حذف واحد</h4>
+              <p className={themeMode === 'dark' ? 'text-[#fff8]' : 'text-[#0008]'}>آیا از حذف مطمئن هستید؟</p>
             </div>
           </div>
         </DialogContent>
-        <DialogActions sx={{ backgroundColor: themeMode==='dark'? '#212b46' : '#f3f4f6' }}>
+        <DialogActions sx={{ backgroundColor: themeMode === 'dark' ? '#212b46' : '#f3f4f6' }}>
           <div className="flex items-center justify-start w-full">
-          <button
+            <button
               onClick={handleClose}
-              className={themeMode==='dark'? "border bg-[#212b36] px-3 py-1 rounded-lg border-[#0002] duration-300 hover:bg-slate-700" : "border  px-3 py-1 rounded-lg border-[#0002] duration-300 hover:bg-slate-50"}
+              className={
+                themeMode === 'dark'
+                  ? 'border bg-[#212b36] px-3 py-1 rounded-lg border-[#0002] duration-300 hover:bg-slate-700'
+                  : 'border  px-3 py-1 rounded-lg border-[#0002] duration-300 hover:bg-slate-50'
+              }
             >
               انصراف
             </button>

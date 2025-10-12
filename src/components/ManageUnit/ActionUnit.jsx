@@ -61,10 +61,11 @@ export default function ActionUnit({ unit, setFlag, valBuilding, setShowDetails,
         )}
 
         {checkClaims(url.pathname, 'delete') && (
-          <MenuItem>
-            <MdOutlineDelete className="text-red-500" />
-            <ModalDeleteUnit handleCloseMenu={handleClose} unit={unit} setFlag={setFlag} setIsLoading={setIsLoading} />
-          </MenuItem>
+          // <MenuItem>
+          //   <MdOutlineDelete className="text-red-500" />
+          //   <ModalDeleteUnit handleCloseMenu={handleClose} unit={unit} setFlag={setFlag} setIsLoading={setIsLoading} />
+          // </MenuItem>
+          <ModalDeleteUnit handleCloseMenu={handleClose} unit={unit} setFlag={setFlag} setIsLoading={setIsLoading} />
         )}
         {checkClaims(url.pathname, 'put') && (
           <MenuItem onClick={() => setOpenModalDeposit(true)}>

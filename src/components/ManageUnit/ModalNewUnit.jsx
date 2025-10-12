@@ -118,6 +118,18 @@ export default function ModalNewUnit({ valBuilding, setFlag }) {
     setErrTitle(false);
   };
 
+  const resetState2 = () => {
+    setNumber2('');
+    setErrNumber2(false);
+    setErrNumberUnit(false);
+    setErrArea2(false);
+    setErrStartFloor(false);
+    setNumberUnit(1);
+    setStartFloor(1);
+    setValTypeBuilding2(1);
+    setArea2(100);
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -225,7 +237,6 @@ export default function ModalNewUnit({ valBuilding, setFlag }) {
     }
 
     if (startFloor && number2 && numberUnit && area2) {
-      setErrMessage('');
       setOpenModalConfirm(true);
     } else {
       setErrMessage('لطفا فیلد های اجباری را وارد کنید');
@@ -234,6 +245,7 @@ export default function ModalNewUnit({ valBuilding, setFlag }) {
 
   const submitUnitsHandler = () => {
     setIsLoading2(true);
+    handleCloseModalConfirm();
     const data = {
       buildingId: valBuilding?.id,
       startFloor,
@@ -249,9 +261,8 @@ export default function ModalNewUnit({ valBuilding, setFlag }) {
         },
       })
       .then(() => {
-        resetState();
-        handleClose();
-        handleCloseModalConfirm();
+        resetState2();
+        handleClose2();
         setIsLoading2(false);
         setFlag((e) => !e);
         Toast.fire({
