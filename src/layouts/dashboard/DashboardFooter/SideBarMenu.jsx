@@ -116,7 +116,7 @@ export default function SideBarMenu({ logoImg, open, setOpen, setFlagRefreshPage
     {
       group: 'اطلاعات من',
       icon: <InfoIcon sx={{ ml: 1, fontSize: 22 }} />,
-      items: [sidebarResident[7], sidebarResident[8], sidebarResident[9], sidebarResident[10], sidebarResident[13]],
+      items: [sidebarResident[10], sidebarResident[13], sidebarResident[8], sidebarResident[9], sidebarResident[7]],
     },
     // {
     //   group: 'سایر',

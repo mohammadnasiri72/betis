@@ -342,15 +342,23 @@ export default function MainPageReservServices({ accountResident, flagRefreshPag
           رزرو خدمات
         </p>
 
-        <StepperReserve levelStepper={levelStepper} />
+        <StepperReserve levelStepper={levelStepper} setLevelStepper={setLevelStepper}/>
         {levelStepper === 0 && (
           <div className="flex flex-wrap">
             {listService.length > 0 &&
               listService
                 .filter((e) => e.typeId !== 2)
                 .map((service) => (
-                  <div key={service?.id} className="w-full px-1 mt-4">
-                    <Card className="w-full h-full flex flex-col justify-between">
+                  <div key={service?.id} className="w-full px-1 !mt-4">
+                    <Card
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      }}
+                    >
                       <div>
                         <CardMedia sx={{ height: 150 }} image={mainDomain + service.imageSrc} title="green iguana" />
 

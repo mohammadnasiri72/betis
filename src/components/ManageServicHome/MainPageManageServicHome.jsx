@@ -41,8 +41,6 @@ function MainPageManageServicHome() {
     label: value,
   }));
 
-
-
   const { themeMode } = useSettings();
   const url = useLocation();
 
@@ -94,6 +92,7 @@ function MainPageManageServicHome() {
         });
     }
   }, [valBuilding?.id]);
+
 
   useEffect(() => {
     if (valBuilding?.id) {
@@ -239,7 +238,7 @@ function MainPageManageServicHome() {
         )}
       </div>
       <div className="px-5">
-        <TabStatus valueTab={valueTab} setValueTab={setValueTab} numTab0={numTab0} setFlag={setFlag}/>
+        <TabStatus valueTab={valueTab} setValueTab={setValueTab} numTab0={numTab0} setFlag={setFlag} />
       </div>
 
       {listMyServicHome

@@ -1,18 +1,13 @@
-
-import { Box, CircularProgress, Divider, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
 import { toGregorian } from 'jalaali-js';
 import { useState } from 'react';
 import useSettings from '../../../hooks/useSettings';
 import ModalCancelReserv from '../MyReserve/ModalCancelReserv';
 import Timer from './Timer';
 
-export default function CardMyReserve({ listService, myReserve, setFlag, isLoading,
-  setIsLoading, }) {
+export default function CardMyReserve({ listService, myReserve, setFlag, isLoading, setIsLoading }) {
   const { themeMode } = useSettings();
   const [isCancel, setIsCancel] = useState(false);
-
-
-
 
   const convertToDateTime = (jalaliDate, time) => {
     // تقسیم تاریخ شمسی به سال، ماه و روز
@@ -61,21 +56,19 @@ export default function CardMyReserve({ listService, myReserve, setFlag, isLoadi
   //   );
   // }
 
-
   return (
     <>
       <div className="px-1">
         <Divider />
 
-
-        <div
-          className='w-full py-2 px-1 flex items-center justify-between'
-        >
+        <div className="w-full py-2 px-1 flex items-center justify-between">
           <div className="flex items-center flex-wrap">
             <span className="font-medium px-1 text-sm max-w-96 min-w-52 text-start">
               مانده تا شروع وقت {listService.find((e) => e.id === myReserve.serviceTime.serviceId)?.title} :
             </span>
-            <Timer date={convertToDateTime(myReserve.dateFa, myReserve.startTime)} />
+            <div className="pt-2">
+              <Timer date={convertToDateTime(myReserve.dateFa, myReserve.startTime)} />
+            </div>
           </div>
           {/* آیکون حذف رزرو */}
           <div className="ml-2 ">
@@ -87,9 +80,6 @@ export default function CardMyReserve({ listService, myReserve, setFlag, isLoadi
             />
           </div>
         </div>
-
-
-
       </div>
     </>
   );

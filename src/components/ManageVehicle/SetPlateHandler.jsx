@@ -231,7 +231,7 @@ const SetPlateHandler = ({
                   }}
                   value={part3}
                 />
-                <div className="  border-l border-[#0008] relative w-1/4 h-full">
+                <div className="border-l border-[#0008] relative w-1/4 h-full">
                   <span className="text-xs rotate-90  absolute top-1/2 -translate-y-1/2 left-0 font-semibold">
                     ایران
                   </span>

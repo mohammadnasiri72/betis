@@ -6,7 +6,7 @@ import { BiSolidConversation } from 'react-icons/bi';
 import { FaUsers, FaUserTie } from 'react-icons/fa';
 import { GiPayMoney } from 'react-icons/gi';
 import { IoFastFood } from 'react-icons/io5';
-import { MdTimer } from 'react-icons/md';
+import { MdOutlineRealEstateAgent, MdTimer } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
@@ -20,8 +20,8 @@ export default function MainHomePage() {
   const [totalCount3, setTotalCount3] = useState(0);
   const [totalCount4, setTotalCount4] = useState(0);
   const [totalCount5, setTotalCount5] = useState(0);
+  const [totalCount6, setTotalCount6] = useState(0);
   const [listFeedback, setListFeedback] = useState([]);
-  const [flag, setFlag] = useState(false);
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
   const { themeMode } = useSettings();
   // get list building & yearId
@@ -155,6 +155,23 @@ export default function MainHomePage() {
           })
           .then((res) => {
             setTotalCount5(res.data.totalCount);
+          })
+          .catch(() => {});
+      }
+
+      if (localStorage.getItem('claims').includes('admin-realstate:get') || localStorage.getItem('roles') === 'Admin') {
+        axios
+          .get(`${mainDomain}/api/RealEstate/GetList`, {
+            params: {
+              unitId: -1,
+              statusId: 0,
+            },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          })
+          .then((res) => {
+            setTotalCount6(res.data.length);
           })
           .catch(() => {});
       }
@@ -369,6 +386,40 @@ export default function MainHomePage() {
                         navigate('/dashboard/admin-guest', {
                           state: { myData: 1 },
                         });
+                      }}
+                      className="text-white bg-[#495677] rounded-lg p-2 text-sm whitespace-nowrap"
+                    >
+                      بررسی لیست
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {(localStorage.getItem('claims').includes('admin-guest:get') || localStorage.getItem('roles') === 'Admin') && (
+          <div className="sm:w-1/2 w-full px-1 mt-3">
+            <div className="border rounded-lg p-2">
+              <div className="bg-[#495677] rounded-lg p-2 text-white flex justify-between items-center">
+                <div className="flex items-center">
+                  <MdOutlineRealEstateAgent />
+                  <span className="px-1">خدمات املاک منتظر تایید</span>
+                </div>
+              </div>
+              <div className="flex justify-center items-center">
+                <img className="h-36" src="/images/11668826_20945390.svg" alt="" />
+              </div>
+              <div className="flex justify-center items-center">
+                <div className="border-dashed border border-[#495677] rounded-lg p-2 w-full">
+                  <div className="flex px-2 justify-between items-center">
+                    <div className="flex items-center">
+                      <span className="px-1 font-semibold text-red-500">{totalCount6}</span>
+                      <span className="text-sm whitespace-nowrap">خدمت منتظر تایید</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigate('/dashboard/admin-realState');
                       }}
                       className="text-white bg-[#495677] rounded-lg p-2 text-sm whitespace-nowrap"
                     >

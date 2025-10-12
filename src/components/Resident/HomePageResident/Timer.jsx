@@ -1,4 +1,3 @@
-import React from 'react';
 import Countdown from 'react-countdown';
 
 export default function Timer({ date }) {
@@ -12,20 +11,28 @@ export default function Timer({ date }) {
         renderer={({ days, hours, minutes, seconds }) => (
           <div style={{ color: days === 0 ? 'red' : '' }} className="flex justify-between px-2 items-center gap-2">
             <div className="rounded-lg w-1/4 flex flex-col">
-              <div className="bg-white text-black py-2 px-3 rounded-xl w-10">{seconds}</div>
-              <p style={{ fontSize: '10px' }}>ثانیه</p>
+              <div className="bg-white text-black rounded-xl w-10 h-10 flex justify-center items-center">
+                {seconds}
+              </div>
+              <p style={{ fontSize: '10px', marginTop: '5px' }}>ثانیه</p>
             </div>
             <div className="rounded-lg w-1/4 flex flex-col">
-              <span className="bg-white text-black py-2 px-3 rounded-xl w-10">{minutes}</span>
-              <p style={{ fontSize: '10px' }}>دقیقه</p>
+              <span className="bg-white text-black rounded-xl w-10 h-10 flex justify-center items-center">
+                {minutes}
+              </span>
+              <p style={{ fontSize: '10px', marginTop: '5px' }}>دقیقه</p>
             </div>
             <div className="rounded-lg w-1/4 flex flex-col">
-              <span className="bg-white text-black py-2 px-3 rounded-xl w-10">{hours}</span>
-              <p style={{ fontSize: '10px' }}>ساعت</p>
+              <span className="bg-white text-black py-2 px-3 rounded-xl w-10 flex justify-center items-center">
+                {hours}
+              </span>
+              <p style={{ fontSize: '10px', marginTop: '5px' }}>ساعت</p>
             </div>
             <div className="rounded-lg w-1/4 flex flex-col">
-              <span className="bg-white text-black py-2 px-3 rounded-xl w-10">{days}</span>
-              <p style={{ fontSize: '10px' }}>روز</p>
+              <span className="bg-white text-black py-2 px-3 rounded-xl w-10 flex justify-center items-center">
+                {days}
+              </span>
+              <p style={{ fontSize: '10px', marginTop: '5px' }}>روز</p>
             </div>
           </div>
         )}

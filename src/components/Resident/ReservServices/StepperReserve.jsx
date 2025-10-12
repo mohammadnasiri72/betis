@@ -10,8 +10,6 @@ import Stepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
-
-
 const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#eaeaf0',
   display: 'flex',
@@ -38,11 +36,7 @@ function QontoStepIcon(props) {
 
   return (
     <QontoStepIconRoot ownerState={{ active }} className={className}>
-      {completed ? (
-        <Check className="QontoStepIcon-completedIcon" />
-      ) : (
-        <div className="QontoStepIcon-circle" />
-      )}
+      {completed ? <Check className="QontoStepIcon-completedIcon" /> : <div className="QontoStepIcon-circle" />}
     </QontoStepIconRoot>
   );
 }
@@ -67,21 +61,18 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(23 37 84) 0%, rgb(29 78 216)50%,rgb(138,35,135) 100%)',
+      backgroundImage: 'linear-gradient( 95deg,rgb(23 37 84) 0%, rgb(29 78 216)50%,rgb(138,35,135) 100%)',
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundImage:
-        'linear-gradient( 95deg,rgb(23 37 84) 0%, rgb(29 78 216)50%,rgb(138,35,135) 100%)',
+      backgroundImage: 'linear-gradient( 95deg,rgb(23 37 84) 0%, rgb(29 78 216)50%,rgb(138,35,135) 100%)',
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
     height: 3,
     border: 0,
-    backgroundColor:
-      theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
     borderRadius: 1,
   },
 }));
@@ -97,13 +88,11 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   ...(ownerState.active && {
-    backgroundImage:
-      'linear-gradient( 136deg,  rgb(23 37 84)0%,  rgb(29 78 216)50%, rgb(138,35,135) 100%)',
+    backgroundImage: 'linear-gradient( 136deg,  rgb(23 37 84)0%,  rgb(29 78 216)50%, rgb(138,35,135) 100%)',
     boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
   }),
   ...(ownerState.completed && {
-    backgroundImage:
-      'linear-gradient( 136deg,rgb(23 37 84)  0%, rgb(29 78 216) 50%, rgb(138,35,135) 100%)',
+    backgroundImage: 'linear-gradient( 136deg,rgb(23 37 84)  0%, rgb(29 78 216) 50%, rgb(138,35,135) 100%)',
   }),
 }));
 
@@ -143,14 +132,23 @@ ColorlibStepIcon.propTypes = {
 
 const steps = ['انتخاب سرویس', 'رزرو زمان', 'تایید نهایی'];
 
-export default function StepperReserve({levelStepper}) {
+export default function StepperReserve({ levelStepper, setLevelStepper }) {
   return (
     <Stack sx={{ width: '100%' }} spacing={4}>
-     
       <Stepper alternativeLabel activeStep={levelStepper} connector={<ColorlibConnector />}>
-        {steps.map((label) => (
+        {steps.map((label, i) => (
           <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+            <StepLabel
+              sx={{ cursor: 'pointer' }}
+              onClick={() => {
+                if (levelStepper >= i) {
+                  setLevelStepper(i);
+                }
+              }}
+              StepIconComponent={ColorlibStepIcon}
+            >
+              {label}
+            </StepLabel>
           </Step>
         ))}
       </Stepper>

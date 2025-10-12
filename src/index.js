@@ -20,14 +20,14 @@ import App from './App';
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
-    <HelmetProvider>
-      <SettingsProvider>
-        <CollapseDrawerProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CollapseDrawerProvider>
-      </SettingsProvider>
-    </HelmetProvider>,
+  <HelmetProvider>
+    <SettingsProvider>
+      <CollapseDrawerProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CollapseDrawerProvider>
+    </SettingsProvider>
+  </HelmetProvider>,
   document.getElementById('root')
 );

@@ -4,15 +4,14 @@ import { TimelineConnector, TimelineContent, TimelineDot, TimelineSeparator } fr
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import { Chip } from '@mui/material';
+import { Chip, IconButton, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import * as React from 'react';
 import { BiMaleFemale } from 'react-icons/bi';
 import { FaCheckCircle, FaEye, FaFemale, FaMale } from 'react-icons/fa';
 import { MdCancel } from 'react-icons/md';
-import { mainDomain } from '../../../utils/mainDomain';
 import useSettings from '../../../hooks/useSettings';
+import { mainDomain } from '../../../utils/mainDomain';
 
 export default function TimeLineReserve({
   listServiceTime,
@@ -25,6 +24,7 @@ export default function TimeLineReserve({
   setIsLoading,
 }) {
   const { themeMode } = useSettings();
+
 
   const showDateHandler = (e) => {
     setIsLoading(true);
@@ -70,16 +70,31 @@ export default function TimeLineReserve({
       {listServiceTime
         .filter((e) => e.isActive)
         .map((e, i) => (
-          <TimelineItem key={i}>
+          <TimelineItem
+            className="hover:bg-slate-50 duration-300"
+            key={i}
+            sx={{
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 0,
+                left: () => (i % 2 === 0 ? 'auto' : '0%'),
+                right: () => (i % 2 !== 0 ? '0%' : 'auto'),
+                width: '50%',
+                height: '2px',
+                backgroundColor: '#0002',
+              },
+            }}
+          >
             <TimelineOppositeContent
               sx={{ m: 'auto 0', padding: 0 }}
               align="right"
               variant="body2"
               color="text.secondary"
             >
-              <div className="flex flex-col items-center justify-start">
+              <div className="flex flex-col items-center justify-start ">
                 <Typography variant="h6" component="span">
-                  <div className="flex justify-center items-center -mt-5">
+                  <div className="flex justify-center items-center -mt-5 ">
                     <div className={themeMode === 'dark' ? 'text-white' : 'text-[#495677]'}>
                       {e.dayOfWeek === 0
                         ? 'یکشنبه'
@@ -97,13 +112,8 @@ export default function TimeLineReserve({
                     </div>
                   </div>
                 </Typography>
-                {/* <Chip
-                  size="small"
-                  label={`${e.startTime.slice(0, 5)} تا ${e.endTime.slice(0, 5)}`}
-                  icon={<MdAccessTime />}
-                /> */}
+
                 <div className="flex items-center bg-[#edeff2] rounded-2xl px-2 py-1 text-sm font-semibold">
-                  {/* <MdAccessTime className="text-xl" /> */}
                   <span className="pr-1 text-[#495677]">
                     {e.endTime.slice(0, 5)} تا {e.startTime.slice(0, 5)}
                   </span>
@@ -111,7 +121,6 @@ export default function TimeLineReserve({
                 <div className="flex justify-start mt-2">
                   <Chip
                     size="small"
-                    // color="primary"
                     label={
                       e.genderType === 'm'
                         ? `مردانه - ${e.capacity} نفر`
@@ -130,42 +139,35 @@ export default function TimeLineReserve({
                     }
                   />
                 </div>
+                {e.sharedUse && (
+                  <div className="flex justify-start mt-2">
+                    <Chip size="small" color="primary" label="اشتراکی" />
+                  </div>
+                )}
               </div>
             </TimelineOppositeContent>
 
-            {/* <ViewDetailsReserve
-              setServiceTime={setServiceTime}
-              e={e}
-              listDateTime={listDateTime}
-              setSelectedDateFa={setSelectedDateFa}
-              isLoading={isLoading}
-              setStartTime={setStartTime}
-              setEndTime={setEndTime}
-              setLevelStepper={setLevelStepper}
-              setIsLoading={setIsLoading}
-              servic={servic}
-              setDayReserve={setDayReserve}
-              setServiceTimeId={setServiceTimeId}
-            /> */}
             <TimelineSeparator>
-              <TimelineConnector className="h-40" />
+              <TimelineConnector className="h-14" />
               <TimelineDot sx={{ backgroundColor: '#495677' }}>
-                <FaEye
-                  onClick={() => {
-                    // setServiceTime(e);
-                    // setServiceTimeId(e.id);
-
-                    showDateHandler(e);
-                  }}
-                  className="cursor-pointer text-3xl hover:text-white duration-300"
-                />
+                <Tooltip title="مشاهده جزئیات">
+                  <IconButton
+                    className="group !p-0 !m-0"
+                    onClick={() => {
+                      showDateHandler(e);
+                    }}
+                  >
+                    <FaEye className="cursor-pointer text-2xl text-white duration-300 group-hover:text-blue-500" />
+                  </IconButton>
+                </Tooltip>
               </TimelineDot>
+              <TimelineConnector className="h-14" />
 
               <TimelineConnector />
             </TimelineSeparator>
 
             <TimelineContent sx={{ m: 'auto 0', padding: 0 }} align="left" variant="body2" color="text.secondary">
-              <div className="items-center flex-col text-slate-200">
+              <div className="items-center flex-col text-slate-200 mx-3">
                 <div
                   style={{
                     color: e.hasGuest ? 'rgb(5 150 105)' : 'rgb(100 116 139)',
@@ -207,8 +209,6 @@ export default function TimeLineReserve({
                   <span className="px-1">واحد خالی</span>
                 </div>
               </div>
-
-           
             </TimelineContent>
           </TimelineItem>
         ))}
