@@ -25,7 +25,6 @@ export default function TimeLineReserve({
 }) {
   const { themeMode } = useSettings();
 
-
   const showDateHandler = (e) => {
     setIsLoading(true);
     setLevelStepper(2);
@@ -115,7 +114,7 @@ export default function TimeLineReserve({
 
                 <div className="flex items-center bg-[#edeff2] rounded-2xl px-2 py-1 text-sm font-semibold">
                   <span className="pr-1 text-[#495677]">
-                    {e.endTime.slice(0, 5)} تا {e.startTime.slice(0, 5)}
+                    {e.startTime.slice(0, 5)} تا {e.endTime.slice(0, 5)}
                   </span>
                 </div>
                 <div className="flex justify-start mt-2">
