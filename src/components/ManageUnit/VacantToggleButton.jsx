@@ -1,7 +1,81 @@
-import { Grid } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { styled } from '@mui/material/styles';
+
+// استایل سفارشی برای دکمه‌ها
+const CustomToggleButton = styled(ToggleButton)(({ theme }) => ({
+  flex: 1,
+  padding: '0px',
+  border: 'none !important',
+  borderRadius: '0px !important',
+  margin: '0 !important',
+  fontWeight: 600,
+  fontSize: '12px',
+  textTransform: 'none',
+  transition: 'all 0.2s ease',
+  minHeight: '28px',
+
+  '&.Mui-selected': {
+    backgroundColor: '#4CAF50 !important',
+    color: 'white !important',
+
+    '&:hover': {
+      backgroundColor: '#45a049 !important',
+    },
+  },
+
+  '&:not(.Mui-selected)': {
+    backgroundColor: '#f5f5f5',
+    color: '#666666',
+
+    '&:hover': {
+      backgroundColor: '#e0e0e0',
+    },
+  },
+}));
+
+// استایل برای وضعیت (default) که سبز نمی‌شود
+const StatusToggleButton = styled(ToggleButton)(({ theme }) => ({
+  flex: 1,
+  padding: '0px',
+  border: 'none !important',
+  borderRadius: '0px !important',
+  margin: '0 !important',
+  fontWeight: 600,
+  fontSize: '12px',
+  textTransform: 'none',
+  transition: 'all 0.2s ease',
+  minHeight: '28px',
+
+  '&.Mui-selected': {
+    backgroundColor: '#f5f5f5 !important',
+    color: '#666666 !important',
+
+    '&:hover': {
+      backgroundColor: '#f5f5f5 !important',
+    },
+  },
+
+  '&:not(.Mui-selected)': {
+    backgroundColor: '#f5f5f5',
+    color: '#666666',
+
+    '&:hover': {
+      backgroundColor: '#e0e0e0',
+    },
+  },
+}));
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  display: 'flex',
+  padding: '0',
+  backgroundColor: '#ffffff',
+  borderRadius: '8px',
+  border: '1px solid #e0e0e0',
+  gap: '1px',
+  width: '100%',
+}));
 
 export default function VacantToggleButton({ vacant, setVacant }) {
   const handleVacant = (event, newVacant) => {
@@ -10,44 +84,23 @@ export default function VacantToggleButton({ vacant, setVacant }) {
     }
   };
 
+  const currentValue = vacant || 'default';
+
   return (
-    <Stack direction="row" spacing={4}>
-      <ToggleButtonGroup
-        style={{ border: '2px solid #0002' }}
-        sx={{
-          '& .MuiToggleButtonGroup-grouped': {
-            borderRadius: '0px !important',
-            margin: 0,
-          },
-          '& .MuiSwitch-track': {
-            borderRadius: '0px !important',
-          },
-        }}
-        className=" w-full"
-        value={vacant}
-        exclusive
-        onChange={handleVacant}
-        aria-label="text alignment"
-      >
-        <Grid container style={{ borderLeft: '2px solid #0002',width: '33.33333%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', p: '0 !important' }}>
+      <StyledToggleButtonGroup value={currentValue} exclusive onChange={handleVacant} aria-label="وضعیت ظرفیت">
+        <CustomToggleButton value="empty" aria-label="خالی">
+          <span className="py-0">خالی</span>
+        </CustomToggleButton>
 
-        <ToggleButton className="w-full" value="empty" aria-label="left aligned">
-          <span>خالی</span>
-        </ToggleButton>
-        </Grid>
-        <Grid container style={{ borderLeft: '2px solid #0002' , width: '33.33333%'}}>
-          
-        <ToggleButton className="w-full" value="default" aria-label="centered">
-          <span>وضعیت</span>
-        </ToggleButton>
-        </Grid>
-        <Grid style={{width: '33.33333%'}}>
+        <StatusToggleButton value="default" aria-label="وضعیت">
+          <span className="py-0">وضعیت</span>
+        </StatusToggleButton>
 
-        <ToggleButton className="w-full" value="full" aria-label="right aligned">
-          <span>پر</span>
-        </ToggleButton>
-        </Grid>
-      </ToggleButtonGroup>
-    </Stack>
+        <CustomToggleButton value="full" aria-label="پر">
+          <span className="py-0">پر</span>
+        </CustomToggleButton>
+      </StyledToggleButtonGroup>
+    </Box>
   );
 }

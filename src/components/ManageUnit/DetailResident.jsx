@@ -149,7 +149,7 @@ export default function DetailResident({ showDetails, setShowDetails, unit }) {
         <div className="flex justify-between">
           <div className="p-3 text-start">
             <p className="font-semibold">{unit.title}</p>
-            <p className="text-xs">مالک: {unit.residentNameFamily ? unit.residentNameFamily : 'نامشخص'}</p>
+            <p className="text-xs">{unit.residentNameFamily ? unit.residentNameFamily : 'مشخص نشده'}</p>
 
             <div className="flex justify-between px-2 mt-2">
               <div className="px-1">

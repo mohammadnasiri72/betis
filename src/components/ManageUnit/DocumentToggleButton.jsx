@@ -1,7 +1,81 @@
-import { Grid } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import { Box } from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { styled } from '@mui/material/styles';
+
+// استایل سفارشی برای دکمه‌ها
+const CustomToggleButton = styled(ToggleButton)(({ theme }) => ({
+  flex: 1,
+  padding: '0px',
+  border: 'none !important',
+  borderRadius: '0px !important',
+  margin: '0 !important',
+  fontWeight: 600,
+  fontSize: '12px',
+  textTransform: 'none',
+  transition: 'all 0.2s ease',
+  minHeight: '28px',
+
+  '&.Mui-selected': {
+    backgroundColor: '#4CAF50 !important',
+    color: 'white !important',
+
+    '&:hover': {
+      backgroundColor: '#45a049 !important',
+    },
+  },
+
+  '&:not(.Mui-selected)': {
+    backgroundColor: '#f5f5f5',
+    color: '#666666',
+
+    '&:hover': {
+      backgroundColor: '#e0e0e0',
+    },
+  },
+}));
+
+// استایل برای سند (default) که سبز نمی‌شود
+const StatusToggleButton = styled(ToggleButton)(({ theme }) => ({
+  flex: 1,
+  padding: '0px',
+  border: 'none !important',
+  borderRadius: '0px !important',
+  margin: '0 !important',
+  fontWeight: 600,
+  fontSize: '12px',
+  textTransform: 'none',
+  transition: 'all 0.2s ease',
+  minHeight: '28px',
+
+  '&.Mui-selected': {
+    backgroundColor: '#f5f5f5 !important',
+    color: '#666666 !important',
+
+    '&:hover': {
+      backgroundColor: '#f5f5f5 !important',
+    },
+  },
+
+  '&:not(.Mui-selected)': {
+    backgroundColor: '#f5f5f5',
+    color: '#666666',
+
+    '&:hover': {
+      backgroundColor: '#e0e0e0',
+    },
+  },
+}));
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  display: 'flex',
+  padding: '0',
+  backgroundColor: '#ffffff',
+  borderRadius: '8px',
+  border: '1px solid #e0e0e0',
+  gap: '1px',
+  width: '100%',
+}));
 
 export default function DocumentToggleButton({ setDocument, document }) {
   const handleDocument = (event, newDocument) => {
@@ -10,41 +84,23 @@ export default function DocumentToggleButton({ setDocument, document }) {
     }
   };
 
+  const currentValue = document || 'default';
+
   return (
-    <Stack direction="row" spacing={0}>
-      <ToggleButtonGroup
-        style={{ border: '2px solid #0002' }}
-        sx={{
-          '& .MuiToggleButtonGroup-grouped': {
-            borderRadius: '0px !important',
-            margin: 0,
-          },
-          '& .MuiSwitch-track': {
-            borderRadius: '0px !important',
-          },
-        }}
-        className="w-full"
-        value={document}
-        exclusive
-        onChange={handleDocument}
-        aria-label="text alignment"
-      >
-        <Grid container style={{ borderLeft: '2px solid #0002' , width:'33.33333%'}}>
-          <ToggleButton aria-label="bold" style={{ border: 'none' }} className="w-full" value="empty">
-            <span>ندارد</span>
-          </ToggleButton>
-        </Grid>
-        <Grid container style={{ borderLeft: '2px solid #0002' ,  width:'33.33333%' }}>
-          <ToggleButton className="w-full" value="default" aria-label="centered">
-            <span>سند</span>
-          </ToggleButton>
-        </Grid>
-        <Grid container style={{ width:'33.33333%'}}>
-          <ToggleButton className="w-full" value="full" aria-label="right aligned">
-            <span>دارد</span>
-          </ToggleButton>
-        </Grid>
-      </ToggleButtonGroup>
-    </Stack>
+    <Box sx={{ display: 'flex', justifyContent: 'center', p: '0 !important' }}>
+      <StyledToggleButtonGroup value={currentValue} exclusive onChange={handleDocument} aria-label="وضعیت سند">
+        <CustomToggleButton value="empty" aria-label="ندارد">
+          <span className="py-0">ندارد</span>
+        </CustomToggleButton>
+
+        <StatusToggleButton value="default" aria-label="سند">
+          <span className="py-0">سند</span>
+        </StatusToggleButton>
+
+        <CustomToggleButton value="full" aria-label="دارد">
+          <span className="py-0">دارد</span>
+        </CustomToggleButton>
+      </StyledToggleButtonGroup>
+    </Box>
   );
 }

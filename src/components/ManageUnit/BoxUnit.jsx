@@ -5,6 +5,7 @@ import { HiCurrencyDollar } from 'react-icons/hi';
 import { ImCancelCircle } from 'react-icons/im';
 import { IoWallet } from 'react-icons/io5';
 import { LuChevronsDown } from 'react-icons/lu';
+import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
 import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
@@ -63,12 +64,12 @@ function BoxUnit({ unit, setFlag, valBuilding, setShowDetails, setUnitSelected }
 
             <Tooltip title={openDetails ? 'بستن جزئیات' : 'نمایش جزئیات بیشتر'}>
               <IconButton
-                sx={{ backgroundColor: '#dbeafe', p: 1, m: 0, '&:hover': { backgroundColor: '#bfdbfe ' } }}
+                sx={{ backgroundColor: '#dbeafe', p: 0, m: 0, '&:hover': { backgroundColor: '#bfdbfe ' } }}
                 onClick={() => {
                   setOpenDetails((e) => !e);
                 }}
               >
-                <LuChevronsDown className={`text-xl text-blue-500 ${openDetails ? 'rotate-180' : ''}`} />
+                <LuChevronsDown className={`text-2xl p-1 text-blue-500 ${openDetails ? 'rotate-180' : ''}`} />
               </IconButton>
             </Tooltip>
           </div>
@@ -148,29 +149,28 @@ function BoxUnit({ unit, setFlag, valBuilding, setShowDetails, setUnitSelected }
           </div>
         </Collapse>
 
+      
         <div className="mt-2">
-          {Number(unit.depositBalance) - Number(unit.debtBalance * -1) > 0 && (
-            <div className="bg-emerald-500 text-white rounded-b-lg p-2">
-              <span className="px-1 font-semibold">
-                {numberWithCommas(Number(unit.depositBalance) - Number(unit.debtBalance * -1))}
-              </span>
-              <span>تومان بستانکار</span>
+          <div
+            className={` text-white rounded-b-lg p-2 flex justify-between items-center !text-sm ${
+              unit.debtBalance * -1 > 0 ? 'bg-red-500' : 'bg-emerald-500'
+            }`}
+          >
+            <div>
+              <span>بدهی :</span>
+              <span className="px-2 font-semibold">{numberWithCommas(unit.debtBalance * -1)}</span>
+              <span>تومان</span>
             </div>
-          )}
-          {Number(unit.depositBalance) - Number(unit.debtBalance * -1) === 0 && (
-            <div className="bg-emerald-500 text-white rounded-b-lg p-2">
-              <span className="px-1 font-semibold">0</span>
-              <span>تومان </span>
-            </div>
-          )}
-          {Number(unit.depositBalance) - Number(unit.debtBalance * -1) < 0 && (
-            <div className="bg-red-500 text-white rounded-b-lg p-2">
-              <span className="px-1 font-semibold">
-                {numberWithCommas(Number(unit.debtBalance * -1) - Number(unit.depositBalance))}
-              </span>
-              <span>تومان بدهکار</span>
-            </div>
-          )}
+            {Number(unit.depositBalance) > 0 && Number(unit.debtBalance * -1) > 0 && (
+              <div>
+                <Tooltip title={`موجودی کیف پول : ${numberWithCommas(unit.depositBalance)} تومان`}>
+                  <IconButton sx={{ p: 0, m: 0 }}>
+                    <MdOutlineAccountBalanceWallet className="text-white text-[18px]" />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
