@@ -159,19 +159,4 @@ body {
   z-index: 56465465456465465 !important;
 }
 
-/* style back */
 
-.img-building-resident {
-  width: auto;
-  object-fit: contain !important;
-  height: 200px !important;
-  min-height: 180px !important;
-  border-bottom-left-radius: 170px;
-  border-bottom-right-radius: 16px;
-
-  text-align: right;
-}
-.resident-panel .w-full {
-  max-width: 800px !important;
-  margin: 0 auto;
-}
