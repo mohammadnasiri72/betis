@@ -9,12 +9,12 @@ import useResponsive from '../../hooks/useResponsive';
 import useSettings from '../../hooks/useSettings';
 // config
 import { HEADER, NAVBAR } from '../../config';
+import DashboardFooter from '../../layouts/dashboard/DashboardFooter/DashboardFooter';
 import DashboardHeader from '../../layouts/dashboard/header';
 import SimpleBackdrop from '../backdrop';
 import Settings from '../settings';
-import MainHomePageResident from './HomePageResident/MainHomePageResident';
-import DashboardFooter from '../../layouts/dashboard/DashboardFooter/DashboardFooter';
 import HeaderDashBoard from './HeaderDashBoard';
+import MainHomePageResident from './HomePageResident/MainHomePageResident';
 //
 
 // ----------------------------------------------------------------------
@@ -117,51 +117,51 @@ export default function HomeResident({
   }
 
   return (
-    <Box
-      sx={{
-        display: { lg: 'flex' },
-        minHeight: { lg: 1 },
-      }}
-    >
-     
-
-      <MainStyle collapseClick={collapseClick}>
-        <div className="pb-10">
-          <div
-            className={
-              themeMode === 'dark'
-                ? ' w-full mx-auto px-1 fixed left-1/2 -translate-x-1/2 bg-[#161c24] top-0 z-50'
-                : ' w-full mx-auto px-1 fixed left-1/2 -translate-x-1/2 bg-white top-0 z-50'
-            }
-          >
-            <HeaderDashBoard
-              accountResident={accountResident}
-              setAccountResident={setAccountResident}
-              accounts={accounts}
-              setClaims={setClaims}
-              totalUnRead={totalUnRead}
-              setTotalUnRead={setTotalUnRead}
-              setIsLoading={setIsLoading}
-              open={openSetting}
-              setOpen={setOpenSetting}
-              setOpenSideBar={setOpenSideBar}
-            />
+    <div className="resident-panel">
+      <Box
+        sx={{
+          display: { lg: 'flex' },
+          minHeight: { lg: 1 },
+        }}
+      >
+        <MainStyle collapseClick={collapseClick}>
+          <div className="pb-10">
+            <div
+              className={
+                themeMode === 'dark'
+                  ? ' w-full mx-auto px-1 fixed left-1/2 -translate-x-1/2 bg-[#161c24] top-0 z-50'
+                  : ' w-full mx-auto px-1 fixed left-1/2 -translate-x-1/2 bg-white top-0 z-50'
+              }
+            >
+              <HeaderDashBoard
+                accountResident={accountResident}
+                setAccountResident={setAccountResident}
+                accounts={accounts}
+                setClaims={setClaims}
+                totalUnRead={totalUnRead}
+                setTotalUnRead={setTotalUnRead}
+                setIsLoading={setIsLoading}
+                open={openSetting}
+                setOpen={setOpenSetting}
+                setOpenSideBar={setOpenSideBar}
+              />
+            </div>
+            <Settings open={openSetting} setOpen={setOpenSetting} />
           </div>
-          <Settings open={openSetting} setOpen={setOpenSetting} />
-        </div>
-        <Outlet />
-        <DashboardFooter
-          setFlagRefreshPage={setFlagRefreshPage}
-          open={openSideBar}
-          setOpen={setOpenSideBar}
-          setFagLoby={setFagLoby}
-          logoImg={logoImg}
-        />
-      </MainStyle>
+          <Outlet />
+          <DashboardFooter
+            setFlagRefreshPage={setFlagRefreshPage}
+            open={openSideBar}
+            setOpen={setOpenSideBar}
+            setFagLoby={setFagLoby}
+            logoImg={logoImg}
+          />
+        </MainStyle>
 
-      {isLoading && <SimpleBackdrop />}
-      {/* {localStorage.getItem('token') && <Settings open={openSetting} setOpen={setOpenSetting} />} */}
-      {/* <Settings open={openSetting} setOpen={setOpenSetting} /> */}
-    </Box>
+        {isLoading && <SimpleBackdrop />}
+        {/* {localStorage.getItem('token') && <Settings open={openSetting} setOpen={setOpenSetting} />} */}
+        {/* <Settings open={openSetting} setOpen={setOpenSetting} /> */}
+      </Box>
+    </div>
   );
 }
