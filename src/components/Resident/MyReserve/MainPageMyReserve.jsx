@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Button, IconButton, Pagination, Skeleton, Stack, Tab, Tabs, TextField, Tooltip } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -9,6 +8,7 @@ import { useEffect, useState } from 'react';
 import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { PiPlusCircleFill } from 'react-icons/pi';
 import DatePicker from 'react-multi-date-picker';
 import { useLocation, useNavigate } from 'react-router';
@@ -188,7 +188,7 @@ export default function MainPageMyReserve({ accountResident, flagRefreshPage }) 
     return (
       <>
         <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+          <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
             بازگشت
           </Button>
         </div>

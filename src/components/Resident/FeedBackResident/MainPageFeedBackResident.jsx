@@ -1,11 +1,11 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate, useParams } from 'react-router';
 import { mainDomain } from '../../../utils/mainDomain';
 import DetailsTickets from './DetailsTickets';
@@ -77,7 +77,7 @@ export default function MainPageFeedBackResident({ accountResident, flagRefreshP
       {/* دکمه بازگشت */}
       {(!params.feedback || params.feedback === 'newTicket') && (
         <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+          <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
             بازگشت
           </Button>
         </div>

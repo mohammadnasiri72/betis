@@ -1,9 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button } from '@mui/material';
 import { Divider } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -24,11 +24,9 @@ function MainPageMyRealEstate({ accountResident, flagRefreshPage }) {
   const [statusesRealEstate, setStatusesRealEstate] = useState({});
 
   const statusArray = Object.entries(statusesRealEstate).map(([key, value]) => ({
-  id: Number(key),
-  title: value
-}));
-
-
+    id: Number(key),
+    title: value,
+  }));
 
   useEffect(() => {
     const request1 = axios.get(`${mainDomain}/api/RealEstate/types`);
@@ -75,7 +73,7 @@ function MainPageMyRealEstate({ accountResident, flagRefreshPage }) {
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>

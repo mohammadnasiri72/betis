@@ -4,7 +4,6 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-nested-ternary */
 import { LoadingOutlined } from '@ant-design/icons';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Card, CardActions, CardContent, CardMedia, Chip, Skeleton, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Divider, Modal } from 'antd';
@@ -14,6 +13,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { FaCheckCircle } from 'react-icons/fa';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { IoMdTime } from 'react-icons/io';
 import { IoCloseSharp, IoHandRight } from 'react-icons/io5';
 import { MdCancel, MdMoreTime } from 'react-icons/md';
@@ -301,7 +301,7 @@ export default function MainPageMenuService({ accountResident, flagRefreshPage }
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>

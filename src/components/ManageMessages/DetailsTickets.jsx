@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Avatar,
   Box,
@@ -18,6 +17,7 @@ import axios from 'axios';
 import moment from 'moment-jalaali';
 import { useEffect, useRef, useState } from 'react';
 import { FaDownload, FaRegDotCircle } from 'react-icons/fa';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { MdDateRange, MdDriveFolderUpload, MdOutlineAccessTimeFilled, MdSend } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
 import { useNavigate, useParams } from 'react-router';
@@ -299,7 +299,7 @@ function DetailsTickets({ listService }) {
             size="small"
             variant="contained"
             color="inherit"
-            startIcon={<ArrowBackIcon />}
+            startIcon={<HiArrowSmRight />}
             onClick={() => navigate(-1)}
           >
             بازگشت

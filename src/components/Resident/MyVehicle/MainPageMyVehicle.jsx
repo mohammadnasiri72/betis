@@ -1,9 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Card, Chip, Skeleton } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { TbListNumbers } from 'react-icons/tb';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
@@ -52,7 +52,7 @@ export default function MainPageMyVehicle({ accountResident, flagRefreshPage }) 
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -104,7 +104,6 @@ export default function MainPageMyVehicle({ accountResident, flagRefreshPage }) 
                             <Chip label={`${vehicle.licensePlate}`} icon={<TbListNumbers className="text-xl" />} />
                           )}
                           {vehicle.typeId === 0 && (
-                           
                             <div className="border-t border-b border-r border-[#000a] rounded-lg pr-2 flex justify-end items-center gap-2">
                               <div className="flex flex-col items-center justify-center">
                                 <span className="text-[8px]">ایران</span>

@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Divider,
   Drawer,
+  IconButton,
   Skeleton,
   Tooltip,
   Typography,
@@ -15,9 +16,9 @@ import {
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { FaRegBell } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router';
-import { IconButtonAnimate } from '../../../components/animate';
 import BoxMessage from '../../../components/boxMessage/BoxMessage';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -395,28 +396,11 @@ export default function NotificationsPopover({ totalUnRead, setTotalUnRead }) {
   return (
     <>
       <Tooltip title="پیامها">
-        <IconButtonAnimate color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
+        <IconButton onClick={handleOpen}>
           <Badge badgeContent={totalUnRead} color="error">
-            {/* <Iconify icon="eva:bell-fill" width={20} height={20} /> */}
-            {/* <img src={themeMode==='dark'? "/images/notification.svg" : "/images/notification.png"} alt="" /> */}
-            <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M18 8.60215C18 6.89108 17.3679 5.25009 16.2426 4.04017C15.1174 2.83026 13.5913 2.15054 12 2.15054C10.4087 2.15054 8.88258 2.83026 7.75736 4.04017C6.63214 5.25009 6 6.89108 6 8.60215C6 16.129 3 18.2796 3 18.2796H21C21 18.2796 18 16.129 18 8.60215Z"
-                stroke={themeMode === 'dark' ? '#fff' : '#28387E'}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M13.73 22.5806C13.5542 22.9065 13.3019 23.177 12.9982 23.3651C12.6946 23.5531 12.3504 23.6521 12 23.6521C11.6496 23.6521 11.3054 23.5531 11.0018 23.3651C10.6982 23.177 10.4458 22.9065 10.27 22.5806"
-                stroke={themeMode === 'dark' ? '#fff' : '#28387E'}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <FaRegBell className="text-[#28387E] text-[22px]" />
           </Badge>
-        </IconButtonAnimate>
+        </IconButton>
       </Tooltip>
       <Drawer open={open} onClose={handleClose} anchor={'right'}>
         {BoxAllMessage}

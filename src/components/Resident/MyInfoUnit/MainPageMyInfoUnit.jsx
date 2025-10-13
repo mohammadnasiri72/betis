@@ -1,21 +1,16 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button } from '@mui/material';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import ToggleInfoUnit from './ToggleInfoUnit';
 
 export default function MainPageMyInfoUnit({ accountResident, flagRefreshPage }) {
   const { themeMode } = useSettings();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>

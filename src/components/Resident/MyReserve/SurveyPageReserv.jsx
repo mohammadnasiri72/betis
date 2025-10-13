@@ -2,13 +2,13 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EventIcon from '@mui/icons-material/Event';
 import { Button, Card, Chip } from '@mui/material';
 import { Divider, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { MdAccessTime } from 'react-icons/md';
 import { TbListNumbers } from 'react-icons/tb';
 import { useNavigate, useParams } from 'react-router';
@@ -191,7 +191,7 @@ function SurveyPageReserv({ setFlag }) {
   return (
     <>
       <div className="px-3 flex items-center">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -256,7 +256,6 @@ function SurveyPageReserv({ setFlag }) {
                                 />
                               )}
                               {reserve?.reservationRelatedInfo?.value?.length === 8 && (
-                               
                                 <div className="border-t border-b border-r border-[#000a] rounded-lg pr-2 flex justify-end items-center gap-2">
                                   <div className="flex flex-col items-center justify-center">
                                     <span className="text-[8px]">ایران</span>

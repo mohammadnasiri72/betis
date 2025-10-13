@@ -159,8 +159,7 @@ export default function HomeResident({
         </MainStyle>
 
         {isLoading && <SimpleBackdrop />}
-        {/* {localStorage.getItem('token') && <Settings open={openSetting} setOpen={setOpenSetting} />} */}
-        {/* <Settings open={openSetting} setOpen={setOpenSetting} /> */}
+       
       </Box>
     </div>
   );

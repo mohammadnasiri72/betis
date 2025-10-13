@@ -1,9 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Skeleton } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -14,7 +14,7 @@ export default function MainPageBoardNoticeResident({ accountResident, flagRefre
   const [isLoading, setIsLoading] = useState(true);
 
   const { themeMode } = useSettings();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     AOS.init();
   }, []);
@@ -22,7 +22,7 @@ export default function MainPageBoardNoticeResident({ accountResident, flagRefre
   //   get list BoardNotice
   useEffect(() => {
     setIsLoading(true);
-    setListBoardNotice([])
+    setListBoardNotice([]);
     axios
       .get(`${mainDomain}/api/BoardNotice/Unit/GetList`, {
         headers: {
@@ -41,16 +41,13 @@ export default function MainPageBoardNoticeResident({ accountResident, flagRefre
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
-      <p className='text-[1.1rem] font-semibold' style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>تابلو اعلانات</p>
+      <p className="text-[1.1rem] font-semibold" style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}>
+        تابلو اعلانات
+      </p>
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto px-2">
         {listBoardNotice.length > 0 &&
           listBoardNotice
@@ -75,7 +72,7 @@ export default function MainPageBoardNoticeResident({ accountResident, flagRefre
         )}
         {listBoardNotice.length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center">
-            <img className="w-32" src={themeMode === 'dark' ? "/images/img-2-dark.png" : "/images/img-2.png"} alt="" />
+            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
             <p>پیامی موجود نیست...</p>
           </div>
         )}

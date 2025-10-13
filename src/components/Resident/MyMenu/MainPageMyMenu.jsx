@@ -1,7 +1,7 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, IconButton, Pagination, Skeleton, Stack, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -70,7 +70,7 @@ export default function MainPageMyMenu({ accountResident, flagRefreshPage }) {
     return (
       <>
         <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+          <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
             بازگشت
           </Button>
         </div>

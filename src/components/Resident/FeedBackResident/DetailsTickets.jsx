@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Avatar,
   Box,
@@ -18,6 +17,7 @@ import axios from 'axios';
 import moment from 'moment-jalaali';
 import { useEffect, useRef, useState } from 'react';
 import { FaDownload, FaRegDotCircle } from 'react-icons/fa';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { MdDateRange, MdDriveFolderUpload, MdOutlineAccessTimeFilled, MdSend } from 'react-icons/md';
 import { RiAdminFill } from 'react-icons/ri';
 import { useNavigate, useParams } from 'react-router';
@@ -268,7 +268,7 @@ function DetailsTickets() {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* عنوان */}
         <div className="flex flex-wrap items-center justify-between gap-1 px-3">
-          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+          <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
             بازگشت
           </Button>
           {ticketEdited.status !== 2 && <ModalCloseDiscunect ticketId={ticketId} setFlag={setFlag} />}
@@ -372,7 +372,7 @@ function DetailsTickets() {
                 >
                   {formatDate(date)}
                 </Typography>
-                <div className='mt-3'/>
+                <div className="mt-3" />
 
                 {/* نمایش پیام‌های مربوط به این تاریخ */}
                 {msgs.map((msg) => (

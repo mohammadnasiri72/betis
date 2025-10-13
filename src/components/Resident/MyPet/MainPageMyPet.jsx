@@ -1,9 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Card, Chip, Skeleton } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { MdOutlinePets } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
@@ -18,7 +18,7 @@ export default function MainPageMyPet({ accountResident, flagRefreshPage }) {
 
   const { themeMode } = useSettings();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init();
@@ -28,7 +28,7 @@ export default function MainPageMyPet({ accountResident, flagRefreshPage }) {
   useEffect(() => {
     if (accountResident.buildingId) {
       setIsLoading(true);
-      setListPet([])
+      setListPet([]);
       axios
         .get(`${mainDomain}/api/Pet/GetList`, {
           params: {
@@ -52,12 +52,7 @@ export default function MainPageMyPet({ accountResident, flagRefreshPage }) {
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -118,7 +113,11 @@ export default function MainPageMyPet({ accountResident, flagRefreshPage }) {
             ))}
           {listPet.length === 0 && !isLoading && (
             <div className="w-full flex flex-col items-center">
-              <img className="w-32" src={themeMode === 'dark' ? "/images/img-2-dark.png" : "/images/img-2.png"} alt="" />
+              <img
+                className="w-32"
+                src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'}
+                alt=""
+              />
               <p>حیوان خانگی ثبت نشده‌است...</p>
             </div>
           )}

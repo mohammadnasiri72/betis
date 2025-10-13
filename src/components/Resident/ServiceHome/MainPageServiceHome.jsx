@@ -3,6 +3,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material
 import { Divider } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -89,7 +90,7 @@ function MainPageServiceHome({ accountResident, flagRefreshPage }) {
   return (
     <>
       <div className="px-3 flex items-center justify-between lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
         <Button

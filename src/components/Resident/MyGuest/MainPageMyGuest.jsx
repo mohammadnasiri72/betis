@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Pagination, Skeleton, Stack } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -18,12 +18,12 @@ export default function MainPageMyGuest({ accountResident, flagRefreshPage }) {
   const [totalPages, setTotalPages] = useState(0);
   const { themeMode } = useSettings();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (accountResident?.id) {
       setIsLoading(true);
-      setListMyGuest([])
+      setListMyGuest([]);
       axios
         .get(`${mainDomain}/api/Guest/GetListPaged`, {
           params: {
@@ -52,12 +52,7 @@ export default function MainPageMyGuest({ accountResident, flagRefreshPage }) {
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          sx={{ mr: 1 }}
-        >
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -89,7 +84,7 @@ export default function MainPageMyGuest({ accountResident, flagRefreshPage }) {
         )}
         {listMyGuest.filter((e) => !e.isArrived).length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center">
-            <img className="w-32" src={themeMode === 'dark' ? "/images/img-2-dark.png" : "/images/img-2.png"} alt="" />
+            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
             <p>مهمان جدیدی موجود نیست...</p>
           </div>
         )}

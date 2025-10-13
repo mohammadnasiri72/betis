@@ -1,21 +1,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { IconButton, Tooltip } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 import SideBarMenu from './SideBarMenu';
-
-
 
 export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, setOpen, setFagLoby }) {
   const [value, setValue] = React.useState('home');
 
   const navigate = useNavigate();
   const url = window.location.pathname;
-
-
 
   const handleAlignment = (event, newValue) => {
     if (newValue !== null) {
@@ -33,11 +27,7 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
 
   return (
     <div>
-
-      <div
-        style={{ zIndex: 100 }}
-        className=" w-full mx-auto fixed bottom-0 right-1/2 translate-x-1/2"
-      >
+      <div style={{ zIndex: 100 }} className=" w-full mx-auto fixed bottom-0 right-1/2 translate-x-1/2">
         {/* <Stack>
           <ToggleButtonGroup
             sx={{ border: 'none', mt: 1, width: '100%' }}
@@ -112,7 +102,7 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
             {/* <div className="cursor-pointer rounded-full bg-[#495677] p-4">
               <img src="/images/List.png" alt="" />
             </div> */}
-            <div
+            {/* <div
               onClick={() => {
                 setOpen(false);
                 if (url !== '/resident/reserv-services') {
@@ -147,11 +137,11 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
                   </svg>
                 </IconButton>
               </Tooltip>
-            </div>
+            </div> */}
             <div
               onClick={() => {
                 setOpen(false);
-                setFagLoby((e) => !e)
+                setFagLoby((e) => !e);
                 if (url !== '/resident/home') {
                   navigate('/resident/home');
                 }
@@ -192,7 +182,7 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
                 </IconButton>
               </Tooltip>
             </div>
-            <div
+            {/* <div
               onClick={() => {
                 setOpen(false);
                 if (url !== '/resident/my-wallet') {
@@ -219,7 +209,7 @@ export default function DashboardFooter({ logoImg, setFlagRefreshPage, open, set
                 </IconButton>
               </Tooltip>
 
-            </div>
+            </div> */}
             <div
               onClick={() => {
                 setOpen(false);

@@ -1,9 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Divider, Pagination, Skeleton, Stack } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
@@ -112,7 +112,7 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
@@ -142,12 +142,11 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto mt-9">
         <Divider />
       </div>
-      {
-        totalCount>0 &&
-      <div className="flex justify-between items-center px-2 lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <span className='text-sm'>{totalCount} مورد</span>
-      </div>
-      }
+      {totalCount > 0 && (
+        <div className="flex justify-between items-center px-2 lg:w-1/3 sm:w-1/2 w-full mx-auto">
+          <span className="text-sm">{totalCount} مورد</span>
+        </div>
+      )}
 
       <div className="lg:w-1/3 sm:w-1/2 w-full mx-auto p-2 overflow-hidden duration-500">
         {listReportDebt.length > 0 &&
@@ -172,8 +171,8 @@ function MainPageMyReportDebt({ accountResident, flagRefreshPage }) {
 
         {listReportDebt.length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center">
-             <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
-          <p>موردی یافت نشد...</p>
+            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
+            <p>موردی یافت نشد...</p>
           </div>
         )}
       </div>

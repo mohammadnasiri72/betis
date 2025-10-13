@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button, Skeleton } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -7,6 +6,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { GrUser, GrUserFemale } from 'react-icons/gr';
+import { HiArrowSmRight } from 'react-icons/hi';
 import { ImCancelCircle } from 'react-icons/im';
 import { LuPhone } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router';
@@ -60,11 +60,10 @@ function MainPageManageResidents({ accountResident, flagRefreshPage }) {
     }
   }, [accountResident, flag]);
 
-  
   return (
     <>
       <div className="px-3 flex items-center lg:w-1/3 sm:w-1/2 w-full mx-auto">
-        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
+        <Button variant="outlined" startIcon={<HiArrowSmRight />} onClick={() => navigate(-1)} sx={{ mr: 1 }}>
           بازگشت
         </Button>
       </div>
