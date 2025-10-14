@@ -112,6 +112,13 @@ const sidebarConfig = [
     ],
   },
   {
+    subheader: 'گزارشات',
+    items: [
+      { title: 'گزارش واحدها', path: '/dashboard/report/admin-unit', icon: <GoHomeFill /> },
+      { title: 'گزارش درخواست‌ها', path: '/dashboard/report/admin-ticket', icon: <GoHomeFill /> },
+    ],
+  },
+  {
     subheader: 'ادمین',
     items: [
       { title: 'مدیریت پرسنل', path: '/dashboard/admin-staff', icon: <ImUserTie /> },
@@ -119,12 +126,6 @@ const sidebarConfig = [
       { title: 'سوالات نظرسنجی', path: '/dashboard/admin-surveyquestion', icon: <RiSurveyFill /> },
       { title: 'پاسخ های نظرسنجی', path: '/dashboard/admin-surveyanswer', icon: <HiClipboardDocumentList /> },
       { title: 'مدیریت خدمات املاک', path: '/dashboard/admin-realState', icon: <BsFillHouseGearFill /> },
-      // {
-      //   title: 'مدیریت انتقاد و پیشنهاد',
-      //   path: '/dashboard/admin-feedback',
-      //   icon: <BiSolidConversation />,
-      // },
-
       {
         title: 'مدیریت تابلو اعلانات',
         path: '/dashboard/admin-boardNotice',

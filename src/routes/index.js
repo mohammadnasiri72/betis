@@ -27,6 +27,7 @@ import ManageOrder from '../pages/ManageOrder';
 import ManageParking from '../pages/ManageParking';
 import ManagePet from '../pages/ManagePet';
 import ManageReportDebt from '../pages/ManageReportDebt';
+import ManageReportUnit from '../pages/ManageReportUnit';
 import ManageReserve from '../pages/ManageReserve';
 import ManageResident from '../pages/ManageResident';
 import ManageRole from '../pages/ManageRole';
@@ -61,6 +62,7 @@ import ServiceHome from '../pages/ServiceHome';
 import HomePage from '../pages/homePage';
 import ManageResidents from '../pages/manageResidents';
 import { mainDomain } from '../utils/mainDomain';
+import ManageReportTicket from '../pages/ManageReportTicket';
 
 // ----------------------------------------------------------------------
 
@@ -340,6 +342,28 @@ export default function Router() {
             ) : (
               <ManageUnit />
             ),
+        },
+        {
+          path: 'report/admin-unit',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-unit:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageReportUnit />
+            ),
+        },
+       
+         {
+          path: 'report/admin-ticket',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-ticket:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageReportTicket />
+            ),
+         
         },
         {
           path: 'admin-parking',
