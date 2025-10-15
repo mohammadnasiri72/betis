@@ -1,7 +1,17 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-nested-ternary */
-import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select,
+  Stack,
+  TextField,
+} from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import persian from 'react-date-object/calendars/persian';
@@ -9,33 +19,30 @@ import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
 import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
+import BoxReportData from './BoxReportData';
 import TicketReport from './TicketReport';
 
 function MainPageManageReportTicket() {
   const { themeMode } = useSettings();
   const url = useLocation();
-  const params = useParams();
-  const navigate = useNavigate();
   const [valBuilding, setValBuilding] = useState('');
   const [listBuilding, setListBuilding] = useState([]);
   const [listUnit, setListUnit] = useState([]);
   const [valUnit, setValUnit] = useState({ title: 'همه', id: -1 });
-
   const [listService, setListService] = useState([]);
   const [valService, setValService] = useState(-1);
-
   const [statusTicket, setStatusTicket] = useState({});
   const [priority, setPriority] = useState({});
   const [subject, setSubject] = useState({});
-
   const [statusTicketSelected, setStatusTicketSelected] = useState(-1);
   const [prioritySelected, setPrioritySelected] = useState(-1);
   const [subjectSelected, setSubjectSelected] = useState(-1);
   const [listMessages, setListMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [pageIndex, setPageIndex] = useState(1);
@@ -44,7 +51,7 @@ function MainPageManageReportTicket() {
   const [valDate, setValDate] = useState('');
   const [date2, setDate2] = useState('');
   const [valDate2, setValDate2] = useState('');
-
+  const [reportData, setReportData] = useState([]);
 
   //   get list building
   useEffect(() => {
@@ -102,7 +109,6 @@ function MainPageManageReportTicket() {
         setStatusTicket(responses[0].data);
         setPriority(responses[1].data);
         setSubject(responses[2].data);
-        console.log(responses);
       })
       .catch((error) => {
         console.error('خطا در دریافت داده:', error);
@@ -128,13 +134,48 @@ function MainPageManageReportTicket() {
     }
   }, [valBuilding]);
 
+  //   get list reportData
+  const configReportData = {
+    method: 'get',
+    url: `${mainDomain}/api/Ticket/Report/Statistics`,
+
+    params: {
+      buildingId: valBuilding?.id,
+      startDateFa: valDate,
+      endDateFa: valDate2,
+      unitId: valUnit.id,
+      serviceId: valService === -1 ? -1 : valService.id,
+      subjectId: subjectSelected,
+      statusId: statusTicketSelected,
+      priorityId: prioritySelected,
+    },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  };
+
+  const getListReportData = (newParams) => {
+    configReportData.params = { ...configReportData.params, ...newParams };
+    setReportData([]);
+    setIsLoading2(true);
+    axios(configReportData)
+      .then((res) => {
+        setReportData(res.data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setIsLoading2(false);
+      });
+  };
+
   const configTickets = {
     method: 'get',
     url: `${mainDomain}/api/Ticket/GetListPaged`,
 
     params: {
       buildingId: valBuilding?.id,
-      dataFa: '',
+      startDateFa: valDate,
+      endDateFa: valDate2,
       unitId: valUnit.id,
       serviceId: valService === -1 ? -1 : valService.id,
       subjectId: subjectSelected,
@@ -168,6 +209,7 @@ function MainPageManageReportTicket() {
   useEffect(() => {
     if (valBuilding.id && url.pathname === '/dashboard/report/admin-ticket') {
       getListTickets();
+      getListReportData();
     }
   }, [valBuilding, url]);
 
@@ -190,7 +232,8 @@ function MainPageManageReportTicket() {
             onClick={() => {
               setDate('');
               setValDate('');
-              getListTickets({ pageIndex: 1, dataFa: '' });
+              getListTickets({ pageIndex: 1, startDateFa: '' });
+              getListReportData({ startDateFa: '' });
               setPageIndex(1);
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -218,7 +261,8 @@ function MainPageManageReportTicket() {
             onClick={() => {
               setDate2('');
               setValDate2('');
-              getListTickets({ pageIndex: 1, dataFa: '' });
+              getListTickets({ pageIndex: 1, endDateFa: '' });
+              getListReportData({ endDateFa: '' });
               setPageIndex(1);
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -271,6 +315,7 @@ function MainPageManageReportTicket() {
                 if (newValue) {
                   setValUnit(newValue);
                   getListTickets({ pageIndex: 1, unitId: newValue.id });
+                  getListReportData({ unitId: newValue.id });
                 }
                 if (!newValue) {
                   setValUnit({});
@@ -301,6 +346,7 @@ function MainPageManageReportTicket() {
                 onChange={(e) => {
                   setStatusTicketSelected(e.target.value);
                   getListTickets({ pageIndex: 1, statusId: e.target.value });
+                  getListReportData({ statusId: e.target.value });
                 }}
               >
                 <MenuItem value={-1}>همه</MenuItem>
@@ -330,6 +376,7 @@ function MainPageManageReportTicket() {
                 onChange={(e) => {
                   setSubjectSelected(e.target.value);
                   getListTickets({ pageIndex: 1, subjectId: e.target.value });
+                  getListReportData({ subjectId: e.target.value });
                 }}
               >
                 <MenuItem value={-1}>همه</MenuItem>
@@ -359,6 +406,7 @@ function MainPageManageReportTicket() {
                 onChange={(e) => {
                   setPrioritySelected(e.target.value);
                   getListTickets({ pageIndex: 1, priorityId: e.target.value });
+                  getListReportData({ priorityId: e.target.value });
                 }}
               >
                 <MenuItem value={-1}>همه</MenuItem>
@@ -388,6 +436,7 @@ function MainPageManageReportTicket() {
                 onChange={(e) => {
                   setValService(e.target.value);
                   getListTickets({ pageIndex: 1, serviceId: e.target.value.id });
+                  getListReportData({ serviceId: e.target.value.id });
                 }}
               >
                 <MenuItem value={-1}>همه</MenuItem>
@@ -417,6 +466,7 @@ function MainPageManageReportTicket() {
                 setDate(event);
                 setValDate(event.format('YYYY/MM/DD'));
                 getListTickets({ pageIndex: 1, dataFa: event.format('YYYY/MM/DD') });
+                getListReportData({ dataFa: event.format('YYYY/MM/DD') });
                 setPageIndex(1);
               }}
               placeholder="تاریخ شروع ثبت درخواست"
@@ -438,7 +488,8 @@ function MainPageManageReportTicket() {
               onChange={(event) => {
                 setDate2(event);
                 setValDate2(event.format('YYYY/MM/DD'));
-                getListTickets({ pageIndex: 1, dataFa: event.format('YYYY/MM/DD') });
+                getListTickets({ pageIndex: 1, endDateFa: event.format('YYYY/MM/DD') });
+                getListReportData({ endDateFa: event.format('YYYY/MM/DD') });
                 setPageIndex(1);
               }}
               placeholder="تاریخ پایان ثبت درخواست"
@@ -446,7 +497,44 @@ function MainPageManageReportTicket() {
           </div>
         </div>
       </div>
-      <TicketReport listMessages={listMessages} />
+      {listMessages.length > 0 && <BoxReportData reportData={reportData} isLoading2={isLoading2} />}
+      <TicketReport listMessages={listMessages} isLoading={isLoading} />
+      {totalCount > 0 && (
+        <div className="flex flex-wrap justify-center items-center mt-2">
+          <Stack spacing={2}>
+            <Pagination
+              page={pageIndex}
+              onChange={(e, value) => {
+                setPageIndex(value);
+                getListTickets({ pageIndex: value, pageSize });
+              }}
+              count={totalPages}
+            />
+          </Stack>
+          <FormControl size="small" style={{ minWidth: 80 }}>
+            <InputLabel id="page-size-label">تعداد </InputLabel>
+            <Select
+              size="small"
+              labelId="page-size-label"
+              id="page-size"
+              value={pageSize}
+              label="تعداد "
+              onChange={(e) => {
+                setPageSize(e.target.value);
+                setPageIndex(1);
+                getListTickets({ pageIndex: 1, pageSize: e.target.value });
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <span>{totalCount} رکورد</span>
+        </div>
+      )}
     </>
   );
 }

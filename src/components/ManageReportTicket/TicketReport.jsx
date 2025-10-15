@@ -1,9 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import {
   Box,
   Card,
   CardContent,
-  Chip,
-  Grid,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -14,217 +14,52 @@ import {
 } from '@mui/material';
 import useSettings from '../../hooks/useSettings';
 
-// کامپوننت گزارش تیکت‌ها
-function TicketReport({ listMessages }) {
+// کامپوننت گزارش درخواست‌ها
+function TicketReport({ listMessages, isLoading }) {
   const { themeMode } = useSettings();
   const isDark = themeMode === 'dark';
 
-  // محاسبات آماری
-  const calculateStats = () => {
-    if (!listMessages.length) return null;
-
-    const totalTickets = listMessages.length;
-
-    // تعداد تیکت‌ها بر اساس وضعیت
-    const closedTickets = listMessages.filter((ticket) => ticket.status === 2).length;
-    const answeredTickets = listMessages.filter((ticket) => ticket.status === 1).length;
-    const pendingTickets = totalTickets - closedTickets - answeredTickets;
-
-    // تعداد تیکت‌ها بر اساس اولویت
-    const highPriority = listMessages.filter((ticket) => ticket.priority === 2).length;
-    const mediumPriority = listMessages.filter((ticket) => ticket.priority === 1).length;
-    const lowPriority = listMessages.filter((ticket) => ticket.priority === 0).length;
-
-    // تعداد تیکت‌ها بر اساس موضوع
-    const crashReports = listMessages.filter((ticket) => ticket.subject === 'CrashReport').length;
-    const complaints = listMessages.filter((ticket) => ticket.subject === 'Complaint').length;
-    const criticisms = listMessages.filter((ticket) => ticket.subject === 'Criticism').length;
-    const proposals = listMessages.filter((ticket) => ticket.subject === 'Proposal').length;
-
-    // محبوب‌ترین سرویس‌ها
-    const serviceCounts = {};
-    listMessages.forEach((ticket) => {
-      if (ticket.serviceTitle) {
-        serviceCounts[ticket.serviceTitle] = (serviceCounts[ticket.serviceTitle] || 0) + 1;
-      }
-    });
-    const topService = Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0];
-
-    return {
-      totalTickets,
-      closedTickets,
-      answeredTickets,
-      pendingTickets,
-      highPriority,
-      mediumPriority,
-      lowPriority,
-      crashReports,
-      complaints,
-      criticisms,
-      proposals,
-      topService: topService ? `${topService[0]} (${topService[1]})` : 'ندارد',
-    };
-  };
-
-  const stats = calculateStats();
-
   // فرمت کردن تاریخ شمسی
-  const formatPersianDate = (dateString) => {
-    return dateString.split(' ')[0]; // فقط تاریخ بدون ساعت
-  };
+  const formatPersianDate = (dateString) => 
+     dateString.split(' ')[0] // فقط تاریخ بدون ساعت
+  ;
 
-  // رنگ وضعیت تیکت
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 2:
-        return 'success'; // بسته شده
-      case 1:
-        return 'primary'; // پاسخ داده شده
-      default:
-        return 'warning'; // در انتظار
-    }
-  };
+  
 
-  // رنگ اولویت تیکت
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 2:
-        return 'error'; // زیاد
-      case 1:
-        return 'warning'; // متوسط
-      default:
-        return 'success'; // کم
-    }
-  };
 
   return (
     <>
-      {/* باکس خلاصه گزارش */}
-      {stats && (
-        <Card
-          className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} mb-6`}
-        >
-          <CardContent className="p-4">
-            <Typography
-              variant="h6"
-              className={`mb-4 font-bold border-b pb-2 ${
-                isDark ? 'text-white border-gray-600' : 'text-gray-800 border-gray-200'
-              }`}
-            >
-              📊 گزارش تیکت‌ها
+      {/* نمایش وضعیت لودینگ */}
+      {isLoading && (
+        <Box className="flex justify-center items-center py-12">
+          <CircularProgress size={25} />
+          <Typography variant="body1" className="!mr-3">
+            در حال دریافت اطلاعات...
+          </Typography>
+        </Box>
+      )}
+
+      {/* پیام زمانی که درخواستی پیدا نشد */}
+      {!isLoading && listMessages.length === 0 && (
+        <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
+          <CardContent className="text-center py-8">
+            <Typography variant="h6" className={isDark ? 'text-gray-400' : 'text-gray-500'}>
+              درخواستی یافت نشد
             </Typography>
-
-            <Grid container spacing={2}>
-              {/* آمار اصلی */}
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                    {stats.totalTickets}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    کل تیکت‌ها
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 text-green-600`}>
-                    {stats.closedTickets}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    بسته شده
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 text-blue-600`}>
-                    {stats.answeredTickets}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    پاسخ داده شده
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 text-amber-600`}>
-                    {stats.pendingTickets}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    در انتظار
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 text-red-600`}>
-                    {stats.highPriority}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    اولویت بالا
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} sm={4} md={2}>
-                <Box
-                  className={`text-center p-3 rounded-lg border ${
-                    isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'
-                  }`}
-                >
-                  <Typography variant="h6" className={`font-bold mb-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                    {stats.topService}
-                  </Typography>
-                  <Typography variant="caption" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
-                    پرتکرارترین سرویس
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-
-            {/* آمار موضوعات */}
-            <Box className="flex flex-wrap gap-2 mt-4 justify-center">
-              <Chip label={`${stats.crashReports} گزارش خرابی`} variant="outlined" size="small" color="error" />
-              <Chip label={`${stats.complaints} شکایت`} variant="outlined" size="small" color="warning" />
-              <Chip label={`${stats.criticisms} انتقاد`} variant="outlined" size="small" color="info" />
-              <Chip label={`${stats.proposals} پیشنهاد`} variant="outlined" size="small" color="success" />
-            </Box>
+            <Typography variant="body2" className={isDark ? 'text-gray-500' : 'text-gray-400'}>
+              هیچ درخواستی مطابق با فیلترهای انتخابی شما وجود ندارد.
+            </Typography>
           </CardContent>
         </Card>
       )}
 
-      {/* جدول تیکت‌ها */}
+      {/* جدول درخواست‌ها */}
       {listMessages.length > 0 && (
         <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
           <CardContent className="p-0">
             <Box className={`p-4 border-b ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
               <Typography variant="h6" className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                📋 لیست تیکت‌ها ({listMessages.length} مورد)
+                📋 لیست درخواست‌ها ({listMessages.length} مورد)
               </Typography>
             </Box>
 
@@ -232,17 +67,23 @@ function TicketReport({ listMessages }) {
               <Table size="medium">
                 <TableHead>
                   <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>واحد</TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>موضوع</TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>سرویس</TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                    <TableCell className={`!font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>واحد</TableCell>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                      موضوع
+                    </TableCell>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                      سرویس
+                    </TableCell>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
                       اولویت
                     </TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>وضعیت</TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                      وضعیت
+                    </TableCell>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
                       تاریخ ثبت
                     </TableCell>
-                    <TableCell className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                    <TableCell className={`!font-bold !text-center ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
                       توضیحات
                     </TableCell>
                   </TableRow>
@@ -257,7 +98,7 @@ function TicketReport({ listMessages }) {
                           : 'border-b border-gray-200 hover:bg-gray-50'
                       }`}
                     >
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 !whitespace-nowrap">
                         <Typography
                           variant="body1"
                           className={`font-medium ${isDark ? 'text-white' : 'text-gray-800'}`}
@@ -265,26 +106,71 @@ function TicketReport({ listMessages }) {
                           {ticket.unitTitle}
                         </Typography>
                       </TableCell>
-                      <TableCell className="py-3">
-                        <Typography variant="body1" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
+                        <span
+                          className={`text-xs rounded-full px-3 py-1 ${
+                            ticket.subject === 'Complaint'
+                              ? 'bg-red-100 text-red-600'
+                              : ticket.subject === 'CrashReport'
+                              ? 'bg-yellow-100 text-yellow-600'
+                              : ticket.subject === 'Criticism'
+                              ? 'bg-orange-100 text-orange-600'
+                              : ticket.subject === 'Proposal'
+                              ? 'bg-emerald-100 text-emerald-600'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
                           {ticket.subjectTitle}
-                        </Typography>
+                        </span>
                       </TableCell>
-                      <TableCell className="py-3">
-                        <Chip label={ticket.serviceTitle || 'ندارد'} size="small" variant="outlined" color="primary" />
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
+                        <span
+                          className={`text-xs rounded-full px-3 py-1 ${
+                            ticket.serviceTitle ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {ticket.serviceTitle || 'انتخاب نشده'}
+                        </span>
                       </TableCell>
-                      <TableCell className="py-3">
-                        <Chip label={ticket.priorityTitle} color={getPriorityColor(ticket.priority)} size="small" />
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
+                        <span
+                          className={`text-xs rounded-full px-3 py-1 ${
+                            ticket.priority === 0
+                              ? 'text-emerald-600 bg-emerald-100'
+                              : ticket.priority === 1
+                              ? 'text-blue-600 bg-blue-100'
+                              : ticket.priority === 2
+                              ? 'text-orange-600 bg-orange-100'
+                              : ticket.priority === 3
+                              ? 'text-red-600 bg-red-100'
+                              : 'text-slate-600 bg-slate-100'
+                          }`}
+                        >
+                          {ticket.priorityTitle}
+                        </span>
                       </TableCell>
-                      <TableCell className="py-3">
-                        <Chip label={ticket.statusTitle} color={getStatusColor(ticket.status)} size="small" />
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
+                        {/* <Chip label={ticket.statusTitle} color={getStatusColor(ticket.status)} size="small" /> */}
+                        <span
+                          className={`text-xs rounded-full px-3 py-1 ${
+                            ticket.status === 0
+                              ? 'text-yellow-600 bg-yellow-100'
+                              : ticket.status === 1
+                              ? 'text-emerald-600 bg-emerald-100'
+                              : ticket.status === 2
+                              ? 'text-slate-600 bg-slate-100'
+                              : ''
+                          }`}
+                        >
+                          {ticket.statusTitle}
+                        </span>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
                         <Typography variant="body2" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
                           {formatPersianDate(ticket.createdAtFa)}
                         </Typography>
                       </TableCell>
-                      <TableCell className="py-3">
+                      <TableCell className="py-3 !text-center">
                         <Typography
                           variant="body2"
                           className={`${isDark ? 'text-gray-300' : 'text-gray-600'} line-clamp-2`}

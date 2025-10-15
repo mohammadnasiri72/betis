@@ -145,13 +145,16 @@ function MainPageManageMessages() {
     }
   }, [valBuilding]);
 
+  
+
   const configTickets = {
     method: 'get',
     url: `${mainDomain}/api/Ticket/GetListPaged`,
 
     params: {
       buildingId: valBuilding?.id,
-      dataFa: '',
+      startDateFa: valDate,
+      endDateFa: valDate,
       unitId: valUnit.id,
       serviceId: valService === -1 ? -1 : valService.id,
       subjectId: subjectSelected,
@@ -207,7 +210,7 @@ function MainPageManageMessages() {
             onClick={() => {
               setDate('');
               setValDate('');
-              getListTickets({ pageIndex: 1, dataFa: '' });
+              getListTickets({ pageIndex: 1, startDateFa: '', endDateFa: '' });
               setPageIndex(1);
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -408,7 +411,11 @@ function MainPageManageMessages() {
                   onChange={(event) => {
                     setDate(event);
                     setValDate(event.format('YYYY/MM/DD'));
-                    getListTickets({ pageIndex: 1, dataFa: event.format('YYYY/MM/DD') });
+                    getListTickets({
+                      pageIndex: 1,
+                      startDateFa: event.format('YYYY/MM/DD'),
+                      endDateFa: event.format('YYYY/MM/DD'),
+                    });
                     setPageIndex(1);
                   }}
                   placeholder="تاریخ ثبت درخواست"

@@ -21,16 +21,22 @@ import {
   FaUserTie,
   FaWarehouse,
 } from 'react-icons/fa';
-import { FaBuildingCircleExclamation, FaBuildingUser, FaMoneyBillTransfer, FaSquareParking } from 'react-icons/fa6';
+import {
+  FaBuildingCircleExclamation,
+  FaBuildingUser,
+  FaHouseLaptop,
+  FaMoneyBillTransfer,
+  FaSquareParking,
+} from 'react-icons/fa6';
 import { GiPayMoney } from 'react-icons/gi';
 import { GoHomeFill } from 'react-icons/go';
-import { HiClipboardList } from 'react-icons/hi';
+import { HiChartBar, HiClipboardList } from 'react-icons/hi';
 import { HiClipboardDocumentList, HiMiniUsers } from 'react-icons/hi2';
 import { ImUsers, ImUserTie } from 'react-icons/im';
 import { IoIosListBox } from 'react-icons/io';
 import { IoWallet } from 'react-icons/io5';
 import { LuCalendarCheck, LuCalendarClock } from 'react-icons/lu';
-import { MdManageAccounts, MdOutlineMiscellaneousServices, MdOutlinePets, MdPets } from 'react-icons/md';
+import { MdManageAccounts, MdOutlineMiscellaneousServices, MdOutlinePets, MdPayments, MdPets } from 'react-icons/md';
 import { RiArtboardFill, RiMoneyDollarBoxFill, RiSurveyFill } from 'react-icons/ri';
 
 const sidebarConfig = [
@@ -114,8 +120,9 @@ const sidebarConfig = [
   {
     subheader: 'گزارشات',
     items: [
-      { title: 'گزارش واحدها', path: '/dashboard/report/admin-unit', icon: <GoHomeFill /> },
-      { title: 'گزارش درخواست‌ها', path: '/dashboard/report/admin-ticket', icon: <GoHomeFill /> },
+      { title: 'گزارش واحدها', path: '/dashboard/report/admin-unit', icon: <FaHouseLaptop /> },
+      { title: 'گزارش درخواست‌ها', path: '/dashboard/report/admin-ticket', icon: <HiChartBar /> },
+      { title: 'گزارش پرداخت‌ها', path: '/dashboard/report/admin-deposit', icon: <MdPayments /> },
     ],
   },
   {
