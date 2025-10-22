@@ -26,8 +26,10 @@ import ManageMessages from '../pages/ManageMessages';
 import ManageOrder from '../pages/ManageOrder';
 import ManageParking from '../pages/ManageParking';
 import ManagePet from '../pages/ManagePet';
+import ManageReportCostIncome from '../pages/ManageReportCostIncome';
 import ManageReportDebt from '../pages/ManageReportDebt';
 import ManageReportDeposit from '../pages/ManageReportDeposit';
+import ManageReportReserve from '../pages/ManageReportReserve';
 import ManageReportTicket from '../pages/ManageReportTicket';
 import ManageReportUnit from '../pages/ManageReportUnit';
 import ManageReserve from '../pages/ManageReserve';
@@ -64,6 +66,7 @@ import ServiceHome from '../pages/ServiceHome';
 import HomePage from '../pages/homePage';
 import ManageResidents from '../pages/manageResidents';
 import { mainDomain } from '../utils/mainDomain';
+import ManageReportOrder from '../pages/ManageReportOrder';
 
 // ----------------------------------------------------------------------
 
@@ -373,6 +376,36 @@ export default function Router() {
               <Navigate to="/404" replace />
             ) : (
               <ManageReportDeposit />
+            ),
+        },
+        {
+          path: 'report/admin-cost-income',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-cost-income:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageReportCostIncome />
+            ),
+        },
+        {
+          path: 'report/admin-reservation',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-reservation:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageReportReserve />
+            ),
+        },
+         {
+          path: 'report/admin-order',
+          element:
+            !localStorage.getItem('claims')?.includes('admin-order:') &&
+            !localStorage.getItem('roles')?.includes('Admin') ? (
+              <Navigate to="/404" replace />
+            ) : (
+              <ManageReportOrder />
             ),
         },
         {

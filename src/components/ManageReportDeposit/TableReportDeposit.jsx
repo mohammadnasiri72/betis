@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { AccountBalanceWallet, Cancel, CheckCircleOutline, PendingActions } from '@mui/icons-material';
+import { Cancel, CheckCircleOutline, PendingActions } from '@mui/icons-material';
 import {
   Box,
   Card,
@@ -12,13 +12,12 @@ import {
   TableRow,
   Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material';
-import TableReportDepositSkeleton from './TableReportDepositSkeleton';
+import useSettings from '../../hooks/useSettings';
 
-function TableReportDeposit({ isLoading, listDeposit }) {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+function TableReportDeposit({ listDeposit, totalCount }) {
+  const { themeMode } = useSettings();
+  const isDark = themeMode === 'dark';
 
   // فرمت کردن مبلغ به ریال
   const formatAmount = (amount) => `${new Intl.NumberFormat('fa-IR').format(amount)} تومان`;
@@ -56,28 +55,6 @@ function TableReportDeposit({ isLoading, listDeposit }) {
     }
   };
 
-  // اگر در حال لودینگ هستیم
-  if (isLoading) {
-    return <TableReportDepositSkeleton />;
-  }
-
-  // اگر داده‌ای وجود ندارد
-  if (!listDeposit || listDeposit.length === 0) {
-    return (
-      <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} mb-6`}>
-        <CardContent className="text-center py-8">
-          <AccountBalanceWallet className={`text-4xl mb-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
-          <Typography variant="h6" className={isDark ? 'text-gray-400' : 'text-gray-500'}>
-            پرداختی یافت نشد
-          </Typography>
-          <Typography variant="body2" className={isDark ? 'text-gray-500' : 'text-gray-400'}>
-            هیچ پرداختی مطابق با فیلترهای انتخابی شما وجود ندارد.
-          </Typography>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} mb-6`}>
       <CardContent className="p-0">
@@ -90,7 +67,7 @@ function TableReportDeposit({ isLoading, listDeposit }) {
               </Typography>
 
               <Typography variant="body2" className={isDark ? 'text-gray-400' : 'text-gray-600'}>
-                ({listDeposit.length} تراکنش)
+                ({totalCount} تراکنش)
               </Typography>
             </Box>
           </Box>
@@ -197,19 +174,6 @@ function TableReportDeposit({ isLoading, listDeposit }) {
             </TableBody>
           </Table>
         </TableContainer>
-
-        {/* فوتر جدول */}
-        <Box className={`p-3 border-t ${isDark ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'}`}>
-          <Box className="flex items-center justify-between">
-            <Typography variant="body2" className={isDark ? 'text-gray-400' : 'text-gray-600'}>
-              مجموع مبالغ: {formatAmount(listDeposit.reduce((sum, item) => sum + item.amount, 0))}
-            </Typography>
-            <Typography variant="body2" className={isDark ? 'text-gray-400' : 'text-gray-600'}>
-              میانگین هر تراکنش:{' '}
-              {formatAmount(Math.round(listDeposit.reduce((sum, item) => sum + item.amount, 0) / listDeposit.length))}
-            </Typography>
-          </Box>
-        </Box>
       </CardContent>
     </Card>
   );

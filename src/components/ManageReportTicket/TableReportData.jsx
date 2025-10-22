@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -15,32 +14,16 @@ import {
 import useSettings from '../../hooks/useSettings';
 
 // کامپوننت گزارش درخواست‌ها
-function TicketReport({ listMessages, isLoading }) {
+function TableReportData({ listMessages, totalCount }) {
   const { themeMode } = useSettings();
   const isDark = themeMode === 'dark';
 
   // فرمت کردن تاریخ شمسی
-  const formatPersianDate = (dateString) => 
-     dateString.split(' ')[0] // فقط تاریخ بدون ساعت
-  ;
-
-  
-
-
+  const formatPersianDate = (dateString) => dateString.split(' ')[0]; // فقط تاریخ بدون ساعت
   return (
     <>
-      {/* نمایش وضعیت لودینگ */}
-      {isLoading && (
-        <Box className="flex justify-center items-center py-12">
-          <CircularProgress size={25} />
-          <Typography variant="body1" className="!mr-3">
-            در حال دریافت اطلاعات...
-          </Typography>
-        </Box>
-      )}
-
       {/* پیام زمانی که درخواستی پیدا نشد */}
-      {!isLoading && listMessages.length === 0 && (
+      {listMessages.length === 0 && (
         <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
           <CardContent className="text-center py-8">
             <Typography variant="h6" className={isDark ? 'text-gray-400' : 'text-gray-500'}>
@@ -58,9 +41,17 @@ function TicketReport({ listMessages, isLoading }) {
         <Card className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'}`}>
           <CardContent className="p-0">
             <Box className={`p-4 border-b ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
-              <Typography variant="h6" className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                📋 لیست درخواست‌ها ({listMessages.length} مورد)
-              </Typography>
+              <Box className="flex items-center justify-center">
+                <Box className="flex gap-1">
+                  <Typography variant="h6" className={`font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                    لیست درخواست‌ها
+                  </Typography>
+
+                  <Typography variant="body2" className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                    ({totalCount} مورد)
+                  </Typography>
+                </Box>
+              </Box>
             </Box>
 
             <TableContainer>
@@ -191,4 +182,4 @@ function TicketReport({ listMessages, isLoading }) {
   );
 }
 
-export default TicketReport;
+export default TableReportData;

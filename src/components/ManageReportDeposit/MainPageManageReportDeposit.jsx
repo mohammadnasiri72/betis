@@ -1,7 +1,10 @@
 /* eslint-disable no-nested-ternary */
+import { AccountBalanceWallet } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
+  Card,
+  CardContent,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,6 +12,7 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import 'aos/dist/aos.css';
 import axios from 'axios';
@@ -17,13 +21,18 @@ import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReportDeposit from './BoxReportDeposit';
+import BoxReportDepositSkeleton from './BoxReportDepositSkeleton';
 import TableReportDeposit from './TableReportDeposit';
+import TableReportDepositSkeleton from './TableReportDepositSkeleton';
 
 function MainPageManageReportDeposit() {
   const { themeMode } = useSettings();
+  const isDark = themeMode === 'dark';
+  const url = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoading2, setIsLoading2] = useState(true);
   const [valBuilding, setValBuilding] = useState('');
@@ -117,7 +126,7 @@ function MainPageManageReportDeposit() {
       getListDeposit({ buildingId: valBuilding?.id, unitId: -1 });
       getReportDeposit({ buildingId: valBuilding?.id, unitId: -1 });
     }
-  }, [yearId, valBuilding]);
+  }, [yearId, valBuilding , url]);
 
   const configReport = {
     method: 'get',
@@ -398,11 +407,31 @@ function MainPageManageReportDeposit() {
           </div>
         </div>
       </div>
+      {listDeposit.length > 0 && !isLoading2 && (
+        <BoxReportDeposit reportDeposit={reportDeposit} fundBalance={fundBalance} />
+      )}
+      {isLoading2 && <BoxReportDepositSkeleton />}
 
-      <BoxReportDeposit isLoading2={isLoading2} reportDeposit={reportDeposit} fundBalance={fundBalance} />
-      <TableReportDeposit isLoading={isLoading} listDeposit={listDeposit} />
+      {listDeposit.length > 0 && !isLoading && <TableReportDeposit listDeposit={listDeposit} totalCount={totalCount} />}
 
-      {totalCount > pageSize && (
+      {isLoading && <TableReportDepositSkeleton />}
+      {!isLoading && !isLoading2 && listDeposit.length === 0 && (
+        <Card
+          className={`shadow-lg border ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'} mb-6`}
+        >
+          <CardContent className="text-center py-8">
+            <AccountBalanceWallet className={`text-4xl mb-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+            <Typography variant="h6" className={isDark ? 'text-gray-400' : 'text-gray-500'}>
+              پرداختی یافت نشد
+            </Typography>
+            <Typography variant="body2" className={isDark ? 'text-gray-500' : 'text-gray-400'}>
+              هیچ پرداختی مطابق با فیلترهای انتخابی شما وجود ندارد.
+            </Typography>
+          </CardContent>
+        </Card>
+      )}
+
+      {totalCount > 0 && (
         <div className="flex justify-center items-center mt-2">
           <Stack spacing={2}>
             <Pagination
@@ -435,7 +464,6 @@ function MainPageManageReportDeposit() {
               ))}
             </Select>
           </FormControl>
-          <span>{totalCount} رکورد</span>
         </div>
       )}
     </>

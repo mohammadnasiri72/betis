@@ -123,6 +123,9 @@ const sidebarConfig = [
       { title: 'گزارش واحدها', path: '/dashboard/report/admin-unit', icon: <FaHouseLaptop /> },
       { title: 'گزارش درخواست‌ها', path: '/dashboard/report/admin-ticket', icon: <HiChartBar /> },
       { title: 'گزارش پرداخت‌ها', path: '/dashboard/report/admin-deposit', icon: <MdPayments /> },
+      { title: 'گزارش هزینه و درآمد', path: '/dashboard/report/admin-cost-income', icon: <MdPayments /> },
+      { title: 'گزارش رزروها', path: '/dashboard/report/admin-reservation', icon: <MdPayments /> },
+      { title: 'گزارش سفارشات', path: '/dashboard/report/admin-order', icon: <MdPayments /> },
     ],
   },
   {

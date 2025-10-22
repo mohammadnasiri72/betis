@@ -1,14 +1,13 @@
 import {
-  Autocomplete,
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Pagination,
-  Select,
-  Skeleton,
-  Stack,
-  TextField,
+    Autocomplete,
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Select,
+    Stack,
+    TextField,
 } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -17,19 +16,25 @@ import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
 import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
-import BoxOrder from './BoxOrder';
-import RateService from './RateService';
-import ToggleButtonFilterStatusOrder from './ToggleButtonFilterStatusOrder';
+import BoxReportOrder from './BoxReportOrder';
+import BoxReportOrderSkeleton from './BoxReportOrderSkeleton';
+import EmptyReportOrder from './EmptyReportOrder';
+import TableReportOrder from './TableReportOrder';
+import TableReportOrderSkeleton from './TableReportOrderSkeleton';
 
-export default function MainPageManageOrder() {
+function MainPageManageReportOrder() {
+  const { themeMode } = useSettings();
+  const isDark = themeMode === 'dark';
+  const url = useLocation();
+
   const [isLoading, setIsLoading] = useState(true);
   const [valBuilding, setValBuilding] = useState('');
   const [listBuilding, setListBuilding] = useState([]);
   const [listUnit, setListUnit] = useState([]);
   const [valUnit, setValUnit] = useState({ title: 'همه', id: -1 });
-  const [flag, setFlag] = useState(0);
   const [numPages, setNumPages] = useState(1);
   const [listOrder, setListOrder] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -41,46 +46,33 @@ export default function MainPageManageOrder() {
   const [errDate2, setErrDate2] = useState(false);
   const [valDate2, setValDate2] = useState('');
   const [yearId, setYearId] = useState('');
-  const [valStatusOrder, setValStatusOrder] = useState(0);
+  const [valStatusOrder, setValStatusOrder] = useState(-1);
   const [listService, setListService] = useState([]);
   const [valService, setValService] = useState(-1);
   const [pageSize, setPageSize] = useState(12);
   const [numStatusOrder, setNumStatusOrder] = useState([]);
-  const { themeMode } = useSettings();
 
-
-  //   get list building
+  // get list building & yearId
   useEffect(() => {
-    axios
-      .get(`${mainDomain}/api/Building/GetList`, {
+    Promise.all([
+      axios.get(`${mainDomain}/api/Year/GetCurrent`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      })
+      }),
+      axios.get(`${mainDomain}/api/Building/GetList`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }),
+    ])
       .then((res) => {
-        setListBuilding(res.data);
-        setValBuilding(res.data[0]);
+        setYearId(res[0].data?.id);
+        setListBuilding(res[1].data);
+        setValBuilding(res[1].data[0]);
       })
-      .catch((err) => {});
+      .catch(() => {});
   }, []);
-  //   get yearId
-  useEffect(() => {
-    axios
-      .get(
-        `${mainDomain}/api/Year/GetList`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      )
-      .then((res) => {
-        setYearId(res.data[0]?.id);
-      })
-      .catch((err) => {});
-  }, []);
-
   //   get list unit & service
   useEffect(() => {
     if (valBuilding?.id) {
@@ -105,17 +97,10 @@ export default function MainPageManageOrder() {
           setListService(res[1].data);
           setValService(-1);
           getOrderList({ buildingId: valBuilding?.id });
-          setValStatusOrder(0);
         })
         .catch(() => {});
     }
-  }, [valBuilding]);
-
-  useEffect(() => {
-    if (flag !== 0) {
-      getOrderList();
-    }
-  }, [flag]);
+  }, [valBuilding, url]);
 
   const config = {
     method: 'get',
@@ -125,7 +110,7 @@ export default function MainPageManageOrder() {
       yearId,
       serviceId: valService,
       unitId: valUnit?.id,
-      statusId: valStatusOrder !== 4 ? valStatusOrder + 1 : -1,
+      statusId: valStatusOrder,
       dateFa: valDate,
       dateDeliveryFa: valDate2,
       orderBy: '',
@@ -199,8 +184,7 @@ export default function MainPageManageOrder() {
             onClick={() => {
               setDate('');
               setValDate('');
-              getOrderList({ dateFa: '', statusId: 1, pageIndex: 1 });
-              setValStatusOrder(0);
+              getOrderList({ dateFa: '', pageIndex: 1 });
               setNumPages(1);
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -230,8 +214,7 @@ export default function MainPageManageOrder() {
             onClick={() => {
               setDate2('');
               setValDate2('');
-              getOrderList({ dateDeliveryFa: '', statusId: 1, pageIndex: 1 });
-              setValStatusOrder(0);
+              getOrderList({ dateDeliveryFa: '', pageIndex: 1 });
               setNumPages(1);
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -244,13 +227,13 @@ export default function MainPageManageOrder() {
   return (
     <>
       <h3
-        style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+        style={{ color: isDark ? '#fff' : '#000' }}
         className="sm:text-2xl text-lg font-semibold whitespace-nowrap mb-5 -mt-5"
       >
-        مدیریت سفارشات
+        گزارش سفارشات
       </h3>
-      <div className="flex flex-wrap px-2">
-        <div className="sm:w-1/5 w-full px-1">
+      <div className="flex flex-wrap px-2 !mb-3">
+        <div className="sm:w-1/6 w-full px-1">
           <FormControl size="small" color="primary" className="w-full">
             <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
               لیست مجتمع ها
@@ -273,7 +256,7 @@ export default function MainPageManageOrder() {
             </Select>
           </FormControl>
         </div>
-        <div className="sm:w-1/5 w-full flex items-center px-1 sm:mt-0 mt-3">
+        <div className="sm:w-1/6 w-full flex items-center px-1 sm:mt-0 mt-3">
           <Autocomplete
             size="small"
             className="w-full"
@@ -283,14 +266,12 @@ export default function MainPageManageOrder() {
             onChange={(event, newValue) => {
               if (newValue) {
                 setValUnit(newValue);
-                getOrderList({ unitId: newValue?.id, statusId: 1, pageIndex: 1 });
-                setValStatusOrder(0);
+                getOrderList({ unitId: newValue?.id, pageIndex: 1 });
                 setNumPages(1);
               }
               if (!newValue) {
                 setValUnit({ title: 'همه', id: -1 });
-                getOrderList({ unitId: -1, statusId: 1, pageIndex: 1 });
-                setValStatusOrder(0);
+                getOrderList({ unitId: -1, pageIndex: 1 });
                 setNumPages(1);
               }
             }}
@@ -303,7 +284,7 @@ export default function MainPageManageOrder() {
             renderInput={(params) => <TextField {...params} label={'لیست واحد ها'} />}
           />
         </div>
-        <div className="sm:w-1/5 w-full px-1 sm:mt-0 mt-3" dir="rtl">
+        <div className="sm:w-1/6 w-full px-1 sm:mt-0 mt-3" dir="rtl">
           <FormControl size="small" color="primary" className="w-full">
             <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
               لیست خدمات
@@ -318,8 +299,7 @@ export default function MainPageManageOrder() {
               color="primary"
               onChange={(e) => {
                 setValService(e.target.value);
-                getOrderList({ serviceId: e.target.value, statusId: 1, pageIndex: 1 });
-                setValStatusOrder(0);
+                getOrderList({ serviceId: e.target.value, pageIndex: 1 });
                 setNumPages(1);
               }}
             >
@@ -334,8 +314,35 @@ export default function MainPageManageOrder() {
             </Select>
           </FormControl>
         </div>
+        <div className="sm:w-1/6 w-full flex items-center px-2 sm:mt-0 mt-3">
+          <FormControl size="small" color="primary" className="w-full">
+            <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
+              انتخاب وضعیت
+            </InputLabel>
+            <Select
+              size="small"
+              className="w-full"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={valStatusOrder}
+              label="انتخاب وضعیت"
+              color="primary"
+              onChange={(e) => {
+                getOrderList({ statusId: e.target.value, pageIndex: 1 });
+                setValStatusOrder(e.target.value);
+                setNumPages(1);
+              }}
+            >
+              <MenuItem value={-1}>همه</MenuItem>
+              <MenuItem value={1}>منتظر تایید</MenuItem>
+              <MenuItem value={2}>درحال انجام</MenuItem>
+              <MenuItem value={3}>انجام شده</MenuItem>
+              <MenuItem value={4}>لغو شده</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         {/* select from time */}
-        <div className="sm:w-1/5 relative w-full px-1 sm:mt-0 mt-3">
+        <div className="sm:w-1/6 relative w-full px-1 sm:mt-0 mt-3">
           <DatePicker
             className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
             format="DD MMMM YYYY"
@@ -352,16 +359,14 @@ export default function MainPageManageOrder() {
               setDate(event);
               setValDate(event.format('YYYY/MM/DD'));
               setErrDate(false);
-              getOrderList({ dateFa: event.format('YYYY/MM/DD'), statusId: 1, pageIndex: 1 });
-              setValStatusOrder(0);
+              getOrderList({ dateFa: event.format('YYYY/MM/DD'), pageIndex: 1 });
               setNumPages(1);
             }}
             placeholder="تاریخ ثبت سفارش"
           />
         </div>
-
         {/* select to time */}
-        <div className="sm:w-1/5 relative w-full px-1 sm:mt-0 mt-3">
+        <div className="sm:w-1/6 relative w-full px-1 sm:mt-0 mt-3">
           <DatePicker
             className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
             format="DD MMMM YYYY"
@@ -378,61 +383,20 @@ export default function MainPageManageOrder() {
               setDate2(event);
               setValDate2(event.format('YYYY/MM/DD'));
               setErrDate2(false);
-              getOrderList({ dateDeliveryFa: event.format('YYYY/MM/DD'), statusId: 1, pageIndex: 1 });
-              setValStatusOrder(0);
+              getOrderList({ dateDeliveryFa: event.format('YYYY/MM/DD'), pageIndex: 1 });
               setNumPages(1);
             }}
             placeholder="تاریخ تحویل سفارش"
           />
         </div>
-
-        <div className="flex flex-wrap w-full">
-          <div className="w-full">
-            <ToggleButtonFilterStatusOrder
-              value={valStatusOrder}
-              setValue={setValStatusOrder}
-              getOrderList={getOrderList}
-              setNumPages={setNumPages}
-              numStatusOrder={numStatusOrder}
-            />
-          </div>
-
-          <div className="w-full flex justify-end p-2">
-            <RateService valService={valService} />
-          </div>
-        </div>
       </div>
-      <div className="flex flex-wrap">
-        {listOrder.length > 0 &&
-          listOrder.map((order) => (
-            <div key={order?.id} className="p-2 sm:w-1/2 w-full">
-              <BoxOrder menu={order} setFlag={setFlag} />
-            </div>
-          ))}
-        {listOrder.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full">
-            <div className=" sm:w-1/2 w-full px-2 -mt-10 -mr-3">
-              <Skeleton height={300} animation="wave" className="" />
-            </div>
-            <div className=" sm:w-1/2 w-full px-2 -mt-10 -mr-3">
-              <Skeleton height={300} animation="wave" className="" />
-            </div>
-            <div className=" sm:w-1/2 w-full px-2 -mt-10 -mr-3">
-              <Skeleton height={300} animation="wave" className="" />
-            </div>
-            <div className=" sm:w-1/2 w-full px-2 -mt-10 -mr-3">
-              <Skeleton height={300} animation="wave" className="" />
-            </div>
-          </div>
-        )}
-        {listOrder.length === 0 && !isLoading && (
-          <div className="w-full flex flex-col items-center mt-5">
-            <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
-            <p>موردی موجود نیست...</p>
-          </div>
-        )}
-      </div>
-      {totalCount > pageSize && (
+
+      {!isLoading && numStatusOrder.length > 0 && listOrder.length > 0 && <BoxReportOrder numStatusOrder={numStatusOrder} />}
+      {isLoading && <BoxReportOrderSkeleton />}
+      {!isLoading && listOrder.length > 0 && <TableReportOrder listOrder={listOrder} totalCount={totalCount} />}
+      {isLoading && <TableReportOrderSkeleton />}
+      {!isLoading && listOrder.length === 0 && <EmptyReportOrder />}
+      {totalCount > 0 && (
         <div className="flex flex-wrap justify-center items-center mt-2">
           <Stack spacing={2}>
             <Pagination
@@ -453,9 +417,9 @@ export default function MainPageManageOrder() {
               value={pageSize}
               label="تعداد "
               onChange={(e) => {
+                getOrderList({ pageIndex: 1, pageSize: e.target.value });
                 setPageSize(e.target.value);
                 setNumPages(1);
-                setFlag((e) => !e);
               }}
             >
               {[6, 12, 24, 48, 96].map((size) => (
@@ -465,9 +429,10 @@ export default function MainPageManageOrder() {
               ))}
             </Select>
           </FormControl>
-          <span>{totalCount} رکورد</span>
         </div>
       )}
     </>
   );
 }
+
+export default MainPageManageReportOrder;

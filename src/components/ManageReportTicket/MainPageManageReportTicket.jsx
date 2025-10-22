@@ -23,7 +23,9 @@ import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReportData from './BoxReportData';
-import TicketReport from './TicketReport';
+import BoxReportDataSkeleton from './BoxReportDataSkeleton';
+import TableReportData from './TableReportData';
+import TableReportDataSkeleton from './TableReportDataSkeleton';
 
 function MainPageManageReportTicket() {
   const { themeMode } = useSettings();
@@ -497,8 +499,12 @@ function MainPageManageReportTicket() {
           </div>
         </div>
       </div>
-      {listMessages.length > 0 && <BoxReportData reportData={reportData} isLoading2={isLoading2} />}
-      <TicketReport listMessages={listMessages} isLoading={isLoading} />
+      {listMessages.length > 0 && !isLoading2 && <BoxReportData reportData={reportData} isLoading2={isLoading2} />}
+      {!isLoading && <TableReportData listMessages={listMessages} totalCount={totalCount} />}
+      {isLoading2 && <BoxReportDataSkeleton />}
+      {isLoading && <TableReportDataSkeleton />}
+
+      {/* صفحه بندی */}
       {totalCount > 0 && (
         <div className="flex flex-wrap justify-center items-center mt-2">
           <Stack spacing={2}>
@@ -532,7 +538,6 @@ function MainPageManageReportTicket() {
               ))}
             </Select>
           </FormControl>
-          <span>{totalCount} رکورد</span>
         </div>
       )}
     </>
