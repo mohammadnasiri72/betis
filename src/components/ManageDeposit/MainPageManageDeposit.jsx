@@ -46,7 +46,7 @@ export default function MainPageManageDeposit() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [totalCountPending, setTotalCountPending] = useState(0);
-  const location = useLocation()
+  const location = useLocation();
   const { themeMode } = useSettings();
   const [pageSize, setPageSize] = useState(12);
 
@@ -55,7 +55,7 @@ export default function MainPageManageDeposit() {
       // setDate(new Date())
       // setStartDateFa(new Date().toLocaleDateString('fa-IR'))
     }
-  }, [location])
+  }, [location]);
 
   useEffect(() => {
     AOS.init();
@@ -73,7 +73,7 @@ export default function MainPageManageDeposit() {
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   //   get yearId
@@ -91,7 +91,7 @@ export default function MainPageManageDeposit() {
       .then((res) => {
         setYearId(res.data[0]?.id);
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }, []);
 
   //   get list unit
@@ -108,23 +108,25 @@ export default function MainPageManageDeposit() {
         .then((res) => {
           setListUnit(res.data);
 
-
           setValUnit({ title: 'همه', id: -1 });
-          getListDeposit({ buildingId: valBuilding?.id, unitId: -1, statusId: 0 });
+          // getListDeposit({ buildingId: valBuilding?.id, unitId: -1, statusId: 0 });
           setValueStatus(0);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [valBuilding]);
+
+  useEffect(() => {
+    if (valBuilding?.id) {
+      getListDeposit({ buildingId: valBuilding?.id });
+    }
+  }, [valBuilding, location]);
 
   useEffect(() => {
     if (flag !== 0) {
       getListDeposit();
     }
   }, [flag]);
-
-
-
 
   useEffect(() => {
     if (flagTimer !== 0) {
@@ -161,7 +163,7 @@ export default function MainPageManageDeposit() {
             });
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [flagTimer]);
 
@@ -198,7 +200,7 @@ export default function MainPageManageDeposit() {
         }
         setIsLoading(false);
       })
-      .catch(() => { });
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -265,8 +267,6 @@ export default function MainPageManageDeposit() {
       </div>
     );
   }
-
-
 
   return (
     <>
@@ -354,7 +354,6 @@ export default function MainPageManageDeposit() {
                   statusId: 0,
                   pageIndex: 1,
                 });
-
               }}
               placeholder="تاریخ شروع ورود مهمان"
             />
@@ -382,7 +381,6 @@ export default function MainPageManageDeposit() {
                   statusId: 0,
                   pageIndex: 1,
                 });
-
               }}
               placeholder="تاریخ پایان ورود مهمان"
             />
@@ -440,7 +438,7 @@ export default function MainPageManageDeposit() {
           </div>
         )}
       </div>
-    
+
       {totalCount > pageSize && (
         <div className="flex justify-center items-center mt-2">
           <Stack spacing={2}>
@@ -456,7 +454,7 @@ export default function MainPageManageDeposit() {
           <FormControl size="small" style={{ minWidth: 80 }}>
             <InputLabel id="page-size-label">تعداد </InputLabel>
             <Select
-              size='small'
+              size="small"
               labelId="page-size-label"
               id="page-size"
               value={pageSize}
@@ -467,7 +465,9 @@ export default function MainPageManageDeposit() {
               }}
             >
               {[6, 12, 24, 48, 96].map((size) => (
-                <MenuItem key={size} value={size}>{size}</MenuItem>
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

@@ -1,6 +1,7 @@
 import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, Skeleton, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxResident from './BoxResident';
@@ -11,7 +12,7 @@ export default function MainPageManageResident() {
   const [listBuilding, setListBuilding] = useState([]);
   const [listUnit, setListUnit] = useState([]);
   const [valUnit, setValUnit] = useState({});
-
+  const url = useLocation();
   const { themeMode } = useSettings();
 
   //   get list building
@@ -53,7 +54,7 @@ export default function MainPageManageResident() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding]);
+  }, [valBuilding, url]);
 
   return (
     <>
@@ -125,14 +126,20 @@ export default function MainPageManageResident() {
             .map((unit) => <BoxResident key={unit?.id} unit={unit} />)}
         {listUnit.filter((e) => (valUnit?.id !== -1 ? e?.id === valUnit?.id : e)).length === 0 && isLoading && (
           <div className="w-full">
-            <div className="w-full">
-              <Skeleton height={80} animation="wave" />
+            <div className="w-full p-2">
+              <Skeleton variant="rounded" height={50} animation="wave" />
             </div>
-            <div className="w-full -mt-6">
-              <Skeleton height={80} animation="wave" />
+            <div className="w-full p-2">
+              <Skeleton variant="rounded" height={50} animation="wave" />
             </div>
-            <div className="w-full -mt-6">
-              <Skeleton height={80} animation="wave" />
+            <div className="w-full p-2">
+              <Skeleton variant="rounded" height={50} animation="wave" />
+            </div>
+            <div className="w-full p-2">
+              <Skeleton variant="rounded" height={50} animation="wave" />
+            </div>
+            <div className="w-full p-2">
+              <Skeleton variant="rounded" height={50} animation="wave" />
             </div>
           </div>
         )}

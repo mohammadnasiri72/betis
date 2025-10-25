@@ -2,7 +2,6 @@
 import {
   Chip,
   FormControl,
-  IconButton,
   Input,
   InputAdornment,
   InputLabel,
@@ -10,7 +9,6 @@ import {
   Select,
   Skeleton,
   TextField,
-  Tooltip,
 } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -22,7 +20,7 @@ import { CiSearch } from 'react-icons/ci';
 import { FaCheckCircle } from 'react-icons/fa';
 import { ImCancelCircle } from 'react-icons/im';
 import { IoIosSpeedometer } from 'react-icons/io';
-import { MdOutlineCalculate, MdOutlineDelete } from 'react-icons/md';
+import { MdOutlineCalculate } from 'react-icons/md';
 import { RiCommunityFill, RiCommunityLine } from 'react-icons/ri';
 import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
@@ -55,8 +53,6 @@ export default function MainPageManageApplayCharge() {
   const [flag, setFlag] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [listReportDebt, setListReportDebt] = useState([]);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null);
 
   const { themeMode } = useSettings();
 
@@ -71,15 +67,6 @@ export default function MainPageManageApplayCharge() {
   }, []);
 
   const e2p = (s) => s.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
-
-  // const resetState = () => {
-  //   setListCalc([]);
-  //   setValBuilding(listBuilding[0]);
-  //   setValCharge(listCharge.filter((e) => e.typeId === 1)[0]);
-  //   setTotalAmount('');
-  //   setValyear(listYear[0]?.id);
-  //   setDueDate('');
-  // };
 
   // set total amount
   useEffect(() => {
@@ -150,7 +137,7 @@ export default function MainPageManageApplayCharge() {
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   //   get list unit
@@ -166,7 +153,7 @@ export default function MainPageManageApplayCharge() {
           setListUnit([{ id: -1, title: 'همه' }, ...res.data]);
           // setValUnit(res.data[0]);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [valBuilding]);
 
@@ -183,7 +170,7 @@ export default function MainPageManageApplayCharge() {
         setYearId(res.data?.id);
         setValyear(res.data?.id);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   // get list charge
@@ -201,7 +188,7 @@ export default function MainPageManageApplayCharge() {
             res.data.filter((e) => e.typeId === 1).length > 0 ? res.data.filter((e) => e.typeId === 1)[0] : -1
           );
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [valBuilding]);
 
@@ -217,7 +204,7 @@ export default function MainPageManageApplayCharge() {
         .then((res) => {
           setListTerm(res.data);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [yearId]);
 
@@ -285,7 +272,7 @@ export default function MainPageManageApplayCharge() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding, valTerm, valCharge, flag]);
+  }, [valBuilding, valTerm, valCharge, flag, url]);
 
   return (
     <>
@@ -552,7 +539,11 @@ export default function MainPageManageApplayCharge() {
                       }}
                       className="flex items-center text-slate-600 bg-slate-100 rounded-3xl px-2 py-1 text-xs"
                     >
-                      {listUnit.find((e) => e?.id === calc?.id).ownerIsResident ? <FaCheckCircle /> : <ImCancelCircle />}
+                      {listUnit.find((e) => e?.id === calc?.id).ownerIsResident ? (
+                        <FaCheckCircle />
+                      ) : (
+                        <ImCancelCircle />
+                      )}
                       <span className="px-1">مالک ساکن</span>
                     </div>
                   </div>
@@ -594,7 +585,6 @@ export default function MainPageManageApplayCharge() {
                   )}
                   {calc.amount === 0 && (
                     <div className="w-full mt-2 flex">
-
                       <button className="w-full bg-emerald-500 p-1 rounded-b-lg">
                         <span className="text-xs px-1 text-white"> {numberWithCommas(calc.amount)} تومان </span>
                       </button>
@@ -671,11 +661,7 @@ export default function MainPageManageApplayCharge() {
                             در انتظار پرداخت
                           </p>
 
-                          <ModalDeleteCharge
-                            report={report}
-                            setFlag={setFlag}
-                          />
-
+                          <ModalDeleteCharge report={report} setFlag={setFlag} />
                         </div>
                       )}
                     </div>
@@ -765,7 +751,7 @@ export default function MainPageManageApplayCharge() {
             ))}
         {listReportDebt.length > 0 &&
           listReportDebt.filter((e) => (searchValue.length > 0 ? e.unitTitle.includes(searchValue) : e)).length ===
-          0 && (
+            0 && (
             <div className="w-full flex flex-col items-center">
               <img
                 className="w-32"
@@ -783,24 +769,39 @@ export default function MainPageManageApplayCharge() {
           </div>
         )}
         {listCalc.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" />
+          <>
+            <div className="flex justify-between w-full items-center">
+              {/* اسکلتون تعداد کل */}
+              <Skeleton variant="text" width={80} height={20} className="whitespace-nowrap text-xs" />
+
+              {/* اسکلتون فیلد جستجو */}
+              <div className="sm:w-1/2 w-full px-5 sm:block hidden">
+                <FormControl sx={{ width: '100%' }} variant="standard">
+                  <Skeleton variant="text" width={60} height={20} sx={{ mb: 1 }} />
+                  <Skeleton variant="rectangular" width="100%" height={40} />
+                </FormControl>
+              </div>
+
+              {/* اسکلتون مبلغ کل */}
+              <Skeleton variant="text" width={120} height={20} className="whitespace-nowrap text-xs mt-1" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" />
+            <div className="flex flex-wrap justify-between w-full mt-1">
+              <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={250} animation="wave" />
+              </div>
+              <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2 sm:mt-0 ">
+                <Skeleton variant="rounded" height={250} animation="wave" />
+              </div>
+              <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2 sm:mt-0 ">
+                <Skeleton variant="rounded" height={250} animation="wave" />
+              </div>
+              <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2 sm:mt-0 ">
+                <Skeleton variant="rounded" height={250} animation="wave" />
+              </div>
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" />
-            </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" />
-            </div>
-          </div>
+          </>
         )}
       </div>
-      {/* Modal for delete confirm */}
-
     </>
   );
 }

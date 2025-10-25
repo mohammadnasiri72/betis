@@ -152,7 +152,7 @@ export default function ModalNewWarehouse({ setFlag, listUnit, valUnitMain }) {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle style={{color: themeMode==='dark'? '#fff' : ''}} sx={{ m: 0, p: 2, textAlign: 'start' }} id="customized-dialog-title">
+        <DialogTitle style={{color: themeMode==='dark'? '#fff' : '#000'}} sx={{ m: 0, p: 2, textAlign: 'start' }} id="customized-dialog-title">
           انباری جدید اضافه کنید
         </DialogTitle>
         <IconButton

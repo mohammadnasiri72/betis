@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { BiMaleFemale } from 'react-icons/bi';
 import { FaAngleLeft, FaCheckCircle, FaFemale, FaMale, FaRegStar, FaStar } from 'react-icons/fa';
 import { MdAccessTime, MdCancel } from 'react-icons/md';
-import { TbListNumbers } from 'react-icons/tb';
 import Rating from 'react-rating';
 import { Link } from 'react-router-dom';
 import useSettings from '../../../hooks/useSettings';
@@ -218,13 +217,42 @@ export default function BoxMyReserve({ myReserve, setIsLoading, setFlag, listSer
                   </p>
                 </div>
                 <div className="px-1">
-                  {myReserve?.reservationRelatedInfo?.value?.length === 7 && (
-                    <Chip
-                      label={`${myReserve?.reservationRelatedInfo?.value}`}
-                      icon={<TbListNumbers className="text-xl" />}
-                    />
+                  {Number(myReserve?.reservationRelatedInfo?.value) > 0 && (
+                    <div className="relative bg-white border border-[#000a] rounded-lg overflow-hidden shadow-lg px-6">
+                      <div className="text-xs text-gray-900 tracking-wider mb-1">
+                        {myReserve?.reservationRelatedInfo?.value.slice(0, 3) || '***'}
+                      </div>
+                      <div className="text-xs text-gray-900 tracking-wider">
+                        {myReserve?.reservationRelatedInfo?.value.slice(3, 8) || '*****'}
+                      </div>
+                      <div className="absolute left-0 top-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" fill="none">
+                          <rect width="24" height="24" fill="#004A96" />
+                          <path
+                            fill="#fff"
+                            d="M5.5 14.5h-.3V12h.3v2.5Zm.45-.05c-.03-.03-.045-.065-.045-.105 0-.042.015-.078.045-.105.03-.03.065-.044.105-.045.04.001.075.016.105.045.03.03.045.065.045.105 0 .04-.015.077-.045.105-.03.03-.065.044-.105.044-.035 0-.067-.014-.095-.044Zm.855-.65h-.39v.7h-.225V12h.555c.19 0 .335.044.435.132.1.088.15.216.15.368 0 .107-.03.2-.09.28-.06.08-.135.14-.225.18l.39.75v.015h-.24l-.315-.7Zm-.39-.185h.345c.06 0 .112-.008.156-.025.045-.017.085-.04.12-.068.03-.03.055-.063.075-.1.02-.04.03-.081.03-.125 0-.05-.01-.094-.03-.135-.02-.04-.045-.075-.075-.105-.03-.03-.07-.055-.12-.075-.05-.02-.105-.03-.165-.03h-.33v.65Zm.87.85c-.03-.03-.045-.065-.045-.105 0-.042.015-.078.045-.105.03-.03.065-.044.105-.045.04.001.075.016.105.045.03.03.045.065.045.105 0 .04-.015.077-.045.105-.03.03-.065.044-.105.044-.035 0-.067-.014-.095-.044ZM5.5 19h-.3v-2.5h.3V19Zm1.05-.7h-.39V19h-.225v-2.5h.555c.19 0 .335.044.435.132.1.088.15.216.15.368 0 .107-.03.2-.09.28-.06.08-.135.14-.225.18l.39.75V19h-.24l-.315-.7Zm-.39-.185h.345c.06 0 .112-.008.156-.025.045-.017.085-.04.12-.068.03-.03.055-.063.075-.1.02-.04.03-.081.03-.125 0-.05-.01-.094-.03-.135-.02-.04-.045-.075-.075-.105-.03-.03-.07-.055-.12-.075-.05-.02-.105-.03-.165-.03h-.33v.65Zm1.77.43h-.69l-.225-.45h-.195l.675-1.75h.21l.675 1.75h-.195l-.225-.45Zm-.54-.19h.495l-.255-.825-.24.825ZM9.5 19h-.225l-.9-1.35V19h-.225v-2.5h.225l.9 1.375v-1.375H9.5V19Z"
+                          />
+                          <rect x="5" y="4.5" width="8" height="0.5" fill="#00A03C" />
+                          <rect x="5" y="5" width="8" height="2" fill="#fff" />
+                          <rect x="5" y="7" width="8" height="1" fill="#FC000B" />
+                          <g clipPath="url(#a)">
+                            <path
+                              fill="#FC000B"
+                              fillRule="evenodd"
+                              d="M7.85 5.9c-.125.085-.205.215-.21.365-.008.195.118.368.306.45-.074.02-.152.025-.228.016-.004 0-.009-.001-.013-.002.072.026.15.038.227.035.02-.001.04-.002.06-.005l.059.079.059-.079c.02.003.04.004.06.005.078.003.155-.01.227-.035-.004.001-.008.001-.013.002-.076.009-.154.004-.228-.016.188-.082.315-.254.306-.45-.006-.15-.089-.28-.214-.365.088.106.13.245.104.39-.026.145-.115.268-.236.348l.016-.713c-.035-.008-.062-.029-.082-.051-.02.022-.047.043-.082.051l.016.713c-.121-.08-.21-.202-.236-.348-.026-.146.016-.284.104-.39Zm.352-.135c.002.008.003.015.003.023 0 .051-.04.093-.09.093-.026 0-.05-.011-.066-.03-.017.018-.04.03-.066.03-.05 0-.09-.042-.09-.093 0-.008.001-.015.003-.023.005.037.04.066.082.066.031 0 .058-.016.072-.039.014.023.041.039.072.039.042 0 .077-.029.082-.066Zm-.535.893c-.075-.037-.137-.09-.18-.153-.043-.064-.066-.136-.066-.21 0-.198.161-.363.376-.407-.155.071-.264.237-.264.431 0 .133.051.253.134.338h.0Zm.762 0c.075-.037.137-.09.18-.153.043-.064.066-.136.066-.21 0-.198-.16-.363-.376-.407.155.071.264.237.264.431 0 .133-.051.253-.134.338h.0Z"
+                              clipRule="evenodd"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="a">
+                              <rect x="7.25" y="5.75" width="1.5" height="1" fill="#fff" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </div>
+                    </div>
                   )}
-                  {myReserve?.reservationRelatedInfo?.value?.length === 8 && (
+                  {Number.isNaN(Number(myReserve?.reservationRelatedInfo?.value)) && (
                     <div className="border-t border-b border-r border-[#000a] rounded-lg pr-2 flex justify-end items-center gap-2">
                       <div className="flex flex-col items-center justify-center">
                         <span className="text-[8px]">ایران</span>

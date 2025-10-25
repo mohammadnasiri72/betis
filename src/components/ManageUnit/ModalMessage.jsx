@@ -1,11 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  FormControlLabel,
-  Switch,
-  TextField,
-  Tooltip
-} from '@mui/material';
+import { FormControlLabel, Switch, TextField, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -67,7 +62,11 @@ export default function ModalMessage({ valBuilding, setFlag }) {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle sx={{ m: 0, p: 2, textAlign: 'start' }} id="customized-dialog-title" className={themeMode==='dark'? "bg-slate-700 text-white" : "bg-slate-100"}>
+        <DialogTitle
+          sx={{ m: 0, p: 2, textAlign: 'start' }}
+          id="customized-dialog-title"
+          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100 !text-black'}
+        >
           ارسال پیام
         </DialogTitle>
         <IconButton
@@ -83,56 +82,56 @@ export default function ModalMessage({ valBuilding, setFlag }) {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers className="sm:min-w-[600px]">
-        <div className="w-full mt-5">
-              <TextField
-                // focused={errSubject}
-                // color={errSubject ? 'error' : 'primary'}
-                className="w-full text-end"
-                id="outlined-multiline-flexible"
-                label="موضوع"
-                dir="rtl"
-                // value={subject}
-                // onChange={(e) => {
-                //   setSubject(e.target.value);
-                //   if (e.target.value.length === 0) {
-                //     setErrSubject(true);
-                //   }
-                //   if (e.target.value.length !== 0) {
-                //     setErrSubject(false);
-                //   }
-                // }}
-              />
-            </div>
-            <div className="mt-5 w-full">
-              <TextField
-                // focused={errBody}
-                // color={errBody ? 'error' : 'primary'}
-                className="w-full text-end"
-                id="outlined-multiline-flexible"
-                label="متن پیام"
-                dir="rtl"
-                multiline
-                minRows={3}
-                // value={body}
-                // onChange={(e) => {
-                //   setBody(e.target.value);
-                //   if (e.target.value.length === 0) {
-                //     setErrBody(true);
-                //   }
-                //   if (e.target.value.length !== 0) {
-                //     setErrBody(false);
-                //   }
-                // }}
-              />
-            </div>
-            <div>
-              <FormControlLabel
-                value={isActiveNotif}
-                onChange={() => setIsActiveNotif(!isActiveNotif)}
-                control={<Switch checked={isActiveNotif} />}
-                label="اطلاع رسانی"
-              />
-            </div>
+          <div className="w-full mt-5">
+            <TextField
+              // focused={errSubject}
+              // color={errSubject ? 'error' : 'primary'}
+              className="w-full text-end"
+              id="outlined-multiline-flexible"
+              label="موضوع"
+              dir="rtl"
+              // value={subject}
+              // onChange={(e) => {
+              //   setSubject(e.target.value);
+              //   if (e.target.value.length === 0) {
+              //     setErrSubject(true);
+              //   }
+              //   if (e.target.value.length !== 0) {
+              //     setErrSubject(false);
+              //   }
+              // }}
+            />
+          </div>
+          <div className="mt-5 w-full">
+            <TextField
+              // focused={errBody}
+              // color={errBody ? 'error' : 'primary'}
+              className="w-full text-end"
+              id="outlined-multiline-flexible"
+              label="متن پیام"
+              dir="rtl"
+              multiline
+              minRows={3}
+              // value={body}
+              // onChange={(e) => {
+              //   setBody(e.target.value);
+              //   if (e.target.value.length === 0) {
+              //     setErrBody(true);
+              //   }
+              //   if (e.target.value.length !== 0) {
+              //     setErrBody(false);
+              //   }
+              // }}
+            />
+          </div>
+          <div>
+            <FormControlLabel
+              value={isActiveNotif}
+              onChange={() => setIsActiveNotif(!isActiveNotif)}
+              control={<Switch checked={isActiveNotif} />}
+              label="اطلاع رسانی"
+            />
+          </div>
           {isLoading && <SimpleBackdrop />}
         </DialogContent>
         <DialogActions>

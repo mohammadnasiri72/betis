@@ -9,11 +9,11 @@ import { PiBuildings } from 'react-icons/pi';
 import { RiHomeOfficeFill } from 'react-icons/ri';
 import { TbBuildingCommunity, TbListDetails } from 'react-icons/tb';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
 import ActionMenu from './ActionMenu';
 import ModalNewBuilding from './ModalNewBuilding';
-import useSettings from '../../hooks/useSettings';
 
 function MainPageManageBuilding() {
   const [listBuilding, setListBuilding] = useState([]);
@@ -24,9 +24,6 @@ function MainPageManageBuilding() {
 
   const { themeMode } = useSettings();
 
- 
-  
-
   useEffect(() => {
     AOS.init();
   }, []);
@@ -34,6 +31,7 @@ function MainPageManageBuilding() {
   // get list building
   useEffect(() => {
     setIsLoading(true);
+    setListBuilding([]);
     axios
       .get(`${mainDomain}/api/Building/GetList`, {
         headers: {
@@ -44,10 +42,10 @@ function MainPageManageBuilding() {
         setIsLoading(false);
         setListBuilding(res.data);
       })
-      .catch(() => {
+      .catch((err) => {
         setIsLoading(false);
       });
-  }, [flag]);
+  }, [flag, url]);
 
   return (
     <>

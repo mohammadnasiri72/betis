@@ -6,11 +6,11 @@ import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxCostIncome from './BoxCostIncome';
 import ModalNewCostIncome from './ModalNewCostIncome';
-import useSettings from '../../hooks/useSettings';
 
 export default function MainPageManageCostIncome() {
   const [flag, setFlag] = useState(false);
@@ -27,7 +27,7 @@ export default function MainPageManageCostIncome() {
   const [listCostIncome, setListCostIncome] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  
+  const url = useLocation();
 
   useEffect(() => {
     setValType(20);
@@ -35,13 +35,10 @@ export default function MainPageManageCostIncome() {
 
   const { themeMode } = useSettings();
 
-  const url = useLocation();
-
   useEffect(() => {
     AOS.init();
   }, []);
 
- 
   // get list building & yearId
   useEffect(() => {
     Promise.all([
@@ -116,7 +113,7 @@ export default function MainPageManageCostIncome() {
           });
       }
     }
-  }, [valTerm, valType, flagTerm, flagType, yearId, flag]);
+  }, [valTerm, valType, flagTerm, flagType, yearId, flag, url]);
 
   return (
     <>
@@ -234,24 +231,24 @@ export default function MainPageManageCostIncome() {
       {listCostIncome.length > 0 && (
         <div className="flex flex-wrap mt-5">
           {listCostIncome
-          .filter((e)=>e.parentId===null)
-          .map((e) => (
-            <div key={e?.id} data-aos="zoom-in" className="lg:w-1/3 sm:w-1/2 w-full p-2">
-              <BoxCostIncome e={e} setFlag={setFlag} setIsLoading={setIsLoading} listCostIncome={listCostIncome}/>
-            </div>
-          ))}
+            .filter((e) => e.parentId === null)
+            .map((e) => (
+              <div key={e?.id} data-aos="zoom-in" className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <BoxCostIncome e={e} setFlag={setFlag} setIsLoading={setIsLoading} listCostIncome={listCostIncome} />
+              </div>
+            ))}
         </div>
       )}
       {listCostIncome.length === 0 && isLoading && (
-        <div className="flex flex-wrap justify-between w-full">
+        <div className="flex flex-wrap justify-between w-full mt-5">
           <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
-            <Skeleton height={250} animation="wave" className="" />
+            <Skeleton variant="rounded" height={150} animation="wave" className="" />
           </div>
-          <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-            <Skeleton height={250} animation="wave" className="" />
+          <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 mt-3">
+            <Skeleton variant="rounded" height={150} animation="wave" className="" />
           </div>
-          <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-            <Skeleton height={250} animation="wave" className="" />
+          <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 mt-3">
+            <Skeleton variant="rounded" height={150} animation="wave" className="" />
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import SelectTerm from './SelectTerm';
@@ -29,6 +30,7 @@ export default function MainPageManageReportDebt() {
   const [ascending, setAscending] = useState(true);
   const [orderBy, setOrderBy] = useState('');
   const [valPaid, setValPaid] = useState(-1);
+  const url = useLocation();
 
   useEffect(() => {
     setValPaid(-1);
@@ -149,7 +151,7 @@ export default function MainPageManageReportDebt() {
           setIsLoading(false);
         });
     }
-  }, [yearId, fromPersianDate, toPersianDate, valCharge, valUnit, ascending, numPages, orderBy, valPaid]);
+  }, [yearId, fromPersianDate, toPersianDate, valCharge, valUnit, ascending, numPages, orderBy, valPaid, url]);
 
   return (
     <>

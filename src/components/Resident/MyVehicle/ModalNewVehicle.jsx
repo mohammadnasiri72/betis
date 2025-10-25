@@ -14,9 +14,9 @@ import * as React from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { MdOutlineAddAPhoto } from 'react-icons/md';
 import Swal from 'sweetalert2';
+import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 import SetPlateHandler from './SetPlateHandler';
-import useSettings from '../../../hooks/useSettings';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -101,13 +101,14 @@ export default function ModalNewVehicle({ setFlag, valTypeVehicle, setValTypeVeh
 
   //   set new vehicle
   const setNewVehicleHandler = () => {
+
     if (valTypeVehicle === 1) {
       if (licensePlate.length !== 8) {
         setErrLicensePlate(true);
       }
     }
     if (valTypeVehicle === 2) {
-      if (licensePlate.length !== 7) {
+      if (licensePlate.length !== 8) {
         setErrLicensePlateMotor(true);
       }
     }
@@ -152,7 +153,7 @@ export default function ModalNewVehicle({ setFlag, valTypeVehicle, setValTypeVeh
       }
     }
     if (valTypeVehicle === 2) {
-      if (licensePlate.length === 7) {
+      if (licensePlate.length === 8) {
         setIsLoading(true);
         const data = {
           unitId: accountResident.id,
@@ -167,7 +168,7 @@ export default function ModalNewVehicle({ setFlag, valTypeVehicle, setValTypeVeh
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           })
-          .then((res) => {
+          .then(() => {
             handleClose();
             setIsLoading(false);
             setFlag((e) => !e);
@@ -213,7 +214,7 @@ export default function ModalNewVehicle({ setFlag, valTypeVehicle, setValTypeVeh
         open={open}
       >
         <DialogTitle
-          style={{ color: themeMode === 'dark' ? '#fff' : '' }}
+          style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
           sx={{ m: 0, p: 2, textAlign: 'start' }}
           id="customized-dialog-title"
         >

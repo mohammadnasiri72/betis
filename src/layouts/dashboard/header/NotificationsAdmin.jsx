@@ -17,8 +17,8 @@ import { useEffect, useState } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { IoCloseOutline } from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router';
-import BoxMessageAdmin from '../../../components/boxMessage/BoxMessageAdmin';
 import { IconButtonAnimate } from '../../../components/animate';
+import BoxMessageAdmin from '../../../components/boxMessage/BoxMessageAdmin';
 import useSettings from '../../../hooks/useSettings';
 import { mainDomain } from '../../../utils/mainDomain';
 
@@ -63,7 +63,8 @@ export default function NotificationsAdmin() {
               setTotalUnRead(res.data);
             })
             .catch((err) => {
-              if (err.response.status === 400 || err.response.status === 401) {
+              console.log(err?.request?.readyState);
+              if (err.response.status === 400 || err.response.status === 401 || err?.request?.readyState === 4) {
                 localStorage.removeItem('token');
                 clearInterval(intervalNotif);
                 navigate('/login');
@@ -80,7 +81,6 @@ export default function NotificationsAdmin() {
     }
   }, []);
 
-
   useEffect(() => {
     axios
       .get(`${mainDomain}/api/Notify/Staff/UnRead/Count`, {
@@ -91,7 +91,17 @@ export default function NotificationsAdmin() {
       .then((res) => {
         setTotalUnRead(res.data);
       })
-      .catch(() => { });
+      .catch((err) => {
+        console.log(err?.request?.readyState);
+        if (err?.request?.readyState === 4) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+        if (err.response.status === 400 || err.response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      });
   }, [flag]);
 
   useEffect(() => {
@@ -119,8 +129,8 @@ export default function NotificationsAdmin() {
           },
         })
         .then((res) => {
-          setIsLoading(false);          
-          setListMessage(res.data.items||[]);
+          setIsLoading(false);
+          setListMessage(res.data.items || []);
           setTotalCount(res.data.totalCount);
         })
         .catch(() => {
@@ -188,7 +198,7 @@ export default function NotificationsAdmin() {
             setListMessageChecked([]);
             setCheckAll(false);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     }
     if (listMessageChecked.length === listMessage.length) {
@@ -215,7 +225,7 @@ export default function NotificationsAdmin() {
             setListMessageChecked([]);
             setCheckAll(false);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     }
   };
@@ -226,8 +236,7 @@ export default function NotificationsAdmin() {
       <Typography sx={{ p: 2, fontSize: 25 }} className="text-start">
         لیست پیام ها
       </Typography>
-      {
-        listMessage.length > 0 &&
+      {listMessage.length > 0 && (
         <div className="flex justify-between items-center pl-2">
           <Checkbox
             indeterminate={listMessageChecked.length > 0 && listMessageChecked.length < listMessage.length}
@@ -259,7 +268,7 @@ export default function NotificationsAdmin() {
             {totalUnRead} پیام خوانده نشده
           </p>
         </div>
-      }
+      )}
       <Divider />
       {listMessage.length > 0 &&
         listMessage.map((message) => (
@@ -300,13 +309,24 @@ export default function NotificationsAdmin() {
             opacity: 0.85,
           }}
         >
-          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: 16 }}>
+          <svg
+            width="120"
+            height="120"
+            viewBox="0 0 120 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ marginBottom: 16 }}
+          >
             <ellipse cx="60" cy="100" rx="40" ry="10" fill="#E3EAFD" />
             <rect x="20" y="30" width="80" height="50" rx="10" fill="#F5F8FF" stroke="#B6C6E3" strokeWidth="2" />
             <rect x="32" y="42" width="56" height="8" rx="4" fill="#D1DBF5" />
             <rect x="32" y="56" width="36" height="8" rx="4" fill="#D1DBF5" />
             <circle cx="90" cy="70" r="6" fill="#B6C6E3" />
-            <path d="M26 30V22C26 18.6863 28.6863 16 32 16H88C91.3137 16 94 18.6863 94 22V30" stroke="#B6C6E3" strokeWidth="2" />
+            <path
+              d="M26 30V22C26 18.6863 28.6863 16 32 16H88C91.3137 16 94 18.6863 94 22V30"
+              stroke="#B6C6E3"
+              strokeWidth="2"
+            />
           </svg>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, color: themeMode === 'dark' ? '#fff' : '#000' }}>
             هیچ پیامی وجود ندارد!
@@ -314,12 +334,7 @@ export default function NotificationsAdmin() {
           <Typography variant="body2" sx={{ mb: 2 }}>
             هنوز پیامی برای شما ارسال نشده است.
           </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => setFlag(e => !e)}
-            sx={{ mt: 1 }}
-          >
+          <Button variant="outlined" size="small" onClick={() => setFlag((e) => !e)} sx={{ mt: 1 }}>
             بروزرسانی
           </Button>
         </Box>
@@ -356,31 +371,36 @@ export default function NotificationsAdmin() {
       </div>
       <div className="text-start p-2">
         <p className="font-bold text-lg">{messageSelected.title}</p>
-        <p className='pt-2 text-sm'>
-          {messageSelected.body && messageSelected.body.split(/\n|\/n/).map((line, idx, arr) => (
-            <span key={idx}>
-              {line}
-              {idx !== arr.length - 1 && <br />}
-            </span>
-          ))}
+        <p className="pt-2 text-sm">
+          {messageSelected.body &&
+            messageSelected.body.split(/\n|\/n/).map((line, idx, arr) => (
+              <span key={idx}>
+                {line}
+                {idx !== arr.length - 1 && <br />}
+              </span>
+            ))}
         </p>
-        <div className='flex justify-between items-center w-full'>
-        <p className='text-xs' style={{
-                color: themeMode === 'dark' ? '#fff8' : '#0008',
-                fontSize: 11,
-                margin: '8px 0 0 0',
-                textAlign: 'start',
-              }}>{messageSelected.description ? messageSelected.description : ''}</p>
-          {
-            messageSelected.createdDateTimeFa &&
+        <div className="flex justify-between items-center w-full">
+          <p
+            className="text-xs"
+            style={{
+              color: themeMode === 'dark' ? '#fff8' : '#0008',
+              fontSize: 11,
+              margin: '8px 0 0 0',
+              textAlign: 'start',
+            }}
+          >
+            {messageSelected.description ? messageSelected.description : ''}
+          </p>
+          {messageSelected.createdDateTimeFa && (
             <p className={themeMode === 'dark' ? 'text-xs text-[#fff8] mt-2' : 'text-xs text-[#0008] mt-2'}>
-              <span className='flex'>
+              <span className="flex">
                 {messageSelected.createdDateTimeFa.slice(10)}
-                <span className='px-1'>-</span>
+                <span className="px-1">-</span>
                 {messageSelected.createdDateTimeFa.slice(0, 10)}
               </span>
             </p>
-          }
+          )}
         </div>
       </div>
       <Divider />
@@ -397,14 +417,14 @@ export default function NotificationsAdmin() {
             <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M18 8.60215C18 6.89108 17.3679 5.25009 16.2426 4.04017C15.1174 2.83026 13.5913 2.15054 12 2.15054C10.4087 2.15054 8.88258 2.83026 7.75736 4.04017C6.63214 5.25009 6 6.89108 6 8.60215C6 16.129 3 18.2796 3 18.2796H21C21 18.2796 18 16.129 18 8.60215Z"
-                stroke={themeMode === 'dark' ? "#fff" : "#28387E"}
+                stroke={themeMode === 'dark' ? '#fff' : '#28387E'}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M13.73 22.5806C13.5542 22.9065 13.3019 23.177 12.9982 23.3651C12.6946 23.5531 12.3504 23.6521 12 23.6521C11.6496 23.6521 11.3054 23.5531 11.0018 23.3651C10.6982 23.177 10.4458 22.9065 10.27 22.5806"
-                stroke={themeMode === 'dark' ? "#fff" : "#28387E"}
+                stroke={themeMode === 'dark' ? '#fff' : '#28387E'}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"

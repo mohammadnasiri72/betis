@@ -89,7 +89,7 @@ function MainPageManageUnit() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding, flag]);
+  }, [valBuilding, flag, url]);
 
   return (
     <>
@@ -278,15 +278,24 @@ function MainPageManageUnit() {
           .filter((e) => (owner === 'empty' ? e.ownerIsResident : owner === 'full' ? !e.ownerIsResident : e)).length ===
           0 &&
           isLoading && (
-            <div className="flex flex-wrap justify-between w-full -mt-14">
-              <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
-                <Skeleton height={300} animation="wave" className="" />
+            <div className="flex flex-wrap justify-between w-full mt-3">
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+                <Skeleton variant="rounded" height={150} className="" />
               </div>
-              <div className="lg:w-1/3 sm:w-1/2 w-full px-2 -mt-24 sm:mt-0">
-                <Skeleton height={300} animation="wave" className="" />
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={150} className="" />
               </div>
-              <div className="lg:w-1/3 sm:w-1/2 w-full px-2 -mt-24 sm:mt-0">
-                <Skeleton height={300} animation="wave" className="" />
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={150} className="" />
+              </div>
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={150} className="" />
+              </div>
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={150} className="" />
+              </div>
+              <div className="lg:w-1/3 sm:w-1/2 w-full p-2">
+                <Skeleton variant="rounded" height={150} className="" />
               </div>
             </div>
           )}

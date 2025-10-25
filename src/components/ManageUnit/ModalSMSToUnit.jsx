@@ -182,7 +182,7 @@ export default function ModalSMSToUnit({ listUnit, valBuilding }) {
         <DialogTitle
           sx={{ m: 0, p: 2, textAlign: 'start' }}
           id="customized-dialog-title"
-          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100'}
+          className={themeMode === 'dark' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-black'}
         >
           ارسال پیام
           <IconButton

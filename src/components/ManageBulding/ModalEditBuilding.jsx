@@ -39,7 +39,6 @@ export default function ModalEditBuilding({ handleCloseMenu, building, setFlag, 
   const [address, setAddress] = React.useState(building.address);
   const [description, setDescription] = React.useState(building.description);
   const [isLoading, setIsLoading] = React.useState(false);
-
   const { themeMode } = useSettings();
 
   useEffect(() => {
@@ -61,9 +60,7 @@ export default function ModalEditBuilding({ handleCloseMenu, building, setFlag, 
     customClass: 'toast-modal',
   });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+ 
   const handleClose = () => {
     setOpen(false);
     handleCloseMenu();
@@ -88,7 +85,7 @@ export default function ModalEditBuilding({ handleCloseMenu, building, setFlag, 
           setIsLoading(false);
           setTypeBuilding(Object.values(res.data));
         })
-        .catch((err) => {
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -136,14 +133,14 @@ export default function ModalEditBuilding({ handleCloseMenu, building, setFlag, 
         image: fileAtt,
         description,
         id: e.id,
-      };
+      };      
       axios
         .put(`${mainDomain}/api/Building/Update`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
-        .then((res) => {
+        .then(() => {
           handleClose();
           setIsLoading(false);
           setFlag((e) => !e);

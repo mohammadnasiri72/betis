@@ -216,17 +216,17 @@ export default function TableReportDebt({
       )}
       {listReportDebt.length === 0 && loading && (
         <div className="flex flex-wrap justify-between w-full">
-          <div className=" w-full px-2">
-            <Skeleton height={50} animation="wave" className="" />
+          <div className=" w-full p-2">
+            <Skeleton variant="rounded" height={50} animation="wave" />
           </div>
-          <div className=" w-full px-2">
-            <Skeleton height={50} animation="wave" className="" />
+          <div className=" w-full p-2">
+            <Skeleton variant="rounded" height={50} animation="wave"/>
           </div>
-          <div className=" w-full px-2">
-            <Skeleton height={50} animation="wave" className="" />
+          <div className=" w-full p-2">
+            <Skeleton variant="rounded" height={50} animation="wave" />
           </div>
-          <div className=" w-full px-2">
-            <Skeleton height={50} animation="wave" className="" />
+          <div className=" w-full p-2">
+            <Skeleton variant="rounded" height={50} animation="wave" />
           </div>
         </div>
       )}

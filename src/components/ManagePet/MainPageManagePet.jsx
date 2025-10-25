@@ -6,11 +6,11 @@ import { useEffect, useState } from 'react';
 import { MdOutlinePets } from 'react-icons/md';
 import { RiCommunityLine } from 'react-icons/ri';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
 import ActionPet from './ActionPet';
 import ModalNewPet from './ModalNewPet';
-import useSettings from '../../hooks/useSettings';
 
 export default function MainPageManagePet() {
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +91,7 @@ export default function MainPageManagePet() {
           setIsLoading(false);
         });
     }
-  }, [flag, valUnit]);
+  }, [flag, valUnit, url]);
 
   return (
     <>
@@ -200,18 +200,30 @@ export default function MainPageManagePet() {
           </div>
         )}
         {listPet.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" className="" />
+          <div className="flex flex-wrap justify-between w-full">
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" className="" />
             </div>
           </div>
         )}

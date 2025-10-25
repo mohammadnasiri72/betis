@@ -3,7 +3,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, Skeleton } from '@mu
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FiPlusCircle } from 'react-icons/fi';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
@@ -19,7 +19,7 @@ export default function MainPageManageCharge() {
   const [flag, setFlag] = useState(false);
   const [listCharge, setListCharge] = useState([]);
   const [chargeEdit, setChargeEdit] = useState({});
-
+  const url2 = useLocation();
   const { themeMode } = useSettings();
 
   //   get list building
@@ -41,6 +41,7 @@ export default function MainPageManageCharge() {
   useEffect(() => {
     if (valBuilding?.id) {
       setIsLoading(true);
+      setListCharge([]);
       axios
         .get(`${mainDomain}/api/Charge/GetList`, {
           params: {
@@ -58,7 +59,7 @@ export default function MainPageManageCharge() {
           setIsLoading(false);
         });
     }
-  }, [flag, valBuilding]);
+  }, [flag, valBuilding, url2]);
 
   const url = window.location.pathname;
 
@@ -153,10 +154,19 @@ export default function MainPageManageCharge() {
               />
             ))}
           {listCharge.length === 0 && isLoading && (
-            <div className="w-full">
-              <Skeleton height={65} animation="wave" />
-              <Skeleton height={65} animation="wave" />
-              <Skeleton height={65} animation="wave" />
+            <div>
+              <div className="w-full p-2">
+                <Skeleton variant="rounded" height={50} animation="wave" />
+              </div>
+              <div className="w-full p-2">
+                <Skeleton variant="rounded" height={50} animation="wave" />
+              </div>
+              <div className="w-full p-2">
+                <Skeleton variant="rounded" height={50} animation="wave" />
+              </div>
+              <div className="w-full p-2">
+                <Skeleton variant="rounded" height={50} animation="wave" />
+              </div>
             </div>
           )}
           {listCharge.length === 0 && !isLoading && (

@@ -49,8 +49,8 @@ export default function MainPageManageWarehouse() {
   //   get list unit
   useEffect(() => {
     if (valBuilding?.id) {
-      setListWarehouse([])
-      setIsLoading(true)
+      setListWarehouse([]);
+      setIsLoading(true);
       axios
         .get(`${mainDomain}/api/Unit/GetList?buildingId=${valBuilding?.id}`, {
           headers: {
@@ -72,9 +72,9 @@ export default function MainPageManageWarehouse() {
 
   //   get list Warehouse
   useEffect(() => {
-    if ( valUnit?.id) {      
+    if (valUnit?.id) {
       setIsLoading(true);
-      setListWarehouse([])
+      setListWarehouse([]);
       axios
         .get(`${mainDomain}/api/Warehouse/GetList`, {
           params: {
@@ -93,11 +93,16 @@ export default function MainPageManageWarehouse() {
           setIsLoading(false);
         });
     }
-  }, [flag , valUnit]);
+  }, [flag, valUnit, url]);
 
   return (
     <>
-      <h3 style={{color: themeMode==='dark'? '#fff':'#000'}} className="sm:text-2xl text-lg font-semibold whitespace-nowrap">مدیریت انباری</h3>
+      <h3
+        style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+        className="sm:text-2xl text-lg font-semibold whitespace-nowrap"
+      >
+        مدیریت انباری
+      </h3>
       <div className="flex justify-between mb-3 py-2 px-2">
         <div className="flex flex-wrap items-center w-full">
           <div className="sm:w-1/4 w-full flex items-center px-2">
@@ -163,7 +168,9 @@ export default function MainPageManageWarehouse() {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
                     <LuWarehouse className="text-3xl" />
-                    <h6 style={{color:themeMode==='dark'? '#fff' : '#000'}} className="px-1">{warehouse.title}</h6>
+                    <h6 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }} className="px-1">
+                      {warehouse.title}
+                    </h6>
                   </div>
                   {(checkClaims(url.pathname, 'put') || checkClaims(url.pathname, 'delete')) && (
                     <ActionWarehouse
@@ -203,30 +210,41 @@ export default function MainPageManageWarehouse() {
               </div>
             </div>
           ))}
-        {listWarehouse.length === 0 && !isLoading &&  (
+        {listWarehouse.length === 0 && !isLoading && (
           <div className="w-full flex flex-col items-center justify-center">
             <img className="w-32" src={themeMode === 'dark' ? '/images/img-2-dark.png' : '/images/img-2.png'} alt="" />
             <p>انباری ثبت نشده است...</p>
           </div>
         )}
         {listWarehouse.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" className="" />
+          <div className="flex flex-wrap justify-between w-full">
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
+            </div>
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={150} animation="wave" />
             </div>
           </div>
         )}
       </div>
-
     </>
   );
 }

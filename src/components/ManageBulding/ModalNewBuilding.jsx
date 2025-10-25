@@ -80,7 +80,7 @@ export default function ModalNewBuilding({ setFlag }) {
           setIsLoading(false);
           setTypeBuilding(Object.values(res.data));
         })
-        .catch((err) => {
+        .catch(() => {
           setIsLoading(false);
         });
     }

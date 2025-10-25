@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import { Skeleton } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Skeleton } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BiSolidConversation } from 'react-icons/bi';
@@ -7,7 +7,7 @@ import { FaUsers, FaUserTie } from 'react-icons/fa';
 import { GiPayMoney } from 'react-icons/gi';
 import { IoFastFood } from 'react-icons/io5';
 import { MdOutlineRealEstateAgent, MdTimer } from 'react-icons/md';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxDetailsFeedback from './BoxDetailsFeedback';
@@ -23,7 +23,11 @@ export default function MainHomePage() {
   const [totalCount6, setTotalCount6] = useState(0);
   const [listFeedback, setListFeedback] = useState([]);
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
+  const [listBuilding, setListBuilding] = useState([]);
   const { themeMode } = useSettings();
+  const navigate = useNavigate();
+  const url = useLocation();
+
   // get list building & yearId
   useEffect(() => {
     Promise.all([
@@ -40,6 +44,7 @@ export default function MainHomePage() {
     ])
       .then((res) => {
         setYearId(res[0].data?.id);
+        setListBuilding(res[1].data);
         setValBuilding(res[1].data[0]);
       })
       .catch(() => {});
@@ -176,7 +181,7 @@ export default function MainHomePage() {
           .catch(() => {});
       }
     }
-  }, [yearId, valBuilding]);
+  }, [yearId, valBuilding, url]);
 
   useEffect(() => {
     if (valBuilding?.id) {
@@ -208,12 +213,35 @@ export default function MainHomePage() {
           });
       }
     }
-  }, [valBuilding]);
-
-  const navigate = useNavigate();
+  }, [valBuilding, url]);
 
   return (
     <>
+      {listBuilding.length > 0 && (
+        <div className="sm:w-1/3 w-full">
+          <FormControl size="small" color="primary" className="w-full">
+            <InputLabel color="primary" className="px-2" id="demo-simple-select-label">
+              لیست مجتمع ها
+            </InputLabel>
+            <Select
+              size="small"
+              className="w-full"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={valBuilding}
+              label="لیست مجتمع ها"
+              color="primary"
+              onChange={(e) => setValBuilding(e.target.value)}
+            >
+              {listBuilding.map((e) => (
+                <MenuItem key={e?.id} value={e}>
+                  {e.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+      )}
       <div className="flex flex-wrap w-full">
         {(localStorage.getItem('claims').includes('admin-reservation:get') ||
           localStorage.getItem('roles') === 'Admin') && (

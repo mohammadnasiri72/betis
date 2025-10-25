@@ -13,10 +13,10 @@ import * as React from 'react';
 import { FiPlusCircle } from 'react-icons/fi';
 import { MdOutlineAddAPhoto } from 'react-icons/md';
 import Swal from 'sweetalert2';
+import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import SimpleBackdrop from '../backdrop';
 import SetPlateHandler from './SetPlateHandler';
-import useSettings from '../../hooks/useSettings';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -108,15 +108,8 @@ export default function ModalNewVehicle({ setFlag, listUnit, valTypeVehicle, set
     if (!valUnit) {
       setErrValUnit(true);
     }
-    if (valTypeVehicle === 1) {
-      if (licensePlate.length !== 8) {
-        setErrLicensePlate(true);
-      }
-    }
-    if (valTypeVehicle === 2) {
-      if (licensePlate.length !== 7) {
-        setErrLicensePlateMotor(true);
-      }
+    if (licensePlate.length !== 8) {
+      setErrLicensePlateMotor(true);
     }
     if (valTypeVehicle === 1) {
       if (valUnit && licensePlate.length === 8) {
@@ -134,7 +127,7 @@ export default function ModalNewVehicle({ setFlag, listUnit, valTypeVehicle, set
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           })
-          .then((res) => {
+          .then(() => {
             handleClose();
             setIsLoading(false);
             setFlag((e) => !e);
@@ -159,7 +152,7 @@ export default function ModalNewVehicle({ setFlag, listUnit, valTypeVehicle, set
       }
     }
     if (valTypeVehicle === 2) {
-      if (valUnit && licensePlate.length === 7) {
+      if (valUnit && licensePlate.length === 8) {
         setIsLoading(true);
         const data = {
           unitId: valUnit.id,
@@ -174,7 +167,7 @@ export default function ModalNewVehicle({ setFlag, listUnit, valTypeVehicle, set
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           })
-          .then((res) => {
+          .then(() => {
             handleClose();
             setIsLoading(false);
             setFlag((e) => !e);
