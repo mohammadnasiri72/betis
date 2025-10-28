@@ -73,7 +73,7 @@ export default function MainPageManageRole() {
         setIsLoading(false);
         resetState();
         setFlag((e) => !e);
-        setListRole([])
+        setListRole([]);
         Toast.fire({
           icon: 'success',
           text: 'نقش با موفقیت ثبت شد',
@@ -97,7 +97,7 @@ export default function MainPageManageRole() {
   //   get list role
   useEffect(() => {
     setIsLoading(true);
-    
+
     axios
       .get(`${mainDomain}/api/Role/GetList`, {
         headers: {
@@ -111,7 +111,7 @@ export default function MainPageManageRole() {
       .catch(() => {
         // setIsLoading(false);
       });
-  }, [flag]);
+  }, [flag, url]);
 
   return (
     <>
@@ -139,9 +139,7 @@ export default function MainPageManageRole() {
             value={nameRole}
           />
           {errNameRole && (
-            <p className="text-xs text-red-500 text-start">
-              *عنوان نقش اجباری است و باید حداقل ۳ کاراکتر باشد
-            </p>
+            <p className="text-xs text-red-500 text-start">*عنوان نقش اجباری است و باید حداقل ۳ کاراکتر باشد</p>
           )}
         </div>
         <div className="sm:w-1/2 w-full px-1 sm:mt-0 mt-3">
@@ -161,26 +159,24 @@ export default function MainPageManageRole() {
             focused={errDescription}
           />
           {errDescription && (
-            <p className="text-xs text-red-500 text-start">
-              *توضیحات اجباری است و باید حداقل ۳ کاراکتر باشد
-            </p>
+            <p className="text-xs text-red-500 text-start">*توضیحات اجباری است و باید حداقل ۳ کاراکتر باشد</p>
           )}
         </div>
-        {
-          checkClaims(url.pathname, 'post') &&
-        <div className="sm:w-1/4 w-full px-1 sm:text-center text-start sm:mt-0 mt-3">
-          <button
-            onClick={setNewRoleHandler}
-            className="bg-emerald-500 px-3 py-1 rounded-lg duration-300 hover:bg-emerald-600 text-white flex items-center"
-          >
-            افزودن
-            <FiPlus />
-          </button>
-        </div>
-        }
+        {checkClaims(url.pathname, 'post') && (
+          <div className="sm:w-1/4 w-full px-1 sm:text-center text-start sm:mt-0 mt-3">
+            <button
+              onClick={setNewRoleHandler}
+              className="bg-emerald-500 px-3 py-1 rounded-lg duration-300 hover:bg-emerald-600 text-white flex items-center"
+            >
+              افزودن
+              <FiPlus />
+            </button>
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap mt-3">
-        {listRole.length > 0 && !isLoading &&
+        {listRole.length > 0 &&
+          !isLoading &&
           listRole.map((e) => (
             <div data-aos="zoom-in" key={e?.id} className="p-1 lg:w-1/5 md:w-1/4 sm:w-1/3 w-full ">
               <Card>
@@ -198,16 +194,13 @@ export default function MainPageManageRole() {
                     </p>
                   </div>
                   <div className="">
-                    {
-                      (checkClaims(url.pathname, 'delete')|| checkClaims(url.pathname, 'put')) &&
-                      <div>
-                        {!e.isSys && <ActionRole role={e} setFlag={setFlag} />}
-                      </div>
-                    }
-                    
+                    {(checkClaims(url.pathname, 'delete') || checkClaims(url.pathname, 'put')) && (
+                      <div>{!e.isSys && <ActionRole role={e} setFlag={setFlag} />}</div>
+                    )}
+
                     {e.isSys && (
                       <div>
-                       <img className='w-10' src="/images/lock.png" alt="" />
+                        <img className="w-10" src="/images/lock.png" alt="" />
                       </div>
                     )}
                   </div>

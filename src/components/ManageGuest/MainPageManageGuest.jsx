@@ -16,10 +16,11 @@ import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
+import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxGuest from './BoxGuest';
-import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 
 export default function MainPageManageGuest() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +40,7 @@ export default function MainPageManageGuest() {
   const [pageSize, setPageSize] = useState(12);
 
   const { themeMode } = useSettings();
+  const url = useLocation();
 
   //   get list building
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function MainPageManageGuest() {
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   //   get list unit
@@ -67,14 +69,14 @@ export default function MainPageManageGuest() {
         .then((res) => {
           setListUnit(res.data);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [valBuilding]);
 
   // get list guest
   useEffect(() => {
     if (valBuilding) {
-      setListGuest([])
+      setListGuest([]);
       setIsLoading(true);
       axios
         .get(`${mainDomain}/api/Guest/GetListPaged`, {
@@ -100,7 +102,7 @@ export default function MainPageManageGuest() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding, flag, valDate, valUnit, typeGuest, numPages]);
+  }, [valBuilding, flag, valDate, valUnit, typeGuest, numPages, url]);
 
   function CustomMultipleInput({ onFocus, value, onChange }) {
     return (
@@ -122,7 +124,7 @@ export default function MainPageManageGuest() {
           <AiOutlineClose
             onClick={() => {
               setDate('');
-              setValDate('')
+              setValDate('');
             }}
             className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer"
           />
@@ -133,7 +135,9 @@ export default function MainPageManageGuest() {
 
   return (
     <>
-      <h3 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }} className="pb-4">مدیریت مهمان</h3>
+      <h3 style={{ color: themeMode === 'dark' ? '#fff' : '#000' }} className="pb-4">
+        مدیریت مهمان
+      </h3>
       <div className="flex flex-wrap px-2">
         <div className="sm:w-1/4 w-full px-1">
           <FormControl size="small" color="primary" className="w-full">
@@ -185,7 +189,7 @@ export default function MainPageManageGuest() {
         {/* select from time */}
         <div className="sm:w-1/4 relative w-full px-1 sm:mt-0 mt-3">
           <DatePicker
-            className={themeMode === 'dark' ? "bg-dark rmdp-mobile" : 'rmdp-mobile'}
+            className={themeMode === 'dark' ? 'bg-dark rmdp-mobile' : 'rmdp-mobile'}
             format="DD MMMM YYYY"
             render={<CustomMultipleInput />}
             calendarPosition="bottom-right"
@@ -267,7 +271,7 @@ export default function MainPageManageGuest() {
           <FormControl size="small" style={{ minWidth: 80 }}>
             <InputLabel id="page-size-label">تعداد </InputLabel>
             <Select
-              size='small'
+              size="small"
               labelId="page-size-label"
               id="page-size"
               value={pageSize}
@@ -278,7 +282,9 @@ export default function MainPageManageGuest() {
               }}
             >
               {[6, 12, 24, 48, 96].map((size) => (
-                <MenuItem key={size} value={size}>{size}</MenuItem>
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

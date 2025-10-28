@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Skeleton } from '@mui/material';
 import { Empty } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,6 @@ import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import BoxSurvey from './BoxSurvey';
 import ModalNewSurvey from './ModalNewSurvey';
 
@@ -89,7 +88,7 @@ function MainPageManageSurveyQuestion() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [valService, flag]);
+  }, [valService, flag, url]);
 
   return (
     <>
@@ -177,7 +176,22 @@ function MainPageManageSurveyQuestion() {
         )}
       </div>
 
-      {isLoading && <SimpleBackdrop />}
+      {listSurvey.length === 0 && isLoading && (
+        <div className="flex flex-wrap justify-between w-full">
+          <div className="w-full p-2">
+            <Skeleton variant="rounded" height={100} animation="wave" className="" />
+          </div>
+          <div className="w-full p-2">
+            <Skeleton variant="rounded" height={100} animation="wave" className="" />
+          </div>
+          <div className="w-full p-2">
+            <Skeleton variant="rounded" height={100} animation="wave" className="" />
+          </div>
+          <div className="w-full p-2">
+            <Skeleton variant="rounded" height={100} animation="wave" className="" />
+          </div>
+        </div>
+      )}
     </>
   );
 }

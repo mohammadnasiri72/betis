@@ -17,6 +17,7 @@ import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
 import 'react-multi-date-picker/styles/backgrounds/bg-dark.css';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxOrder from './BoxOrder';
@@ -47,7 +48,7 @@ export default function MainPageManageOrder() {
   const [pageSize, setPageSize] = useState(12);
   const [numStatusOrder, setNumStatusOrder] = useState([]);
   const { themeMode } = useSettings();
-
+  const url = useLocation();
 
   //   get list building
   useEffect(() => {
@@ -104,12 +105,18 @@ export default function MainPageManageOrder() {
           setValUnit({ title: 'همه', id: -1 });
           setListService(res[1].data);
           setValService(-1);
-          getOrderList({ buildingId: valBuilding?.id });
+
           setValStatusOrder(0);
         })
         .catch(() => {});
     }
   }, [valBuilding]);
+
+  useEffect(() => {
+    if (valBuilding?.id) {
+      getOrderList({ buildingId: valBuilding?.id });
+    }
+  }, [valBuilding, url]);
 
   useEffect(() => {
     if (flag !== 0) {

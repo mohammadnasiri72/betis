@@ -161,7 +161,7 @@ export default function MainPageManageServiceBlock() {
           // setIsLoading(false);
         });
     }
-  }, [valService, flag, valUnit]);
+  }, [valService, flag, valUnit , url]);
 
 
 

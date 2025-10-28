@@ -17,6 +17,7 @@ import persian from 'react-date-object/calendars/persian';
 import persianFa from 'react-date-object/locales/persian_fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import DatePicker from 'react-multi-date-picker';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxReservation from './BoxReservation';
@@ -46,7 +47,7 @@ export default function MainPageManageReserve() {
   const [pageSize, setPageSize] = useState(12);
 
   const { themeMode } = useSettings();
-
+  const url = useLocation();
   // get list building & yearId
   useEffect(() => {
     Promise.all([
@@ -92,12 +93,18 @@ export default function MainPageManageReserve() {
           setValUnit({ title: 'همه', id: -1 });
           setListService(res[1].data.filter((e) => e.typeId !== 2));
           setValService(-1);
-          getListReserve({ buildingId: valBuilding?.id });
+
           setValueStatus(0);
         })
         .catch(() => {});
     }
   }, [valBuilding]);
+
+  useEffect(() => {
+    if (valBuilding?.id) {
+      getListReserve({ buildingId: valBuilding?.id });
+    }
+  }, [valBuilding, url]);
 
   useEffect(() => {
     if (flag !== 0) {

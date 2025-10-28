@@ -9,10 +9,10 @@ import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
+import Description from './Description';
 import ModalDeleteServiceMenu from './ModalDeleteServiceMenu';
 import ModalEditServiceMenu from './ModalEditServiceMenu';
 import ModalNewServiceMenu from './ModalNewServiceMenu';
-import Description from './Description';
 
 export default function MainPageManageServiceMenu() {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,8 +25,6 @@ export default function MainPageManageServiceMenu() {
   const [isDisable, setIsDisable] = useState(false);
 
   const { themeMode } = useSettings();
-
-  
 
   const url = useLocation();
 
@@ -70,7 +68,6 @@ export default function MainPageManageServiceMenu() {
         })
         .then((res) => {
           if (res.data.length > 0 && res.data.filter((e) => e.typeId === 2).length > 0) {
-            
             setListService(res.data.filter((e) => e.typeId === 2));
             setIsDisable(false);
           } else {
@@ -104,7 +101,7 @@ export default function MainPageManageServiceMenu() {
           setIsLoading(false);
         });
     }
-  }, [valService, flag]);
+  }, [valService, flag, url]);
 
   return (
     <>
@@ -227,7 +224,7 @@ export default function MainPageManageServiceMenu() {
                     {menu.description ? menu.description : 'بدون توضیحات'}
                   </span> */}
                 </div>
-                <div className='h-2'> </div>
+                <div className="h-2"> </div>
                 {menu.inventory !== -1 && (
                   <div className="flex items-center px-2">
                     <span className="text-xs">ظرفیت : </span>
@@ -258,24 +255,24 @@ export default function MainPageManageServiceMenu() {
                 )}
                 {(checkClaims(url.pathname, 'put') || checkClaims(url.pathname, 'delete')) && (
                   <div>
-                    <div className='h-10'> </div>
-                  <div className="bg-slate-100 flex justify-between mt-2 absolute bottom-0 left-0 right-0">
-                    {checkClaims(url.pathname, 'put') && (
-                      <div className="bg-[#00005e] w-1/2 flex justify-center duration-300 hover:bg-[#00007e]">
-                        <ModalEditServiceMenu
-                          setFlag={setFlag}
-                          menu={menu}
-                          listService={listService}
-                          valBuilding={valBuilding}
-                        />
-                      </div>
-                    )}
-                    {checkClaims(url.pathname, 'delete') && (
-                      <div className="bg-red-500 w-1/2 text-center duration-300 hover:bg-red-600">
-                        <ModalDeleteServiceMenu menu={menu} setFlag={setFlag} setIsLoading={setIsLoading} />
-                      </div>
-                    )}
-                  </div>
+                    <div className="h-10"> </div>
+                    <div className="bg-slate-100 flex justify-between mt-2 absolute bottom-0 left-0 right-0">
+                      {checkClaims(url.pathname, 'put') && (
+                        <div className="bg-[#00005e] w-1/2 flex justify-center duration-300 hover:bg-[#00007e]">
+                          <ModalEditServiceMenu
+                            setFlag={setFlag}
+                            menu={menu}
+                            listService={listService}
+                            valBuilding={valBuilding}
+                          />
+                        </div>
+                      )}
+                      {checkClaims(url.pathname, 'delete') && (
+                        <div className="bg-red-500 w-1/2 text-center duration-300 hover:bg-red-600">
+                          <ModalDeleteServiceMenu menu={menu} setFlag={setFlag} setIsLoading={setIsLoading} />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </Card>

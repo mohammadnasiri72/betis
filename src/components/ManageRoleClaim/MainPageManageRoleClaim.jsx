@@ -2,6 +2,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import SimpleBackdrop from '../backdrop';
@@ -15,6 +16,7 @@ export default function MainPageManageRoleClaim() {
   const [listRoleClaim, setListRoleClaim] = useState([]);
 
   const { themeMode } = useSettings();
+  const url = useLocation();
 
   // get list roles
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function MainPageManageRoleClaim() {
           setIsLoading(false);
         });
     }
-  }, [valRole]);
+  }, [valRole, url]);
 
   return (
     <>

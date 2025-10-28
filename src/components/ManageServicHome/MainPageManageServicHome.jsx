@@ -1,11 +1,10 @@
-import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, Skeleton, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import BoxServiceHome from './BoxServiceHome';
 import ModalNewServiceHome from './ModalNewServiceHome';
 import TabStatus from './TabStatus';
@@ -93,7 +92,6 @@ function MainPageManageServicHome() {
     }
   }, [valBuilding?.id]);
 
-
   useEffect(() => {
     if (valBuilding?.id) {
       setIsLoading(true);
@@ -119,7 +117,7 @@ function MainPageManageServicHome() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding?.id, flag, valUnit, valueTab]);
+  }, [valBuilding?.id, flag, valUnit, valueTab, url]);
 
   return (
     <>
@@ -290,7 +288,32 @@ function MainPageManageServicHome() {
             <p>موردی موجود نیست...</p>
           </div>
         )}
-      {isLoading && <SimpleBackdrop />}
+
+      {listMyServicHome
+        .filter((ev) =>
+          valTypeRealEstate === -1 ? ev : ev.type === optionsType.find((e) => e.id === valTypeRealEstate)?.label
+        )
+        .filter((ev) =>
+          valSubjectsRealEstate === -1
+            ? ev
+            : ev.subject === optionsSubject.find((e) => e.id === valSubjectsRealEstate)?.label
+        ).length === 0 &&
+        isLoading && (
+          <div className="flex flex-wrap justify-between w-full">
+            <div className="lg:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={200} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={200} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={200} animation="wave" className="" />
+            </div>
+            <div className="lg:w-1/2 w-full p-2">
+              <Skeleton variant="rounded" height={200} animation="wave" className="" />
+            </div>
+          </div>
+        )}
     </>
   );
 }

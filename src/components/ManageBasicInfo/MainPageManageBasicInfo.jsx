@@ -14,7 +14,6 @@ import ModalNewBasicInfo from './ModalNewBasicInfo';
 
 export default function MainPageManageBasicInfo() {
   const [isLoading, setIsLoading] = useState(true);
-  const [valBuilding, setValBuilding] = useState('');
   const [listCategory, setListCategory] = useState({});
   const [valCategory, setValCategory] = useState('');
   const [valCategoryId, setValCategoryId] = useState('');
@@ -76,7 +75,7 @@ export default function MainPageManageBasicInfo() {
           setIsLoading(false);
         });
     }
-  }, [valCategoryId, flag]);
+  }, [valCategoryId, flag , url]);
 
   return (
     <>

@@ -106,7 +106,7 @@ export default function MainPageManageServiceTime() {
       setListServiceTime([]);
       // setIsLoading(false);
     }
-  }, [valService, flag]);
+  }, [valService, flag , url]);
 
 
   return (

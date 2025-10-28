@@ -78,7 +78,7 @@ export default function MainPageManageStaff() {
           setIsLoading(false);
         });
     }
-  }, [valBuilding, yearId, flag]);
+  }, [valBuilding, yearId, flag , url]);
 
   return (
     <>

@@ -53,7 +53,7 @@ export default function MainPageManageBoardNotice() {
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   //   get list BoardNotice
@@ -83,13 +83,13 @@ export default function MainPageManageBoardNotice() {
           setIsLoading(false);
         });
     }
-  }, [flag, valBuilding, numPages, pageSize]);
+  }, [flag, valBuilding, numPages, pageSize, url]);
 
   const handleChangeType = (event, newValType) => {
     if (newValType !== null) {
-      setValType(newValType)
+      setValType(newValType);
     }
-  }
+  };
 
   return (
     <>
@@ -126,7 +126,8 @@ export default function MainPageManageBoardNotice() {
           </div>
           <div className="sm:block hidden w-3/4 px-3">
             <Stack direction="row" spacing={0} className="w-full ">
-              <ToggleButtonGroup size='small'
+              <ToggleButtonGroup
+                size="small"
                 style={{ border: '2px solid #0002' }}
                 sx={{
                   '& .MuiToggleButtonGroup-grouped': {
@@ -222,18 +223,18 @@ export default function MainPageManageBoardNotice() {
           </div>
         )}
         {listBoardNotice.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" className="" />
+          <div className="flex flex-wrap justify-between w-full px-2">
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={130} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={130} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={130} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={130} animation="wave" className="" />
             </div>
           </div>
         )}
@@ -246,7 +247,7 @@ export default function MainPageManageBoardNotice() {
           <FormControl size="small" style={{ minWidth: 80 }}>
             <InputLabel id="page-size-label">تعداد </InputLabel>
             <Select
-              size='small'
+              size="small"
               labelId="page-size-label"
               id="page-size"
               value={pageSize}
@@ -257,7 +258,9 @@ export default function MainPageManageBoardNotice() {
               }}
             >
               {[8, 16, 32, 64, 128].map((size) => (
-                <MenuItem key={size} value={size}>{size}</MenuItem>
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

@@ -2,6 +2,7 @@
 import { FormControl, InputLabel, MenuItem, Pagination, Select, Skeleton, Stack } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import useSettings from '../../hooks/useSettings';
 import { mainDomain } from '../../utils/mainDomain';
 import BoxSurveyAnswer from './BoxSurveyAnswer';
@@ -22,6 +23,8 @@ function MainPageManageSurveyAnswer() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [valOrderBy, setValOrderBy] = useState(1);
+
+  const url = useLocation();
 
   // get list building & yearId
   useEffect(() => {
@@ -59,16 +62,21 @@ function MainPageManageSurveyAnswer() {
         })
         .then((res) => {
           setListService(res.data);
-          if (valTypeService === 0) {
-            getListReserve({ buildingId: valBuilding?.id, pageIndex: 1 });
-          }
-          if (valTypeService === 2) {
-            getListOrder({ buildingId: valBuilding?.id, pageIndex: 1 });
-          }
         })
         .catch(() => {});
     }
   }, [valBuilding]);
+
+  useEffect(() => {
+    if (valBuilding?.id) {
+      if (valTypeService === 0) {
+        getListReserve({ buildingId: valBuilding?.id, pageIndex: 1 });
+      }
+      if (valTypeService === 2) {
+        getListOrder({ buildingId: valBuilding?.id, pageIndex: 1 });
+      }
+    }
+  }, [valBuilding, url]);
 
   //   get list order
 

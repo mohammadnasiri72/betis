@@ -63,6 +63,7 @@ export default function MainPageManageService() {
     if (valBuilding?.id) {
       setIsLoading(true);
       setShowImgEmpty(true);
+      setListService([]);
       axios
         .get(`${mainDomain}/api/Service/GetList`, {
           params: {
@@ -82,7 +83,7 @@ export default function MainPageManageService() {
           setShowImgEmpty(false);
         });
     }
-  }, [flag, valBuilding]);
+  }, [flag, valBuilding, url]);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -211,15 +212,24 @@ export default function MainPageManageService() {
           </div>
         )}
         {listService.length === 0 && isLoading && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
-            <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" className="" />
+          <div className="flex flex-wrap justify-between w-full">
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
             </div>
-            <div className="lg:w-1/3 sm:w-1/2 w-full px-2 -mt-20 sm:mt-0">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
             </div>
-            <div className="lg:w-1/3 sm:w-1/2 w-full px-2 -mt-20 sm:mt-0">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
+            </div>
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
+            </div>
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
+            </div>
+            <div className="lg:w-1/3 sm:w-1/2 w-full p-1">
+              <Skeleton variant="rounded" height={300} animation="wave" className="!rounded-xl" />
             </div>
           </div>
         )}

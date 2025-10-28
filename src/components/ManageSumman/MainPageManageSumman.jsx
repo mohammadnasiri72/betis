@@ -42,7 +42,7 @@ export default function MainPageManageSomman() {
   const [flag, setFlag] = useState(0);
   const [flagTimer, setFlagTimer] = useState(0);
   const [pageSize, setPageSize] = useState(8);
-  const location = useLocation()
+  const location = useLocation();
   const { themeMode } = useSettings();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function MainPageManageSomman() {
       // setDate(new Date())
       // setValDate(new Date().toLocaleDateString('fa-IR'))
     }
-  }, [location])
+  }, [location]);
 
   //   get list building
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function MainPageManageSomman() {
         setListBuilding(res.data);
         setValBuilding(res.data[0]);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
   //   get list status summan
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function MainPageManageSomman() {
       .then((res) => {
         setListStatusSumman(res.data);
       })
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   //   get list unit
@@ -94,12 +94,18 @@ export default function MainPageManageSomman() {
         .then((res) => {
           setListUnit([{ id: -1, title: 'همه' }, ...res.data]);
           setValUnit({ title: 'همه', id: -1 });
-          getSummanList({ buildingId: valBuilding?.id, unitId: -1, statusId: 0 });
+
           setValStatusSumman(0);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [valBuilding]);
+
+  useEffect(() => {
+    if (valBuilding?.id) {
+      getSummanList({ buildingId: valBuilding?.id });
+    }
+  }, [valBuilding, location]);
 
   useEffect(() => {
     if (flag !== 0) {
@@ -140,7 +146,7 @@ export default function MainPageManageSomman() {
             });
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [flagTimer]);
 
@@ -175,7 +181,7 @@ export default function MainPageManageSomman() {
         }
         setIsLoading(false);
       })
-      .catch(() => { });
+      .catch(() => {});
   };
 
   function CustomMultipleInput({ onFocus, value, onChange }) {
@@ -359,7 +365,7 @@ export default function MainPageManageSomman() {
             <FormControl size="small" style={{ minWidth: 80 }}>
               <InputLabel id="page-size-label">تعداد </InputLabel>
               <Select
-                size='small'
+                size="small"
                 labelId="page-size-label"
                 id="page-size"
                 value={pageSize}
@@ -371,7 +377,9 @@ export default function MainPageManageSomman() {
                 }}
               >
                 {[8, 16, 32, 64, 128].map((size) => (
-                  <MenuItem key={size} value={size}>{size}</MenuItem>
+                  <MenuItem key={size} value={size}>
+                    {size}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>

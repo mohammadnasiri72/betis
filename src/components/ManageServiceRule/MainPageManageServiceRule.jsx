@@ -5,12 +5,11 @@ import 'aos/dist/aos.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
+import useSettings from '../../hooks/useSettings';
 import { checkClaims } from '../../utils/claims';
 import { mainDomain } from '../../utils/mainDomain';
-import SimpleBackdrop from '../backdrop';
 import BoxServiceRule from './BoxServiceRule';
 import ModalNewServiceRule from './ModalNewServiceRule';
-import useSettings from '../../hooks/useSettings';
 
 export default function MainPageManageServiceRule() {
   const [isLoading, setIsLoading] = useState(false);
@@ -79,7 +78,7 @@ export default function MainPageManageServiceRule() {
 
   //  get list serviceRule
   useEffect(() => {
-    if (valService?.id) {      
+    if (valService?.id) {
       setListServiceRule([]);
       setLoading(true);
       axios
@@ -99,11 +98,16 @@ export default function MainPageManageServiceRule() {
           setLoading(false);
         });
     }
-  }, [flag, valService]);
+  }, [flag, valService, url]);
 
   return (
     <>
-      <h3 style={{color:themeMode==='dark'?'#fff':'#000'}} className="sm:text-2xl text-lg font-semibold whitespace-nowrap">مدیریت قوانین خدمات</h3>
+      <h3
+        style={{ color: themeMode === 'dark' ? '#fff' : '#000' }}
+        className="sm:text-2xl text-lg font-semibold whitespace-nowrap"
+      >
+        مدیریت قوانین خدمات
+      </h3>
       <div className="flex justify-between mb-3 py-2 items-start px-2">
         <div className="flex flex-wrap items-center w-full">
           <div className="sm:w-1/4 w-full flex items-center px-2">
@@ -192,15 +196,15 @@ export default function MainPageManageServiceRule() {
           </div>
         )}
         {listServiceRule.length === 0 && (loading || isLoading) && (
-          <div className="flex flex-wrap justify-between w-full -mt-14">
+          <div className="flex flex-wrap justify-between w-full">
             <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
-              <Skeleton height={250} animation="wave" className="" />
+              <Skeleton variant="rounded" height={100} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
+              <Skeleton variant="rounded" height={100} animation="wave" className="" />
             </div>
-            <div className="lg:w-1/3 sm:w-1/2 w-full px-2 sm:mt-0 -mt-20">
-              <Skeleton height={250} animation="wave" className="" />
+            <div className="lg:w-1/3 sm:w-1/2 w-full px-2">
+              <Skeleton variant="rounded" height={100} animation="wave" className="" />
             </div>
           </div>
         )}
