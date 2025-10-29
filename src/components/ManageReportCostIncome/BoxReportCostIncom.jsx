@@ -115,7 +115,7 @@ function BoxReportCostIncome({ listCostIncome }) {
 
   // محاسبه آمار کلی
   const totalTransactions = listCostIncome.length;
-  const totalAmount = listCostIncome.filter((ev) => ev.statusId === 1).reduce((sum, item) => sum + item.amount, 0);
+  const totalAmount = listCostIncome.reduce((sum, item) => sum + item.amount, 0);
 
   // گروه‌بندی بر اساس وضعیت
   const confirmedItems = listCostIncome.filter((item) => item.statusId === 1);
@@ -278,7 +278,9 @@ function BoxReportCostIncome({ listCostIncome }) {
                       isCost ? (isDark ? 'text-red-300' : 'text-red-600') : isDark ? 'text-green-300' : 'text-green-600'
                     }`}
                   >
-                    {formatShortAmount(totalAmount)}
+                    {formatShortAmount(
+                      listCostIncome.filter((ev) => ev.statusId === 1).reduce((sum, item) => sum + item.amount, 0)
+                    )}
                   </Typography>
                 </Box>
                 <Typography
