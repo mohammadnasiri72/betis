@@ -114,7 +114,7 @@ function BoxReportUnit({ stats }) {
     { id: 'occupancy', title: 'وضعیت سکونت', icon: <Home /> },
     { id: 'financial', title: 'وضعیت مالی', icon: <AttachMoney /> },
     { id: 'ownership', title: 'مالکیت', icon: <Person /> },
-    { id: 'documents', title: 'مستندات', icon: <DocumentScanner /> },
+    { id: 'documents', title: 'سند', icon: <DocumentScanner /> },
   ];
 
   const handleSectionClick = (sectionId) => {
@@ -335,7 +335,7 @@ function BoxReportUnit({ stats }) {
                       >
                         <Box className="flex items-center gap-2 !select-none">
                           <Box className="p-1">{section.icon}</Box>
-                          <Box>
+                          <Box className="flex flex-col items-start justify-center">
                             <Typography variant="body2" className="font-medium text-gray-800">
                               {section.title}
                             </Typography>
@@ -380,7 +380,7 @@ const getSectionSubtitle = (sectionId, stats) => {
     case 'documents':
       return `${
         stats.unitsWithDocuments > 0 ? ((stats.unitsWithDocuments / stats.totalUnits) * 100).toFixed(1) : 0
-      }% دارای مستندات`;
+      }% دارای سند`;
     default:
       return '';
   }
@@ -521,7 +521,7 @@ const renderSectionDetails = (sectionId, stats) => {
           <Box className="flex items-center justify-between p-2 rounded text-sm bg-white">
             <Box className="flex items-center gap-2">
               <Typography variant="body2" className="text-gray-600">
-                واحدهای دارای مستندات:
+                واحدهای دارای سند:
               </Typography>
             </Box>
             <Typography variant="body2" className="font-medium text-blue-600">
@@ -531,7 +531,7 @@ const renderSectionDetails = (sectionId, stats) => {
           <Box className="flex items-center justify-between p-2 rounded text-sm bg-white">
             <Box className="flex items-center gap-2">
               <Typography variant="body2" className="text-gray-600">
-                درصد مستندات:
+                درصد سند:
               </Typography>
             </Box>
             <Typography variant="body2" className="font-medium text-blue-600">

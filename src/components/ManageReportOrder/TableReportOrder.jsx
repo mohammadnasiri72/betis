@@ -181,7 +181,7 @@ function TableReportOrder({ listOrder, totalCount }) {
                     isDark ? 'text-white' : 'text-gray-800'
                   } py-3`}
                 >
-                  امتیاز
+                  امتیاز از 5
                 </TableCell>
                 <TableCell
                   className={`!font-bold !text-center !whitespace-nowrap ${
@@ -292,7 +292,7 @@ function TableReportOrder({ listOrder, totalCount }) {
 
                       {/* امتیاز نظرسنجی */}
                       <TableCell className="py-3 !text-center !whitespace-nowrap">
-                        {renderSurveyScore(order.surveyScore)}
+                        <span className='text-xs'>{order.surveyScore ? order.surveyScore : '---'}</span>
                       </TableCell>
 
                       {/* توضیحات */}

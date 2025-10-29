@@ -115,7 +115,7 @@ function BoxReportCostIncome({ listCostIncome }) {
 
   // محاسبه آمار کلی
   const totalTransactions = listCostIncome.length;
-  const totalAmount = listCostIncome.reduce((sum, item) => sum + item.amount, 0);
+  const totalAmount = listCostIncome.filter((ev) => ev.statusId === 1).reduce((sum, item) => sum + item.amount, 0);
 
   // گروه‌بندی بر اساس وضعیت
   const confirmedItems = listCostIncome.filter((item) => item.statusId === 1);
@@ -317,7 +317,7 @@ function BoxReportCostIncome({ listCostIncome }) {
                         variant="body2"
                         className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                       >
-                        {`کل ${typeTitle}‌ها`}
+                        کل تراکنش ها
                       </Typography>
                       {typeIcon}
                     </Box>

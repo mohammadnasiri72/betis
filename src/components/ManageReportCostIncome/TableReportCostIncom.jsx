@@ -159,7 +159,7 @@ function TableReportCostIncome({ listCostIncome }) {
                     <Box className="flex justify-center">
                       <Typography
                         variant="body2"
-                        className={`${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-[150px] text-center`}
+                        className={`${isDark ? 'text-gray-300' : 'text-gray-600'} max-w-[150px] text-center !text-xs`}
                       >
                         {item.for || '---'}
                       </Typography>

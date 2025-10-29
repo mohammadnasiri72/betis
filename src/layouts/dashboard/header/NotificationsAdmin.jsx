@@ -63,7 +63,6 @@ export default function NotificationsAdmin() {
               setTotalUnRead(res.data);
             })
             .catch((err) => {
-              console.log(err?.request?.readyState);
               if (err.response.status === 400 || err.response.status === 401 || err?.request?.readyState === 4) {
                 localStorage.removeItem('token');
                 clearInterval(intervalNotif);
@@ -92,7 +91,6 @@ export default function NotificationsAdmin() {
         setTotalUnRead(res.data);
       })
       .catch((err) => {
-        console.log(err?.request?.readyState);
         if (err?.request?.readyState === 4) {
           localStorage.removeItem('token');
           navigate('/login');

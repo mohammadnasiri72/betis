@@ -18,6 +18,7 @@ function TableReportReserve({ listReserve, totalCount }) {
   const { themeMode } = useSettings();
   const isDark = themeMode === 'dark';
 
+
   // فرمت کردن زمان (حذف ثانیه)
   const formatTime = (timeString) => {
     if (!timeString) return '---';
@@ -78,20 +79,6 @@ function TableReportReserve({ listReserve, totalCount }) {
     }
   };
 
-  // نمایش امتیاز نظرسنجی
-  const renderSurveyScore = (score) => {
-    if (score === null || score === undefined) return '---';
-
-    const stars = '★'.repeat(score) + '☆'.repeat(5 - score);
-    return (
-      <Tooltip title={`امتیاز: ${score} از 5`} arrow>
-        <Typography variant="body2" className={`font-medium ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>
-          {stars}
-        </Typography>
-      </Tooltip>
-    );
-  };
-
   // بررسی منقضی شده
   const isExpiredBadge = (isExpired) => {
     if (isExpired) {
@@ -128,25 +115,53 @@ function TableReportReserve({ listReserve, totalCount }) {
           <Table size="medium">
             <TableHead>
               <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   واحد
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   تاریخ رزرو
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   بازه زمانی
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   وضعیت
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   تاریخ ایجاد
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
-                  امتیاز
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
+                  امتیاز از 5
                 </TableCell>
-                <TableCell className={`!font-bold !text-center !whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'} py-3`}>
+                <TableCell
+                  className={`!font-bold !text-center !whitespace-nowrap ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                  } py-3`}
+                >
                   توضیحات
                 </TableCell>
               </TableRow>
@@ -218,7 +233,9 @@ function TableReportReserve({ listReserve, totalCount }) {
                       </TableCell>
 
                       {/* امتیاز نظرسنجی */}
-                      <TableCell className="py-3 !text-center !whitespace-nowrap">{renderSurveyScore(reserve.surveyScore)}</TableCell>
+                      <TableCell className="py-3 !text-center !whitespace-nowrap">
+                        <span className='text-xs'>{reserve.surveyScore ? reserve.surveyScore : '---'}</span>
+                      </TableCell>
 
                       {/* توضیحات */}
                       <TableCell className="py-3 !text-center !whitespace-nowrap">

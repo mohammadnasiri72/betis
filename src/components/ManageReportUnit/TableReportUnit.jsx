@@ -190,7 +190,7 @@ function TableReportUnit({ filteredUnits }) {
                       </Typography>
                     </TableCell>
                     <TableCell className="py-3" sx={{ textAlign: 'center' }}>
-                      <Typography variant="body1" className={isDark ? 'text-gray-300' : 'text-gray-600'}>
+                      <Typography variant="body1" className={`!text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                         {unit.residentNameFamily || 'ندارد'}
                       </Typography>
                     </TableCell>

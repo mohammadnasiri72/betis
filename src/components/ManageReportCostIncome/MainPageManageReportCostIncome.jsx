@@ -12,6 +12,7 @@ import { mainDomain } from '../../utils/mainDomain';
 import BoxReportCostIncom from './BoxReportCostIncom';
 import BoxReportCostIncomeSkeleton from './BoxReportCostIncomSkelton';
 import TableReportCostIncom from './TableReportCostIncom';
+import TableReportCostIncomSkeleton from './TableReportCostIncomSkeleton';
 
 function MainPageManageReportCostIncome() {
   const { themeMode } = useSettings();
@@ -92,6 +93,8 @@ function MainPageManageReportCostIncome() {
               yearId: valyear,
               termId: valTerm,
               typeId: valType,
+              startDateFa,
+              endDateFa,
             },
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -106,7 +109,7 @@ function MainPageManageReportCostIncome() {
           });
       }
     }
-  }, [valTerm, valType, flagTerm, flagType, yearId, url]);
+  }, [valTerm, valType, flagTerm, flagType, yearId, url, startDateFa, endDateFa]);
 
   function CustomMultipleInput({ onFocus, value, onChange }) {
     return (
@@ -160,6 +163,7 @@ function MainPageManageReportCostIncome() {
       </div>
     );
   }
+
 
   return (
     <>
@@ -301,12 +305,11 @@ function MainPageManageReportCostIncome() {
         </div>
       </div>
       <div className="mt-5">
-        {!isLoading && <BoxReportCostIncom listCostIncome={listCostIncome} />}
+        {!isLoading && <BoxReportCostIncom listCostIncome={listCostIncome.filter((ev) => !ev.parentId)} />}
         {isLoading && <BoxReportCostIncomeSkeleton />}
       </div>
-      <div>
-        <TableReportCostIncom listCostIncome={listCostIncome} />
-      </div>
+      {!isLoading && <TableReportCostIncom listCostIncome={listCostIncome.filter((ev) => !ev.parentId)} />}
+      {isLoading && <TableReportCostIncomSkeleton />}
     </>
   );
 }
