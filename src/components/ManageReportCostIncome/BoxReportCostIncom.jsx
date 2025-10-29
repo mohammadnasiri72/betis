@@ -324,7 +324,7 @@ function BoxReportCostIncome({ listCostIncome }) {
                       {typeIcon}
                     </Box>
                     <Typography variant="h6" className={`font-bold ${isCost ? 'text-red-600' : 'text-green-600'}`}>
-                      {formatShortAmount(totalAmount)}
+                      {totalAmount.toLocaleString()} تومان
                     </Typography>
                     <Typography variant="caption" className={isDark ? 'text-gray-400' : 'text-gray-600'}>
                       {totalTransactions} تراکنش
